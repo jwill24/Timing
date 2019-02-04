@@ -317,19 +317,6 @@ bool DisPho::GetLHCInfo(const edm::Event & iEvent, const edm::EventSetup & iSetu
   subtrain_num.clear();
   train_num.clear();
 
-  //fBX = 0.;
-  //fXangle = 0.;
-
-  /*
-  for ( unsigned int i=0; i<BUNCHES; i++ ) {
-    fBeam1VC[i] = 0.;
-    fBeam2VC[i] = 0.;
-    fBeam1RF[i] = 0.;
-    fBeam2RF[i] = 0.;
-    fBeamDelay[i] = 0.;
-  }
-  */
-
   // Get event information
   fBX = iEvent.bunchCrossing() - 1; // Force the LHC info to match with the CMS convention
 
