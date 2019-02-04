@@ -64,7 +64,7 @@ DisPho::DisPho(const edm::ParameterSet & iConfig) :
   // MET flags
   inputFlags         (iConfig.existsAs<std::string>("inputFlags") ? iConfig.getParameter<std::string>("inputFlags") : ""),
   triggerFlagsTag    (iConfig.getParameter<edm::InputTag>("triggerFlags")),
-  ecalBadCalibFlagTag(iConfig.getParameter<edm::InputTag>("ecalBadCalibFlag")),
+  //ecalBadCalibFlagTag(iConfig.getParameter<edm::InputTag>("ecalBadCalibFlag")),
 
   // tracks
   tracksTag(iConfig.getParameter<edm::InputTag>("tracks")),
@@ -151,7 +151,7 @@ void DisPho::ConsumeTokens()
 
   // MET flags
   triggerFlagsToken     = consumes<edm::TriggerResults> (triggerFlagsTag);
-  ecalBadCalibFlagToken = consumes<bool> (ecalBadCalibFlagTag);
+  //ecalBadCalibFlagToken = consumes<bool> (ecalBadCalibFlagTag);
 
   // tracks 
   tracksToken = consumes<std::vector<reco::Track> > (tracksTag);
@@ -196,6 +196,7 @@ DisPho::~DisPho() {}
 
 void DisPho::analyze(const edm::Event & iEvent, const edm::EventSetup & iSetup)
 {
+
   /////////////////
   // Get Objects //
   /////////////////
@@ -207,6 +208,12 @@ void DisPho::analyze(const edm::Event & iEvent, const edm::EventSetup & iSetup)
   ////////////////////////  
 
   DisPho::InitializeObjects(iEvent);
+
+  /////////////////
+  /// LHC Info ///
+  /////////////////
+
+  DisPho::GetLHCInfo(iEvent,iSetup);
 
   /////////////////
   // Get Weights //
@@ -232,7 +239,7 @@ void DisPho::analyze(const edm::Event & iEvent, const edm::EventSetup & iSetup)
 
   if (applyBlindMET && DisPho::ApplyBlindMET()) return;
   DisPho::FillBlindMET();
-  
+
   //////////////////
   // Prep Objects //
   //////////////////
@@ -250,6 +257,7 @@ void DisPho::analyze(const edm::Event & iEvent, const edm::EventSetup & iSetup)
   DisPho::FillPreSelectionHT();
 
   if (applyPhGood && DisPho::ApplyPreSelectionGoodPhoton()) return;
+
   DisPho::FillPreSelectionGoodPhoton();
 
   ////////////////////////////
@@ -257,6 +265,7 @@ void DisPho::analyze(const edm::Event & iEvent, const edm::EventSetup & iSetup)
   ////////////////////////////
 
   DisPho::FillTreeFromObjects(iEvent);
+
 }
 
 ///////////////////////////
@@ -291,6 +300,122 @@ bool DisPho::GetObjects(const edm::Event & iEvent, const edm::EventSetup & iSetu
   return true;
 }
 
+bool DisPho::GetLHCInfo(const edm::Event & iEvent, const edm::EventSetup & iSetup)
+{
+
+  bool first_zero( true );
+  bool first_notzero( true );
+  unsigned int zero(0);
+  unsigned int notzero(0);
+  unsigned int longnotzero(0);
+  unsigned int count(0);
+  unsigned int longcount(0);
+
+  train_zero.clear();
+  train_notzero.clear();
+  long_train_notzero.clear();
+  subtrain_num.clear();
+  train_num.clear();
+
+  //fBX = 0.;
+  //fXangle = 0.;
+
+  /*
+  for ( unsigned int i=0; i<BUNCHES; i++ ) {
+    fBeam1VC[i] = 0.;
+    fBeam2VC[i] = 0.;
+    fBeam1RF[i] = 0.;
+    fBeam2RF[i] = 0.;
+    fBeamDelay[i] = 0.;
+  }
+  */
+
+  // Get event information
+  fBX = iEvent.bunchCrossing() - 1; // Force the LHC info to match with the CMS convention
+
+  cout << "---- GETTING LHC INFO ----" << endl;
+
+  // Get LHCInfo handle
+  edm::ESHandle<LHCInfo> lhcInfo;
+  iSetup.get<LHCInfoRcd>().get(lhcInfo);
+
+  const LHCInfo* info = lhcInfo.product();
+
+  fXangle = info->crossingAngle();
+
+  // Beam 1 VC
+  fBunchNum = 0;
+  std::vector<float> ( info->beam1VC() );
+  for (vector<float>::const_iterator i = info->beam1VC().begin(); i != info->beam1VC().end(); ++i) {
+    fBeam1VC[fBunchNum] = *i;
+    fBunchNum++;
+  }
+  
+  // Beam 2 VC
+  fBunchNum = 0;
+  std::vector<float> ( info->beam2VC() );
+  for (vector<float>::const_iterator i = info->beam2VC().begin(); i != info->beam2VC().end(); ++i) {
+    fBeam2VC[fBunchNum] = *i;
+    fBunchNum++;
+  }
+
+  // Beam 1 RF
+  fBunchNum = 0;
+  std::vector<float> ( info->beam1RF() );
+  for (vector<float>::const_iterator i = info->beam1RF().begin(); i != info->beam1RF().end(); ++i) {
+    fBeam1RF[fBunchNum] = *i;
+    fBunchNum++;
+  }
+
+  // Beam 2 RF
+  fBunchNum = 0;
+  std::vector<float> ( info->beam2RF() );
+  for (vector<float>::const_iterator i = info->beam2RF().begin(); i != info->beam2RF().end(); ++i) {
+    fBeam2RF[fBunchNum] = *i;
+    fBunchNum++;
+  }
+
+  // Get train position
+  for( unsigned int i = 0; i < info->beam1VC().size(); i++ ){
+    if( info->beam1VC()[i] == 0.0 ) {
+      if( first_zero == true ) {
+	first_zero = false;
+	first_notzero = true;
+	zero = 0;
+      }
+      zero++;
+    }
+    else {
+      if( first_notzero == true ) {
+	first_notzero = false;
+	first_zero = true;
+	notzero = 0;
+	if( zero > 10 ){
+	  longnotzero = 0;
+	  longcount++;
+	}
+	count++;
+      }
+      notzero++;
+      longnotzero++;
+    }
+    train_zero.push_back(zero);
+    train_notzero.push_back(notzero);
+    long_train_notzero.push_back(longnotzero);
+    subtrain_num.push_back(count);
+    train_num.push_back(longcount);
+  }
+
+  // Store train positions for tree
+  subtrain_position = train_notzero[fBX];
+  train_position = long_train_notzero[fBX];
+  subtrain_number = subtrain_num[fBX];
+  train_number = train_num[fBX];
+
+
+  return true;
+}
+
 bool DisPho::GetStandardObjects(const edm::Event & iEvent)
 {
   // TRIGGER RESULTS
@@ -302,11 +427,11 @@ bool DisPho::GetStandardObjects(const edm::Event & iEvent)
   if (oot::BadHandle(triggerObjectsH,"triggerObjects")) return false;
 
   // MET FLAGS
-  iEvent.getByToken(triggerFlagsToken,triggerFlagsH);
-  if (oot::BadHandle(triggerFlagsH,"triggerFlags")) return false;
+  //iEvent.getByToken(triggerFlagsToken,triggerFlagsH);
+  //if (oot::BadHandle(triggerFlagsH,"triggerFlags")) return false;
 
-  iEvent.getByToken(ecalBadCalibFlagToken,ecalBadCalibFlagH);
-  if (oot::BadHandle(ecalBadCalibFlagH,"ecalBadCalibFlag")) return false;
+  //iEvent.getByToken(ecalBadCalibFlagToken,ecalBadCalibFlagH);
+  //if (oot::BadHandle(ecalBadCalibFlagH,"ecalBadCalibFlag")) return false;
 
   // TRACKS
   iEvent.getByToken(tracksToken,tracksH);
@@ -321,12 +446,12 @@ bool DisPho::GetStandardObjects(const edm::Event & iEvent)
   if (oot::BadHandle(rhoH,"rho")) return false;
 
   // METS
-  iEvent.getByToken(metsToken,metsH);
-  if (oot::BadHandle(metsH,"mets")) return false;
+  //iEvent.getByToken(metsToken,metsH);
+  //if (oot::BadHandle(metsH,"mets")) return false;
 
   // JETS
-  iEvent.getByToken(jetsToken,jetsH);
-  if (oot::BadHandle(jetsH,"jets")) return false;
+  //iEvent.getByToken(jetsToken,jetsH);
+  //if (oot::BadHandle(jetsH,"jets")) return false;
 
   // LEPTONS
   iEvent.getByToken(electronsToken,electronsH);
@@ -425,15 +550,16 @@ bool DisPho::GetMCObjects(const edm::Event & iEvent)
 
 void DisPho::InitializeObjects(const edm::Event & iEvent)
 {
+
   // INPUT + OUTPUT RHO
   rho = *(rhoH.product());
 
   // OUTPUT MET
-  t1pfMET = pat::MET(metsH->front());
+  //t1pfMET = pat::MET(metsH->front());
 
   // OUPUT JETS
-  jets.clear(); 
-  jets.reserve(jetsH->size());
+  //jets.clear(); 
+  //jets.reserve(jetsH->size());
 
   // OUTPUT ELECTRONS
   electrons.clear(); 
@@ -476,6 +602,10 @@ void DisPho::InitializeObjects(const edm::Event & iEvent)
     if (isToy) toys.clear();
   }
 }
+
+//void InitializeLHCInfo()
+//{
+//}
  
 void DisPho::GetWeights()
 {
@@ -551,10 +681,15 @@ void DisPho::PrepObjects(const edm::Event & iEvent)
   if (isGMSB) oot::PrepNeutralinos(genParticlesH,neutralinos);
   if (isHVDS) oot::PrepVPions(genParticlesH,vPions);
   if (isToy)  oot::PrepToys(genParticlesH,toys);
+
   oot::PrepTriggerBits(triggerResultsH,iEvent,triggerBitMap);
-  oot::PrepTriggerBits(triggerFlagsH,iEvent,triggerFlagMap);
+
+  //oot::PrepTriggerBits(triggerFlagsH,iEvent,triggerFlagMap);
+
   oot::PrepTriggerObjects(triggerResultsH,triggerObjectsH,iEvent,triggerObjectsByFilterMap);
-  oot::PrepJets(jetsH,jets,jetpTmin,jetEtamax,jetIDmin);
+
+  //oot::PrepJets(jetsH,jets,jetpTmin,jetEtamax,jetIDmin);
+
   oot::PrepRecHits(recHitsEB,recHitsEE,recHitMap,rhEmin);
 
   ///////////////////
@@ -578,12 +713,12 @@ void DisPho::PrepObjects(const edm::Event & iEvent)
 
   oot::PrepLeptons(electronsH,electrons,photons,ellowpTmin,leptondRmin); // consider only electrons NOT matched to our photons
   oot::PrepLeptons(muonsH,muons,photons,mulowpTmin,leptondRmin); // consider only muons NOT matched to our photons
-		
+
   ///////////////////////////////
   // Object Counts for Storing //
   ///////////////////////////////
 
-  nJets    = std::min(int(jets.size()),Config::nJets);
+  //nJets    = std::min(int(jets.size()),Config::nJets);
   nRecHits = recHitMap.size();
   nPhotons = std::min(int(photons.size()),Config::nPhotons);
 }
@@ -686,6 +821,7 @@ void DisPho::FillPreSelectionGoodPhoton()
 
 void DisPho::FillTreeFromObjects(const edm::Event & iEvent)
 {
+
   /////////////
   // MC Info //
   /////////////
@@ -715,6 +851,7 @@ void DisPho::FillTreeFromObjects(const edm::Event & iEvent)
   /////////////////////////
 
   DisPho::InitializePVBranches();
+
   DisPho::SetPVBranches();
 
   //////////////////
@@ -734,8 +871,8 @@ void DisPho::FillTreeFromObjects(const edm::Event & iEvent)
   // Jets (AK4 standard) //
   /////////////////////////
 
-  DisPho::InitializeJetBranches();
-  DisPho::SetJetBranches();
+  //DisPho::InitializeJetBranches();
+  //DisPho::SetJetBranches();
 
   if (isMC)
   {
@@ -1125,7 +1262,7 @@ void DisPho::SetMETFilterBranches()
   metECALCalib = (triggerFlagMap.count(Config::ECALCalibFlag) ? triggerFlagMap[Config::ECALCalibFlag] : false);
 
   // special remade calib flag
-  metECALBadCalib = *(ecalBadCalibFlagH.product());
+  //metECALBadCalib = *(ecalBadCalibFlagH.product());
 }
 
 void DisPho::InitializePVBranches()
@@ -1138,13 +1275,15 @@ void DisPho::InitializePVBranches()
 
 void DisPho::SetPVBranches()
 {
+
   nvtx = verticesH->size();
-  
+
   const auto & primevtx = verticesH->front();
 
   vtxX = primevtx.position().x();
   vtxY = primevtx.position().y();
   vtxZ = primevtx.position().z();
+
 }
 
 void DisPho::InitializeMETBranches()
@@ -1702,7 +1841,7 @@ void DisPho::SetPhoBranches()
     auto & phoBranch = phoBranches[iphoton];
     
     // basic kinematic with v2: https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaMiniAODV2#Applying_the_Energy_Scale_and_sm
-    const auto phop4 = photon.p4() * (photon.userFloat("ecalEnergyPostCorr") / photon.energy());
+    const auto phop4 = photon.p4(); //* (photon.userFloat("ecalEnergyPostCorr") / photon.energy());
     phoBranch.E_   = phop4.energy();
     phoBranch.pt_  = phop4.pt();
     phoBranch.phi_ = phop4.phi();
@@ -2264,6 +2403,18 @@ void DisPho::MakeEventTree()
   disphotree->Branch("run", &run);
   disphotree->Branch("lumi", &lumi);
   disphotree->Branch("event", &event, "event/l");
+
+  // LHC Info
+  disphotree->Branch( "bunch_crossing", &fBX, "bunch_crossing/i" );
+  disphotree->Branch( "num_bunch", &fBunchNum, "num_bunch/i");
+  disphotree->Branch( "beam1_VC", fBeam1VC, "beam1_VC[num_bunch]/F" ); 
+  disphotree->Branch( "beam2_VC", fBeam2VC, "beam2_VC[num_bunch]/F" ); 
+  disphotree->Branch( "beam1_RF", fBeam1RF, "beam1_RF[num_bunch]/F" ); 
+  disphotree->Branch( "beam2_RF", fBeam2RF, "beam2_RF[num_bunch]/F" ); 
+  disphotree->Branch("subtrain_position", &subtrain_position, "subtrain_position/i" ); 
+  disphotree->Branch("train_position", &train_position, "train_position/i" ); 
+  disphotree->Branch("subtrain_number", &subtrain_number, "subtrain_number/i" ); 
+  disphotree->Branch("train_number", &train_number, "train_number/i" ); 
    
   // Trigger Info
   disphotree->Branch("hltSignal", &hltSignal);

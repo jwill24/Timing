@@ -88,6 +88,11 @@
 #include "CondFormats/JetMETObjects/interface/JetResolutionObject.h"
 #include "JetMETCorrections/Modules/interface/JetResolution.h"
 
+// LHC Info
+#include "CondFormats/RunInfo/interface/LHCInfo.h"
+#include "CondFormats/DataRecord/interface/LHCInfoRcd.h"
+#include "CondTools/RunInfo/interface/LHCInfoPopConSourceHandler.h"
+
 // ROOT
 #include "TH1F.h"
 #include "TTree.h"
@@ -98,6 +103,11 @@
 
 // Unique structs
 #include "Timing/TimingAnalyzer/plugins/DisPhoTypes.hh"
+
+#define BUNCHES 3564
+
+using namespace std;
+using namespace edm;
 
 ////////////////////
 // Unique typedef //
@@ -135,11 +145,13 @@ public:
   ///////////////////////////
 
   bool GetObjects(const edm::Event & iEvent, const edm::EventSetup & iSetup);
+  bool GetLHCInfo(const edm::Event & iEvent, const edm::EventSetup & iSetup);
   bool GetStandardObjects(const edm::Event & iEvent);
   bool GetCalibrationConstants(const  edm::EventSetup & iSetup);
   bool GetMCObjects(const edm::Event & iEvent);
   void InitializeObjects(const edm::Event & iEvent);
-
+  //void InitializeLHCInfo();
+  
   void GetWeights();
   void InitializeGenPUBranches();
   void SetGenPUBranches();
@@ -235,6 +247,15 @@ private:
   // Input Members //
   ///////////////////
 
+  // LHC info  
+  std::vector<unsigned int> train_zero, train_notzero, long_train_notzero, subtrain_num, train_num;
+  
+  unsigned int subtrain_position, train_position, subtrain_number, train_number;
+
+  unsigned int fBunchNum, fBX, fXangle;
+
+  float fBeam1VC[BUNCHES], fBeam2VC[BUNCHES], fBeam1RF[BUNCHES], fBeam2RF[BUNCHES];
+  
   // blinding
   const unsigned int blindSF;
   const bool applyBlindSF;

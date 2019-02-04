@@ -189,6 +189,23 @@ process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.destinations = ['cout', 'cerr']
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
+# LHC Info
+process.LHCInfoReader = cms.ESSource("PoolDBESSource",
+				     DBParameters = cms.PSet(
+		messageLevel = cms.untracked.int32(0),
+		authenticationPath = cms.untracked.string('')),
+				     toGet = cms.VPSet( 
+		cms.PSet(
+			record = cms.string("LHCInfoRcd"),
+			tag = cms.string("LHCInfoStartFillTest_v2")
+			)
+		),
+				     connect = cms.string('frontier://FrontierPrep/CMS_CONDITIONS')
+				     )
+
+process.lhcinfo_prefer = cms.ESPrefer("PoolDBESSource","LHCInfoReader")
+
+
 ## Define the input source
 process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring( 
 		# reminiaod data: 94X_dataRun2_v6
@@ -196,7 +213,13 @@ process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(
 		# reminiaod GJets, GT: 94X_mc2017_realistic_v14
 		#'/store/user/kmcdermo/files/miniAOD/GJets_600toInf_miniAODv2.root'
 		# miniaodv2 GMSB, GT: 94X_mc2017_realistic_v14
-		'/store/user/kmcdermo/files/miniAOD/GMSB_L600TeV_Ctau400cm_miniAODv2.root'
+		#'/store/user/kmcdermo/files/miniAOD/GMSB_L600TeV_Ctau400cm_miniAODv2.root'
+		# Run2018B, GT: 102X_dataRun2_Sep2018Rereco_v1
+		#'/store/data/Run2018B/EGamma/MINIAOD/17Sep2018-v1/60000/FF5A89A5-453C-684D-813A-369B457AD498.root'
+		# Run2016E, GT: 102X_dataRun2_Prompt_v1
+		#'/store/data/Run2018E/EGamma/MINIAOD/PromptReco-v1/000/325/520/00000/2F6163F4-934A-AD4D-B9FE-9B2EDBBE99FE.root'
+		# Run2016D. GT:102X_dataRun2_Prompt_v1
+		'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/712/00000/64812F26-EBA8-E811-AF9B-FA163E067929.root'
 		))
 
 ## How many events to process
@@ -221,47 +244,53 @@ from PhysicsTools.PatAlgos.slimming.unpackedTracksAndVertices_cfi import unpacke
 process.unpackedTracksAndVertices = unpackedTracksAndVertices.clone()
 
 ## MET corrections for 2017 data: https://twiki.cern.ch/twiki/bin/view/CMS/MissingETUncertaintyPrescription#Instructions_for_9_4_X_X_9_for_2
-from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
-runMetCorAndUncFromMiniAOD (
-        process,
-        isData = not options.isMC,
-        fixEE2017 = True,
-	fixEE2017Params = {'userawPt':True, 'ptThreshold':50.0, 'minEtaThreshold':2.65, 'maxEtaThreshold':3.139},
-        postfix = "ModifiedMET"
-)
+#from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+#runMetCorAndUncFromMiniAOD (
+#        process,
+#        isData = not options.isMC,
+#        fixEE2017 = True,
+#	fixEE2017Params = {'userawPt':True, 'ptThreshold':50.0, 'minEtaThreshold':2.65, 'maxEtaThreshold':3.139},
+#        postfix = "ModifiedMET"
+#)
 
 ## Apply JECs : https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#CorrPatJets
-from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
-updateJetCollection (
-   process,
-   jetSource = cms.InputTag('slimmedJets'),
-   labelName = 'UpdatedJEC',
-   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None')
-)
+#from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
+#updateJetCollection (
+#   process,
+#   jetSource = cms.InputTag('slimmedJets'),
+#   labelName = 'UpdatedJEC',
+#   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None')
+#)
+
+## Apply IDs in pat::Photon
+from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
+setupEgammaPostRecoSeq(process,
+                       runEnergyCorrections=False, #as energy corrections are not yet availible for 2018
+                       era='2018-Prompt') 
 
 ## Rerun one MET filter: https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#How_to_run_ecal_BadCalibReducedM
-baddetEcallist = cms.vuint32(
-    [872439604,872422825,872420274,872423218,
-     872423215,872416066,872435036,872439336,
-     872420273,872436907,872420147,872439731,
-     872436657,872420397,872439732,872439339,
-     872439603,872422436,872439861,872437051,
-     872437052,872420649,872422436,872421950,
-     872437185,872422564,872421566,872421695,
-     872421955,872421567,872437184,872421951,
-     872421694,872437056,872437057,872437313])
+#baddetEcallist = cms.vuint32(
+#    [872439604,872422825,872420274,872423218,
+#     872423215,872416066,872435036,872439336,
+#     872420273,872436907,872420147,872439731,
+#     872436657,872420397,872439732,872439339,
+#     872439603,872422436,872439861,872437051,
+#     872437052,872420649,872422436,872421950,
+#     872437185,872422564,872421566,872421695,
+#     872421955,872421567,872437184,872421951,
+#     872421694,872437056,872437057,872437313])
 
-process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter("EcalBadCalibFilter",
-    EcalRecHitSource = cms.InputTag("reducedEgamma:reducedEERecHits"),
-    ecalMinEt        = cms.double(50.),
-    baddetEcal       = baddetEcallist, 
-    taggingMode      = cms.bool(True),
-    debug            = cms.bool(False)
-)
+#process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter("EcalBadCalibFilter",
+#    EcalRecHitSource = cms.InputTag("reducedEgamma:reducedEERecHits"),
+#    ecalMinEt        = cms.double(50.),
+#    baddetEcal       = baddetEcallist, 
+#    taggingMode      = cms.bool(True),
+#    debug            = cms.bool(False)
+#)
 
 ## Apply Scale/Smearing + GED and OOT VID to ootPhotons
-from RecoEgamma.EgammaTools.OOTPhotonPostRecoTools import setupOOTPhotonPostRecoSeq
-setupOOTPhotonPostRecoSeq(process)
+#from RecoEgamma.EgammaTools.OOTPhotonPostRecoTools import setupOOTPhotonPostRecoSeq
+#setupOOTPhotonPostRecoSeq(process)
 
 # Make the tree 
 process.tree = cms.EDAnalyzer("DisPho",
@@ -318,7 +347,7 @@ process.tree = cms.EDAnalyzer("DisPho",
    ## met filters
    inputFlags       = cms.string(options.inputFlags),
    triggerFlags     = cms.InputTag("TriggerResults", "", triggerFlagsProcess),
-   ecalBadCalibFlag = cms.InputTag("ecalBadCalibReducedMINIAODFilter"),			      
+   #ecalBadCalibFlag = cms.InputTag("ecalBadCalibReducedMINIAODFilter"),			      
    ## tracks
    tracks = cms.InputTag("unpackedTracksAndVertices"),
    ## vertices
@@ -326,9 +355,11 @@ process.tree = cms.EDAnalyzer("DisPho",
    ## rho
    rho = cms.InputTag("fixedGridRhoFastjetAll"), #fixedGridRhoAll
    ## METs
-   mets = cms.InputTag("slimmedMETsModifiedMET"),
+   #mets = cms.InputTag("slimmedMETsModifiedMET"),
+   mets = cms.InputTag("slimmedMETs"),
    ## jets
-   jets = cms.InputTag("updatedPatJetsUpdatedJEC"),
+   #jets = cms.InputTag("updatedPatJetsUpdatedJEC"),
+   jets = cms.InputTag("slimmedJets"),
    ## electrons
    electrons = cms.InputTag("slimmedElectrons"),
    ## muons
@@ -358,12 +389,13 @@ process.tree = cms.EDAnalyzer("DisPho",
 
 # Set up the path
 process.treePath = cms.Path(
-	process.patJetCorrFactorsUpdatedJEC +
-	process.updatedPatJetsUpdatedJEC +
-	process.fullPatMetSequenceModifiedMET +
-	process.ecalBadCalibReducedMINIAODFilter +
+	process.egammaPostRecoSeq +
+	#process.patJetCorrFactorsUpdatedJEC +
+	#process.updatedPatJetsUpdatedJEC +
+	#process.fullPatMetSequenceModifiedMET +
+	#process.ecalBadCalibReducedMINIAODFilter +
 	process.unpackedTracksAndVertices +
-	process.ootPhotonPostRecoSeq +
+	#process.ootPhotonPostRecoSeq +
 	process.tree
 )
 

@@ -170,8 +170,8 @@ namespace oot
   //////////////////////////////
 
   // photon corrected et, pt
-  inline float GetPhotonEt(const pat::Photon & photon){return (photon.et()*(photon.userFloat("ecalEnergyPostCorr")/photon.energy()));}
-  inline float GetPhotonPt(const pat::Photon & photon){return (photon.pt()*(photon.userFloat("ecalEnergyPostCorr")/photon.energy()));}
+  inline float GetPhotonEt(const pat::Photon & photon){return (photon.et());}//*(photon.userFloat("ecalEnergyPostCorr")/photon.energy()));}
+  inline float GetPhotonPt(const pat::Photon & photon){return (photon.pt());}//*(photon.userFloat("ecalEnergyPostCorr")/photon.energy()));}
 
   // sort by photon corrected pt
   inline void SortPhotonsByPt(std::vector<pat::Photon> & photons)
