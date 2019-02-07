@@ -1,36 +1,27 @@
 # Displaced Photon Analysis Framework
 
-Update to README: old 80X code removed, but still have GEN_SIM...
+Update to README: this code has been modified to work with CMSSW_10_2_X.
+Code belongs to 
 
-Standard setup:
-```
-cmsrel CMSSW_9_4_12
-cd CMSSW_9_4_12/src
+cmsrel CMSSW_10_2_5
+cd CMSSW_10_2_5/src
 cmsenv
 git cms-init
 
-git cms-merge-topic kmcdermo:post_reco_OOT_AND_add_OOT_VID
-git cms-addpkg RecoMET/METFilters
+git cms-merge-topic cms-egamma:EgammaID_1023
+git cms-merge-topic cms-egamma:EgammaPostRecoTools
 
-git clone git@github.com:kmcdermo/Timing.git
-pushd Timing
-git remote rename origin kmcdermo
-popd
+## Two lines need to be edited in RecoEgamma/EgammaTools/python/EgammaPostRecoTools.py
+## Comment out lines 208 and 210
+## Add the following lines:
+## phoSrc = cms.InputTag('slimmedOOTPhotons',processName=cms.InputTag.skipCurrentProcess())
+## phoCalibSrc = cms.InputTag('slimmedOOTPhotons',processName=cms.InputTag.skipCurrentProcess())
 
-scram b -j 8
-```
+git clone git@github.com:jwill24/Timing.git
+git checkout 10_2_X
 
-N.B. The previous instruction to include: ```git cms-merge-topic cms-met:METFixEE2017_949_v2``` has been dropped as this code is merged in 9_4_12.
+scram b -j 10
 
-Will also need to setup combine somewhere in a separate CMSSW release area:
-https://cms-hcomb.gitbooks.io/combine/content/part1/#for-end-users-that-dont-need-to-commit-or-do-any-development
-
-Change the relative path for the setup in ```limits/scripts/common_variables.sh```. Currently using Higgs combine with CMSSW_8_1_0. 
-
-Made ```kmcdermo:post_reco_OOT_AND_add_OOT_VID``` with the following:
-- ```kmcdermo:post_reco_OOT```: adds scale/smear + GED cut-based VID for OOT photons
-- combo of squashed commits from: ```lsoffi:CMSSW_10_1_1_OOT_PhotonID_wSMaj``` and ```kmcdermo:add_OOT_VID```
-- add commits for OOT VID for GED and OOT Photons
 
 -----------------------
 

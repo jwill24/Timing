@@ -1,6 +1,7 @@
 <use name="DataFormats/Common"/>
 <use name="CondFormats/RunInfo"/>
 <use name="CondFormats/DataRecord"/>
+<use name="RecoEgamma/EgammaTools"/>
 
 <export>
   <lib name="1"/>

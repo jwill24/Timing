@@ -1,6 +1,9 @@
 #include "Timing/TimingAnalyzer/plugins/DisPho.hh"
 
 DisPho::DisPho(const edm::ParameterSet & iConfig) :
+  // LHC Info 
+  lhcInfoValid (iConfig.existsAs<bool>("lhcInfoValid")  ? iConfig.getParameter<bool>("lhcInfoValid")  : false),
+
   // blinding cuts
   blindSF(iConfig.existsAs<int>("blindSF") ? iConfig.getParameter<int>("blindSF") : 1000),
   applyBlindSF(iConfig.existsAs<bool>("applyBlindSF") ? iConfig.getParameter<bool>("applyBlindSF") : false),
@@ -320,85 +323,94 @@ bool DisPho::GetLHCInfo(const edm::Event & iEvent, const edm::EventSetup & iSetu
   // Get event information
   fBX = iEvent.bunchCrossing() - 1; // Force the LHC info to match with the CMS convention
 
-  cout << "---- GETTING LHC INFO ----" << endl;
-
   // Get LHCInfo handle
   edm::ESHandle<LHCInfo> lhcInfo;
   iSetup.get<LHCInfoRcd>().get(lhcInfo);
 
-  const LHCInfo* info = lhcInfo.product();
-
-  fXangle = info->crossingAngle();
-
-  // Beam 1 VC
-  fBunchNum = 0;
-  std::vector<float> ( info->beam1VC() );
-  for (vector<float>::const_iterator i = info->beam1VC().begin(); i != info->beam1VC().end(); ++i) {
-    fBeam1VC[fBunchNum] = *i;
-    fBunchNum++;
+  // Verify LHC Info
+  if(!lhcInfoValid) {
+    //throw cms::Exception("ProductNotValid") << "LHCInfo product not valid";
+    //std::cout << "LHCInfo not found?\n" << std::endl;
+    return false;
   }
-  
-  // Beam 2 VC
-  fBunchNum = 0;
-  std::vector<float> ( info->beam2VC() );
-  for (vector<float>::const_iterator i = info->beam2VC().begin(); i != info->beam2VC().end(); ++i) {
-    fBeam2VC[fBunchNum] = *i;
-    fBunchNum++;
-  }
+  else{
 
-  // Beam 1 RF
-  fBunchNum = 0;
-  std::vector<float> ( info->beam1RF() );
-  for (vector<float>::const_iterator i = info->beam1RF().begin(); i != info->beam1RF().end(); ++i) {
-    fBeam1RF[fBunchNum] = *i;
-    fBunchNum++;
-  }
-
-  // Beam 2 RF
-  fBunchNum = 0;
-  std::vector<float> ( info->beam2RF() );
-  for (vector<float>::const_iterator i = info->beam2RF().begin(); i != info->beam2RF().end(); ++i) {
-    fBeam2RF[fBunchNum] = *i;
-    fBunchNum++;
-  }
-
-  // Get train position
-  for( unsigned int i = 0; i < info->beam1VC().size(); i++ ){
-    if( info->beam1VC()[i] == 0.0 ) {
-      if( first_zero == true ) {
-	first_zero = false;
-	first_notzero = true;
-	zero = 0;
-      }
-      zero++;
+    //cout << "---- GETTING LHC INFO ----" << endl;
+    
+    const LHCInfo* info = lhcInfo.product();
+    
+    fXangle = info->crossingAngle();
+    
+    // Beam 1 VC
+    fBunchNum = 0;
+    std::vector<float> ( info->beam1VC() );
+    for (vector<float>::const_iterator i = info->beam1VC().begin(); i != info->beam1VC().end(); ++i) {
+      fBeam1VC[fBunchNum] = *i;
+      fBunchNum++;
     }
-    else {
-      if( first_notzero == true ) {
-	first_notzero = false;
-	first_zero = true;
-	notzero = 0;
-	if( zero > 10 ){
-	  longnotzero = 0;
-	  longcount++;
+    
+    // Beam 2 VC
+    fBunchNum = 0;
+    std::vector<float> ( info->beam2VC() );
+    for (vector<float>::const_iterator i = info->beam2VC().begin(); i != info->beam2VC().end(); ++i) {
+      fBeam2VC[fBunchNum] = *i;
+      fBunchNum++;
+    }
+    
+    // Beam 1 RF
+    fBunchNum = 0;
+    std::vector<float> ( info->beam1RF() );
+    for (vector<float>::const_iterator i = info->beam1RF().begin(); i != info->beam1RF().end(); ++i) {
+      fBeam1RF[fBunchNum] = *i;
+      fBunchNum++;
+    }
+    
+    // Beam 2 RF
+    fBunchNum = 0;
+    std::vector<float> ( info->beam2RF() );
+    for (vector<float>::const_iterator i = info->beam2RF().begin(); i != info->beam2RF().end(); ++i) {
+      fBeam2RF[fBunchNum] = *i;
+      fBunchNum++;
+    }
+    
+    // Get train position
+    for( unsigned int i = 0; i < info->beam1VC().size(); i++ ){
+      if( info->beam1VC()[i] == 0.0 ) {
+	if( first_zero == true ) {
+	  first_zero = false;
+	  first_notzero = true;
+	  zero = 0;
 	}
-	count++;
+	zero++;
       }
-      notzero++;
-      longnotzero++;
+      else {
+	if( first_notzero == true ) {
+	  first_notzero = false;
+	  first_zero = true;
+	  notzero = 0;
+	  if( zero > 10 ){
+	    longnotzero = 0;
+	    longcount++;
+	  }
+	  count++;
+	}
+	notzero++;
+	longnotzero++;
+      }
+      train_zero.push_back(zero);
+      train_notzero.push_back(notzero);
+      long_train_notzero.push_back(longnotzero);
+      subtrain_num.push_back(count);
+      train_num.push_back(longcount);
     }
-    train_zero.push_back(zero);
-    train_notzero.push_back(notzero);
-    long_train_notzero.push_back(longnotzero);
-    subtrain_num.push_back(count);
-    train_num.push_back(longcount);
+    
+    // Store train positions for tree
+    subtrain_position = train_notzero[fBX];
+    train_position = long_train_notzero[fBX];
+    subtrain_number = subtrain_num[fBX];
+    train_number = train_num[fBX];
+    
   }
-
-  // Store train positions for tree
-  subtrain_position = train_notzero[fBX];
-  train_position = long_train_notzero[fBX];
-  subtrain_number = subtrain_num[fBX];
-  train_number = train_num[fBX];
-
 
   return true;
 }
@@ -590,10 +602,6 @@ void DisPho::InitializeObjects(const edm::Event & iEvent)
   }
 }
 
-//void InitializeLHCInfo()
-//{
-//}
- 
 void DisPho::GetWeights()
 {
   /////////////////
@@ -2390,19 +2398,21 @@ void DisPho::MakeEventTree()
   disphotree->Branch("run", &run);
   disphotree->Branch("lumi", &lumi);
   disphotree->Branch("event", &event, "event/l");
-
+  
   // LHC Info
-  disphotree->Branch( "bunch_crossing", &fBX, "bunch_crossing/i" );
-  disphotree->Branch( "num_bunch", &fBunchNum, "num_bunch/i");
-  disphotree->Branch( "beam1_VC", fBeam1VC, "beam1_VC[num_bunch]/F" ); 
-  disphotree->Branch( "beam2_VC", fBeam2VC, "beam2_VC[num_bunch]/F" ); 
-  disphotree->Branch( "beam1_RF", fBeam1RF, "beam1_RF[num_bunch]/F" ); 
-  disphotree->Branch( "beam2_RF", fBeam2RF, "beam2_RF[num_bunch]/F" ); 
-  disphotree->Branch("subtrain_position", &subtrain_position, "subtrain_position/i" ); 
-  disphotree->Branch("train_position", &train_position, "train_position/i" ); 
-  disphotree->Branch("subtrain_number", &subtrain_number, "subtrain_number/i" ); 
-  disphotree->Branch("train_number", &train_number, "train_number/i" ); 
-   
+  if ( lhcInfoValid ) {
+    disphotree->Branch( "bunch_crossing", &fBX, "bunch_crossing/i" );
+    disphotree->Branch( "num_bunch", &fBunchNum, "num_bunch/i");
+    disphotree->Branch( "beam1_VC", fBeam1VC, "beam1_VC[num_bunch]/F" ); 
+    disphotree->Branch( "beam2_VC", fBeam2VC, "beam2_VC[num_bunch]/F" ); 
+    disphotree->Branch( "beam1_RF", fBeam1RF, "beam1_RF[num_bunch]/F" ); 
+    disphotree->Branch( "beam2_RF", fBeam2RF, "beam2_RF[num_bunch]/F" ); 
+    disphotree->Branch("subtrain_position", &subtrain_position, "subtrain_position/i" ); 
+    disphotree->Branch("train_position", &train_position, "train_position/i" ); 
+    disphotree->Branch("subtrain_number", &subtrain_number, "subtrain_number/i" ); 
+    disphotree->Branch("train_number", &train_number, "train_number/i" ); 
+  }
+
   // Trigger Info
   disphotree->Branch("hltSignal", &hltSignal);
   disphotree->Branch("hltRefPhoID", &hltRefPhoID);

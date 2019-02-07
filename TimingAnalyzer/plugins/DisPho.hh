@@ -249,12 +249,10 @@ private:
 
   // LHC info  
   std::vector<unsigned int> train_zero, train_notzero, long_train_notzero, subtrain_num, train_num;
-  
   unsigned int subtrain_position, train_position, subtrain_number, train_number;
-
   unsigned int fBunchNum, fBX, fXangle;
-
   float fBeam1VC[BUNCHES], fBeam2VC[BUNCHES], fBeam1RF[BUNCHES], fBeam2RF[BUNCHES];
+  const bool lhcInfoValid;
   
   // blinding
   const unsigned int blindSF;

@@ -5,6 +5,9 @@ import FWCore.ParameterSet.Config as cms
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('python')
 
+## LHC Info
+options.register('lhcInfoValid',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to get lhc info');
+
 ## blinding
 options.register('blindSF',1000,VarParsing.multiplicity.singleton,VarParsing.varType.int,'pick every nth SF event');
 options.register('applyBlindSF',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to apply event SF blinding');
@@ -171,6 +174,9 @@ print "        -- Extra bits --"
 print "nThreads       : ",options.nThreads
 print "runUnscheduled : ",options.runUnscheduled
 print "deleteEarly    : ",options.deleteEarly
+print " "
+print "LHC Info       : ",options.lhcInfoValid
+
 print "     #####################"
 
 ## Define the CMSSW process
@@ -214,12 +220,16 @@ process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(
 		#'/store/user/kmcdermo/files/miniAOD/GJets_600toInf_miniAODv2.root'
 		# miniaodv2 GMSB, GT: 94X_mc2017_realistic_v14
 		#'/store/user/kmcdermo/files/miniAOD/GMSB_L600TeV_Ctau400cm_miniAODv2.root'
+		# Run2018A, GT: 102X_dataRun2_Sep2018Rereco_v1
+		#'/store/data/Run2018A/EGamma/MINIAOD/17Sep2018-v2/110000/C82A2CFA-C92D-C648-A574-3ED3E09BDB07.root'
 		# Run2018B, GT: 102X_dataRun2_Sep2018Rereco_v1
 		#'/store/data/Run2018B/EGamma/MINIAOD/17Sep2018-v1/60000/FF5A89A5-453C-684D-813A-369B457AD498.root'
 		# Run2016E, GT: 102X_dataRun2_Prompt_v1
-		#'/store/data/Run2018E/EGamma/MINIAOD/PromptReco-v1/000/325/520/00000/2F6163F4-934A-AD4D-B9FE-9B2EDBBE99FE.root'
-		# Run2016D. GT:102X_dataRun2_Prompt_v1
-		'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/712/00000/64812F26-EBA8-E811-AF9B-FA163E067929.root'
+		'/store/data/Run2018E/EGamma/MINIAOD/PromptReco-v1/000/325/520/00000/2F6163F4-934A-AD4D-B9FE-9B2EDBBE99FE.root'
+		# Run2016D, GT:102X_dataRun2_Prompt_v1
+		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/712/00000/64812F26-EBA8-E811-AF9B-FA163E067929.root'
+		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/776/00000/62FBACDD-71AC-E811-95C7-02163E019FE5.root'
+		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/007/00000/6A6E9A39-C29C-E811-8820-FA163EA76F2E.root'
 		))
 
 ## How many events to process
@@ -262,11 +272,12 @@ process.unpackedTracksAndVertices = unpackedTracksAndVertices.clone()
 #   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None')
 #)
 
+
 ## Apply IDs in pat::Photon
 from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 setupEgammaPostRecoSeq(process,
                        runEnergyCorrections=False, #as energy corrections are not yet availible for 2018
-                       era='2018-Prompt') 
+		       era='2018-Prompt') 
 
 ## Rerun one MET filter: https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#How_to_run_ecal_BadCalibReducedM
 #baddetEcallist = cms.vuint32(
@@ -292,8 +303,12 @@ setupEgammaPostRecoSeq(process,
 #from RecoEgamma.EgammaTools.OOTPhotonPostRecoTools import setupOOTPhotonPostRecoSeq
 #setupOOTPhotonPostRecoSeq(process)
 
+
+
 # Make the tree 
 process.tree = cms.EDAnalyzer("DisPho",
+   ## LHC Info
+   lhcInfoValid = cms.bool(options.lhcInfoValid),
    ## blinding 
    blindSF = cms.int32(options.blindSF),
    applyBlindSF = cms.bool(options.applyBlindSF),
@@ -387,9 +402,13 @@ process.tree = cms.EDAnalyzer("DisPho",
    genJets      = cms.InputTag("slimmedGenJets"),
 )
 
+process.seq = cms.Sequence(
+   process.egammaPostRecoSeq
+)
+
 # Set up the path
 process.treePath = cms.Path(
-	process.egammaPostRecoSeq +
+	process.seq +
 	#process.patJetCorrFactorsUpdatedJEC +
 	#process.updatedPatJetsUpdatedJEC +
 	#process.fullPatMetSequenceModifiedMET +
