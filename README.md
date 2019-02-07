@@ -11,11 +11,11 @@ git cms-init
 git cms-merge-topic cms-egamma:EgammaID_1023
 git cms-merge-topic cms-egamma:EgammaPostRecoTools
 
-## Two lines need to be edited in RecoEgamma/EgammaTools/python/EgammaPostRecoTools.py
-## Comment out lines 208 and 210
-## Add the following lines:
-## phoSrc = cms.InputTag('slimmedOOTPhotons',processName=cms.InputTag.skipCurrentProcess())
-## phoCalibSrc = cms.InputTag('slimmedOOTPhotons',processName=cms.InputTag.skipCurrentProcess())
+ Two lines need to be edited in RecoEgamma/EgammaTools/python/EgammaPostRecoTools.py
+ Comment out lines 208 and 210
+ Add the following lines:
+ phoSrc = cms.InputTag('slimmedOOTPhotons',processName=cms.InputTag.skipCurrentProcess())
+ phoCalibSrc = cms.InputTag('slimmedOOTPhotons',processName=cms.InputTag.skipCurrentProcess())
 
 git clone git@github.com:jwill24/Timing.git
 git checkout 10_2_X
