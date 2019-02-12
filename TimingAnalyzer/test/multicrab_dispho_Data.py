@@ -62,7 +62,8 @@ def main():
         inputPaths   = 'HLTpathsWExtras.txt'
         inputFilters = 'HLTfilters.txt'
         inputFlags   = 'METflags.txt'
-        inputJSON    = 'golden2017.json'
+        #inputJSON    = 'golden2017.json'
+        inputJSON    = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/PromptReco/Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.txt'
          
         #--------------------------------------------------------
         # This is the base config:
@@ -80,29 +81,32 @@ def main():
         config.JobType.inputFiles  = [ inputDir+inputPaths , inputDir+inputFilters , inputDir+inputFlags ]
 
         config.Data.inputDataset = None
-        config.Data.lumiMask     = inputDir+inputJSON
+        config.Data.lumiMask     = inputJSON
         config.Data.splitting    = 'EventAwareLumiBased'
         config.Data.unitsPerJob  = 200000
 
-        config.Data.outputDatasetTag = None
+        config.Data.outputDatasetTag = 'EGamma_ntuple_v2'
         config.Data.publication      = False
+        #config.Site.storageSite      = 'T2_US_Nebraska'
         config.Site.storageSite      = 'T2_CH_CERN'
-        config.Data.outLFNDirBase    = '/store/group/phys_exotica/displacedPhotons/nTuples/2017/analysis/unskimmed'
+        config.Data.outLFNDirBase    = '/store/group/phys_pps/diphoton/juwillia'
         #--------------------------------------------------------
 
         # Will submit one task for each of these input datasets.
         inputDataAndOpts = [
-            ['/SinglePhoton/Run2017B-31Mar2018-v1/MINIAOD'],
-            ['/SinglePhoton/Run2017C-31Mar2018-v1/MINIAOD'],
-            ['/SinglePhoton/Run2017D-31Mar2018-v1/MINIAOD'],
-            ['/SinglePhoton/Run2017E-31Mar2018-v1/MINIAOD'],
-            ['/SinglePhoton/Run2017F-31Mar2018-v1/MINIAOD'],
+            #['/SinglePhoton/Run2017B-31Mar2018-v1/MINIAOD'],
+            #['/SinglePhoton/Run2017C-31Mar2018-v1/MINIAOD'],
+            #['/SinglePhoton/Run2017D-31Mar2018-v1/MINIAOD'],
+            #['/SinglePhoton/Run2017E-31Mar2018-v1/MINIAOD'],
+            #['/SinglePhoton/Run2017F-31Mar2018-v1/MINIAOD'],
 
-            ['/DoubleEG/Run2017B-31Mar2018-v1/MINIAOD'],
-            ['/DoubleEG/Run2017C-31Mar2018-v1/MINIAOD'],
-            ['/DoubleEG/Run2017D-31Mar2018-v1/MINIAOD'],
-            ['/DoubleEG/Run2017E-31Mar2018-v1/MINIAOD'],
-            ['/DoubleEG/Run2017F-31Mar2018-v1/MINIAOD'],
+            #['/DoubleEG/Run2017B-31Mar2018-v1/MINIAOD'],
+            #['/DoubleEG/Run2017C-31Mar2018-v1/MINIAOD'],
+            #['/DoubleEG/Run2017D-31Mar2018-v1/MINIAOD'],
+            #['/DoubleEG/Run2017E-31Mar2018-v1/MINIAOD'],
+            #['/DoubleEG/Run2017F-31Mar2018-v1/MINIAOD'],
+
+            ['/EGamma/Run2018D-PromptReco-v2/MINIAOD']
 
             ]
  
@@ -111,12 +115,13 @@ def main():
             primaryDataset = inDO[0].split('/')[1]
             runEra         = inDO[0].split('/')[2]
 
-            config.General.requestName   = primaryDataset+"_"+runEra
+            config.General.requestName   = primaryDataset+"_"+runEra+"_v7"
 
-            config.JobType.pyCfgParams   = ['globalTag=94X_dataRun2_v6','nThreads='+str(config.JobType.numCores),
-                                            'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags]
+            config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Prompt_v1','nThreads='+str(config.JobType.numCores),
+                                            'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags,
+                                            'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=True']
             config.Data.inputDataset     = inDO[0]
-            config.Data.outputDatasetTag = '%s_%s' % (config.General.workArea, config.General.requestName)
+            #config.Data.outputDatasetTag = '%s_%s' % (config.General.workArea, config.General.requestName)
             # Submit.
             try:
                 print "Submitting for input dataset %s" % (inDO[0])

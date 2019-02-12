@@ -252,6 +252,7 @@ private:
   unsigned int subtrain_position, train_position, subtrain_number, train_number;
   unsigned int fBunchNum, fBX, fXangle;
   float fBeam1VC[BUNCHES], fBeam2VC[BUNCHES], fBeam1RF[BUNCHES], fBeam2RF[BUNCHES];
+  float beam1_VC, beam2_VC, beam1_RF, beam2_RF;
   const bool lhcInfoValid;
   
   // blinding

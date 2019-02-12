@@ -409,6 +409,12 @@ bool DisPho::GetLHCInfo(const edm::Event & iEvent, const edm::EventSetup & iSetu
     train_position = long_train_notzero[fBX];
     subtrain_number = subtrain_num[fBX];
     train_number = train_num[fBX];
+
+    // Store beam conditions for bx
+    beam1_RF = fBeam1RF[fBX];
+    beam2_RF = fBeam2RF[fBX];
+    beam1_VC = fBeam1VC[fBX];
+    beam2_VC = fBeam2VC[fBX];
     
   }
 
@@ -2403,10 +2409,10 @@ void DisPho::MakeEventTree()
   if ( lhcInfoValid ) {
     disphotree->Branch( "bunch_crossing", &fBX, "bunch_crossing/i" );
     disphotree->Branch( "num_bunch", &fBunchNum, "num_bunch/i");
-    disphotree->Branch( "beam1_VC", fBeam1VC, "beam1_VC[num_bunch]/F" ); 
-    disphotree->Branch( "beam2_VC", fBeam2VC, "beam2_VC[num_bunch]/F" ); 
-    disphotree->Branch( "beam1_RF", fBeam1RF, "beam1_RF[num_bunch]/F" ); 
-    disphotree->Branch( "beam2_RF", fBeam2RF, "beam2_RF[num_bunch]/F" ); 
+    disphotree->Branch( "beam1_VC", &beam1_VC, "beam1_VC/F" ); 
+    disphotree->Branch( "beam2_VC", &beam2_VC, "beam2_VC/F" ); 
+    disphotree->Branch( "beam1_RF", &beam1_RF, "beam1_RF/F" ); 
+    disphotree->Branch( "beam2_RF", &beam2_RF, "beam2_RF/F" ); 
     disphotree->Branch("subtrain_position", &subtrain_position, "subtrain_position/i" ); 
     disphotree->Branch("train_position", &train_position, "train_position/i" ); 
     disphotree->Branch("subtrain_number", &subtrain_number, "subtrain_number/i" ); 
@@ -2444,7 +2450,8 @@ void DisPho::MakeEventTree()
   disphotree->Branch("vtxX", &vtxX);
   disphotree->Branch("vtxY", &vtxY);
   disphotree->Branch("vtxZ", &vtxZ);
-  
+
+  /*  
   // MET info
   disphotree->Branch("t1pfMETpt", &t1pfMETpt);
   disphotree->Branch("t1pfMETphi", &t1pfMETphi);
@@ -2482,6 +2489,7 @@ void DisPho::MakeEventTree()
     disphotree->Branch("jetsmearUpSF", &jetsmearUpSF);
     disphotree->Branch("jetisGen", &jetisGen);
   }
+  */
 
   // Electron Info
   disphotree->Branch("nelLowL", &nelLowL);

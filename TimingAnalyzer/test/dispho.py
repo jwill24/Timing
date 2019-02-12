@@ -59,7 +59,7 @@ options.register('genjetdRmin',0.2,VarParsing.multiplicity.singleton,VarParsing.
 options.register('genjetpTfactor',3.0,VarParsing.multiplicity.singleton,VarParsing.varType.float,'genjet pT resolution factor for smearing');
 options.register('leptondRmin',0.3,VarParsing.multiplicity.singleton,VarParsing.varType.float,'lepton dR minimum cut for veto');
 
-## extra JER info
+## Extra JER info
 options.register('smearjetEmin',0.01,VarParsing.multiplicity.singleton,VarParsing.varType.float,'min jet E for smearing');
 
 ## trigger input
@@ -224,12 +224,16 @@ process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(
 		#'/store/data/Run2018A/EGamma/MINIAOD/17Sep2018-v2/110000/C82A2CFA-C92D-C648-A574-3ED3E09BDB07.root'
 		# Run2018B, GT: 102X_dataRun2_Sep2018Rereco_v1
 		#'/store/data/Run2018B/EGamma/MINIAOD/17Sep2018-v1/60000/FF5A89A5-453C-684D-813A-369B457AD498.root'
-		# Run2016E, GT: 102X_dataRun2_Prompt_v1
-		'/store/data/Run2018E/EGamma/MINIAOD/PromptReco-v1/000/325/520/00000/2F6163F4-934A-AD4D-B9FE-9B2EDBBE99FE.root'
+		# Run2018C, GT: 102X_dataRun2_Sep2018Rereco_v1 
+		#'/store/data/Run2018C/EGamma/MINIAOD/17Sep2018-v1/270000/8972BD30-85EF-7447-9E61-920DE246370E.root'
 		# Run2016D, GT:102X_dataRun2_Prompt_v1
-		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/712/00000/64812F26-EBA8-E811-AF9B-FA163E067929.root'
+		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/262/00000/180E59D4-F7A1-E811-90B8-FA163E30F0B0.root' #TEST
+		'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/712/00000/64812F26-EBA8-E811-AF9B-FA163E067929.root'
 		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/776/00000/62FBACDD-71AC-E811-95C7-02163E019FE5.root'
 		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/007/00000/6A6E9A39-C29C-E811-8820-FA163EA76F2E.root'
+		# Run2016E, GT: 102X_dataRun2_Prompt_v1
+		#'/store/data/Run2018E/EGamma/MINIAOD/PromptReco-v1/000/325/520/00000/2F6163F4-934A-AD4D-B9FE-9B2EDBBE99FE.root'
+		#'Inputfile.root'
 		))
 
 ## How many events to process
@@ -244,7 +248,7 @@ process.GlobalTag.globaltag = options.globalTag
 ## Setup the service to make a ROOT TTree
 process.TFileService = cms.Service("TFileService", 
 		                   fileName = cms.string(options.outputFileName))
-
+				   
 ## Decide which label to use for MET Flags
 if   options.isMC : triggerFlagsProcess = "PAT"
 else              : triggerFlagsProcess = "RECO"
