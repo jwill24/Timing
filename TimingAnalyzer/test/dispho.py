@@ -225,10 +225,10 @@ process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(
 		# Run2018B, GT: 102X_dataRun2_Sep2018Rereco_v1
 		#'/store/data/Run2018B/EGamma/MINIAOD/17Sep2018-v1/60000/FF5A89A5-453C-684D-813A-369B457AD498.root'
 		# Run2018C, GT: 102X_dataRun2_Sep2018Rereco_v1 
-		#'/store/data/Run2018C/EGamma/MINIAOD/17Sep2018-v1/270000/8972BD30-85EF-7447-9E61-920DE246370E.root'
+		'/store/data/Run2018C/EGamma/MINIAOD/17Sep2018-v1/270000/8972BD30-85EF-7447-9E61-920DE246370E.root'
 		# Run2016D, GT:102X_dataRun2_Prompt_v1
 		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/262/00000/180E59D4-F7A1-E811-90B8-FA163E30F0B0.root' #TEST
-		'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/712/00000/64812F26-EBA8-E811-AF9B-FA163E067929.root'
+		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/712/00000/64812F26-EBA8-E811-AF9B-FA163E067929.root'
 		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/776/00000/62FBACDD-71AC-E811-95C7-02163E019FE5.root'
 		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/007/00000/6A6E9A39-C29C-E811-8820-FA163EA76F2E.root'
 		# Run2016E, GT: 102X_dataRun2_Prompt_v1
@@ -280,28 +280,31 @@ process.unpackedTracksAndVertices = unpackedTracksAndVertices.clone()
 ## Apply IDs in pat::Photon
 from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 setupEgammaPostRecoSeq(process,
-                       runEnergyCorrections=False, #as energy corrections are not yet availible for 2018
+		       isMiniAOD=True,
+		       runVID=True,
+		       runEnergyCorrections=False, #as energy corrections are not yet availible for 2018
 		       era='2018-Prompt') 
 
-## Rerun one MET filter: https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#How_to_run_ecal_BadCalibReducedM
-#baddetEcallist = cms.vuint32(
-#    [872439604,872422825,872420274,872423218,
-#     872423215,872416066,872435036,872439336,
-#     872420273,872436907,872420147,872439731,
-#     872436657,872420397,872439732,872439339,
-#     872439603,872422436,872439861,872437051,
-#     872437052,872420649,872422436,872421950,
-#     872437185,872422564,872421566,872421695,
-#     872421955,872421567,872437184,872421951,
-#     872421694,872437056,872437057,872437313])
 
-#process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter("EcalBadCalibFilter",
-#    EcalRecHitSource = cms.InputTag("reducedEgamma:reducedEERecHits"),
-#    ecalMinEt        = cms.double(50.),
-#    baddetEcal       = baddetEcallist, 
-#    taggingMode      = cms.bool(True),
-#    debug            = cms.bool(False)
-#)
+## Rerun one MET filter: https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#How_to_run_ecal_BadCalibReducedM
+baddetEcallist = cms.vuint32(
+    [872439604,872422825,872420274,872423218,
+     872423215,872416066,872435036,872439336,
+     872420273,872436907,872420147,872439731,
+     872436657,872420397,872439732,872439339,
+     872439603,872422436,872439861,872437051,
+     872437052,872420649,872422436,872421950,
+     872437185,872422564,872421566,872421695,
+     872421955,872421567,872437184,872421951,
+     872421694,872437056,872437057,872437313])
+
+process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter("EcalBadCalibFilter",
+    EcalRecHitSource = cms.InputTag("reducedEgamma:reducedEERecHits"),
+    ecalMinEt        = cms.double(50.),
+    baddetEcal       = baddetEcallist, 
+    taggingMode      = cms.bool(True),
+    debug            = cms.bool(False)
+)
 
 ## Apply Scale/Smearing + GED and OOT VID to ootPhotons
 #from RecoEgamma.EgammaTools.OOTPhotonPostRecoTools import setupOOTPhotonPostRecoSeq
@@ -366,7 +369,7 @@ process.tree = cms.EDAnalyzer("DisPho",
    ## met filters
    inputFlags       = cms.string(options.inputFlags),
    triggerFlags     = cms.InputTag("TriggerResults", "", triggerFlagsProcess),
-   #ecalBadCalibFlag = cms.InputTag("ecalBadCalibReducedMINIAODFilter"),			      
+   ecalBadCalibFlag = cms.InputTag("ecalBadCalibReducedMINIAODFilter"),			      
    ## tracks
    tracks = cms.InputTag("unpackedTracksAndVertices"),
    ## vertices
@@ -407,8 +410,8 @@ process.tree = cms.EDAnalyzer("DisPho",
 )
 
 process.seq = cms.Sequence(
-   process.egammaPostRecoSeq
-)
+	process.egammaPostRecoSeq
+	)
 
 # Set up the path
 process.treePath = cms.Path(
@@ -416,9 +419,10 @@ process.treePath = cms.Path(
 	#process.patJetCorrFactorsUpdatedJEC +
 	#process.updatedPatJetsUpdatedJEC +
 	#process.fullPatMetSequenceModifiedMET +
-	#process.ecalBadCalibReducedMINIAODFilter +
+	process.ecalBadCalibReducedMINIAODFilter +
 	process.unpackedTracksAndVertices +
 	#process.ootPhotonPostRecoSeq +
+	#process.egammaPostRecoSeq+
 	process.tree
 )
 

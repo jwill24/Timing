@@ -41,8 +41,8 @@ DisPho::DisPho(const edm::ParameterSet & iConfig) :
   minHT(iConfig.existsAs<double>("minHT") ? iConfig.getParameter<double>("minHT") : 400.f),
   applyHT(iConfig.existsAs<bool>("applyHT") ? iConfig.getParameter<bool>("applyHT") : false),
   phgoodpTmin(iConfig.existsAs<double>("phgoodpTmin") ? iConfig.getParameter<double>("phgoodpTmin") : 70.f),
-  phgoodIDmin(iConfig.existsAs<std::string>("phgoodIDmin") ? iConfig.getParameter<std::string>("phgoodIDmin") : "loose"),
-  applyPhGood(iConfig.existsAs<bool>("applyPhGood") ? iConfig.getParameter<bool>("applyPhGood") : false),
+  phgoodIDmin(iConfig.existsAs<std::string>("phgoodIDmin") ? iConfig.getParameter<std::string>("phgoodIDmin") : "loose"), 
+  applyPhGood(iConfig.existsAs<bool>("applyPhGood") ? iConfig.getParameter<bool>("applyPhGood") : false), 
 
   // matching criteria
   dRmin(iConfig.existsAs<double>("dRmin") ? iConfig.getParameter<double>("dRmin") : 0.3),
@@ -67,7 +67,7 @@ DisPho::DisPho(const edm::ParameterSet & iConfig) :
   // MET flags
   inputFlags         (iConfig.existsAs<std::string>("inputFlags") ? iConfig.getParameter<std::string>("inputFlags") : ""),
   triggerFlagsTag    (iConfig.getParameter<edm::InputTag>("triggerFlags")),
-  //ecalBadCalibFlagTag(iConfig.getParameter<edm::InputTag>("ecalBadCalibFlag")),
+  ecalBadCalibFlagTag(iConfig.getParameter<edm::InputTag>("ecalBadCalibFlag")),
 
   // tracks
   tracksTag(iConfig.getParameter<edm::InputTag>("tracks")),
@@ -154,7 +154,7 @@ void DisPho::ConsumeTokens()
 
   // MET flags
   triggerFlagsToken     = consumes<edm::TriggerResults> (triggerFlagsTag);
-  //ecalBadCalibFlagToken = consumes<bool> (ecalBadCalibFlagTag);
+  ecalBadCalibFlagToken = consumes<bool> (ecalBadCalibFlagTag);
 
   // tracks 
   tracksToken = consumes<std::vector<reco::Track> > (tracksTag);
@@ -334,13 +334,11 @@ bool DisPho::GetLHCInfo(const edm::Event & iEvent, const edm::EventSetup & iSetu
     return false;
   }
   else{
-
-    //cout << "---- GETTING LHC INFO ----" << endl;
     
     const LHCInfo* info = lhcInfo.product();
     
     fXangle = info->crossingAngle();
-    
+
     // Beam 1 VC
     fBunchNum = 0;
     std::vector<float> ( info->beam1VC() );
@@ -372,7 +370,7 @@ bool DisPho::GetLHCInfo(const edm::Event & iEvent, const edm::EventSetup & iSetu
       fBeam2RF[fBunchNum] = *i;
       fBunchNum++;
     }
-    
+
     // Get train position
     for( unsigned int i = 0; i < info->beam1VC().size(); i++ ){
       if( info->beam1VC()[i] == 0.0 ) {
@@ -403,9 +401,10 @@ bool DisPho::GetLHCInfo(const edm::Event & iEvent, const edm::EventSetup & iSetu
       subtrain_num.push_back(count);
       train_num.push_back(longcount);
     }
-    
+
     // Store train positions for tree
     subtrain_position = train_notzero[fBX];
+    
     train_position = long_train_notzero[fBX];
     subtrain_number = subtrain_num[fBX];
     train_number = train_num[fBX];
@@ -435,8 +434,8 @@ bool DisPho::GetStandardObjects(const edm::Event & iEvent)
   //iEvent.getByToken(triggerFlagsToken,triggerFlagsH);
   //if (oot::BadHandle(triggerFlagsH,"triggerFlags")) return false;
 
-  //iEvent.getByToken(ecalBadCalibFlagToken,ecalBadCalibFlagH);
-  //if (oot::BadHandle(ecalBadCalibFlagH,"ecalBadCalibFlag")) return false;
+  iEvent.getByToken(ecalBadCalibFlagToken,ecalBadCalibFlagH);
+  if (oot::BadHandle(ecalBadCalibFlagH,"ecalBadCalibFlag")) return false;
 
   // TRACKS
   iEvent.getByToken(tracksToken,tracksH);
@@ -610,6 +609,8 @@ void DisPho::InitializeObjects(const edm::Event & iEvent)
 
 void DisPho::GetWeights()
 {
+
+
   /////////////////
   // gen weights //
   /////////////////
@@ -675,6 +676,7 @@ void DisPho::AlwaysFillHists()
 
 void DisPho::PrepObjects(const edm::Event & iEvent)
 {
+  
   /////////////////////
   // Object Prepping //
   /////////////////////
@@ -806,6 +808,7 @@ bool DisPho::ApplyPreSelectionGoodPhoton()
     
     isphgood = true; break;
   } // end loop over photons
+
   
   return !isphgood;
 }

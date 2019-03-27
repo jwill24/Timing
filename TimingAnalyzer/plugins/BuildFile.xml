@@ -21,6 +21,7 @@
   <use name="JetMETCorrections/Objects"/>
   <use name="CondFormats/JetMETObjects"/>
   <use name="SimDataFormats/PileupSummaryInfo"/>
+  <use name="RecoEgamma/PhotonIdentification"/>
   <use name="RecoEgamma/EgammaTools"/>
   <use name="JetMETCorrections/Modules"/>
 </library>

@@ -326,7 +326,10 @@ namespace oot
 	    }
 	  }
 	}
-	if (!isGoodID) continue;
+	if (!isGoodID) {
+	  std::cout << "this photon has a bad ID" << std::endl;
+	  continue;
+	}
       }
 
       // save it in the final vector!
@@ -554,6 +557,13 @@ namespace oot
 
   void GetGEDPhoVID(const pat::Photon & photon, std::vector<pat::Photon::IdPair> & idpairs)
   {
+
+    // This is where I think the error is coming from
+
+    //std::cout << "Test bool: " << !photon.isPhotonIDAvailable(Config::GEDPhotonTightVID) << std::endl;
+
+    if ( !photon.isPhotonIDAvailable(Config::GEDPhotonTightVID) ) return; // My fix
+
     idpairs[2].second = photon.photonID(Config::GEDPhotonTightVID);
     idpairs[1].second = photon.photonID(Config::GEDPhotonMediumVID);
     idpairs[0].second = photon.photonID(Config::GEDPhotonLooseVID);
@@ -622,6 +632,9 @@ namespace oot
 
   void GetOOTPhoVID(const pat::Photon & photon, std::vector<pat::Photon::IdPair> & idpairs)
   {
+
+    if ( !photon.isPhotonIDAvailable(Config::OOTPhotonTightVID) ) return; // My fix
+
     idpairs[4].second = photon.photonID(Config::OOTPhotonTightVID);
     idpairs[3].second = photon.photonID(Config::OOTPhotonLooseVID);
   }
