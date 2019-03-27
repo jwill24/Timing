@@ -15,6 +15,10 @@ git checkout 10_2_X
 
 scram b -j 10  
 
+----------------
+
+Use lhcInfoValid=True during cmsRun for eras containing LHCInfo
+
 
 
 
