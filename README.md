@@ -2,6 +2,7 @@
 
 Update to README: this code has been modified to work with CMSSW_10_2_X and LHCInfo  
 
+```
 cmsrel CMSSW_10_2_5  
 cd CMSSW_10_2_5/src  
 cmsenv  
@@ -14,6 +15,7 @@ cd Timing
 git checkout 10_2_X  
 
 scram b -j 10  
+```
 
 ----------------
 
