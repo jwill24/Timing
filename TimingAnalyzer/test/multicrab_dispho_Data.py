@@ -19,13 +19,13 @@ def getOptions():
 
     parser.add_option('-c', '--crabCmd',
                       dest = 'crabCmd',
-                      default = '',
+                      default = 'submit',
                       help = "crab command",
                       metavar = 'CMD')
 
     parser.add_option('-w', '--workArea',
                       dest = 'workArea',
-                      default = 'multicrab_dispho_SPH',
+                      default = 'myworkingArea',
                       help = "work area directory (only if CMD != 'submit')",
                       metavar = 'WAD')
 
@@ -58,13 +58,13 @@ def main():
     if options.crabCmd == 'submit':
 
         # External files needed by CRAB
-        inputDir     = '/afs/cern.ch/user/k/kmcdermo/public/input/'
+        inputDir     = '/home/t3-ku/jaking/ecaltiming/CMSSW_10_2_5/src/Timing/TimingAnalyzer/test/input/'
         inputPaths   = 'HLTpathsWExtras.txt'
         inputFilters = 'HLTfilters.txt'
         inputFlags   = 'METflags.txt'
         #inputJSON    = 'golden2017.json'
-        inputJSON    = '/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions18/13TeV/PromptReco/Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.txt'
-         
+        inputJSON    = 'Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.txt'
+
         #--------------------------------------------------------
         # This is the base config:
         #--------------------------------------------------------
@@ -82,14 +82,14 @@ def main():
 
         config.Data.inputDataset = None
         config.Data.lumiMask     = inputJSON
-        config.Data.splitting    = 'EventAwareLumiBased'
-        config.Data.unitsPerJob  = 200000
+#        config.Data.splitting    = 'EventAwareLumiBased'
+        config.Data.splitting    = 'Automatic'
+        #config.Data.unitsPerJob  = 200000
 
         config.Data.outputDatasetTag = 'EGamma_ntuple_v2'
         config.Data.publication      = False
-        #config.Site.storageSite      = 'T2_US_Nebraska'
-        config.Site.storageSite      = 'T2_CH_CERN'
-        config.Data.outLFNDirBase    = '/store/group/phys_pps/diphoton/juwillia'
+        config.Site.storageSite      = 'T2_US_Nebraska'
+        config.Data.outLFNDirBase    = '/store/user/jaking/ecalTiming/'
         #--------------------------------------------------------
 
         # Will submit one task for each of these input datasets.
@@ -106,8 +106,11 @@ def main():
             #['/DoubleEG/Run2017E-31Mar2018-v1/MINIAOD'],
             #['/DoubleEG/Run2017F-31Mar2018-v1/MINIAOD'],
 
-            ['/EGamma/Run2018D-PromptReco-v2/MINIAOD']
-
+            #['/EGamma/Run2018A-17Sep2018-v2/MINIAOD'],
+            #['/EGamma/Run2018B-26Sep2018-v1/MINIAOD'],
+            #['/EGamma/Run2018C-17Sep2018-v1/MINIAOD'],
+            #['/EGamma/Run2018D-PromptReco-v2/MINIAOD'],
+            ['/EGamma/Run2018E-PromptReco-v1/MINIAOD'],
             ]
  
         for inDO in inputDataAndOpts:
@@ -120,6 +123,11 @@ def main():
             config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Prompt_v1','nThreads='+str(config.JobType.numCores),
                                             'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags,
                                             'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=True']
+
+            #config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Sep2018Rereco_v1','nThreads='+str(config.JobType.numCores),
+            #                                'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags,
+            #                                'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=False']
+
             config.Data.inputDataset     = inDO[0]
             #config.Data.outputDatasetTag = '%s_%s' % (config.General.workArea, config.General.requestName)
             # Submit.
