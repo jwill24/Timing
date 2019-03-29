@@ -1,6 +1,6 @@
 # Displaced Photon Analysis Framework. 
 
-Update to README: this code has been modified to work with CMSSW_10_2_X and LHCInfo  
+Update: this code has been modified to work with CMSSW_10_2_X and LHCInfo  
 
 ```
 cmsrel CMSSW_10_2_5  
