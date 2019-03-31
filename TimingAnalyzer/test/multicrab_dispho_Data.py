@@ -120,10 +120,17 @@ def main():
 
             config.General.requestName   = primaryDataset+"_"+runEra+"_v7"
 
-            config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Prompt_v1','nThreads='+str(config.JobType.numCores),
+	    # for 2018D prompt
+            #config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Prompt_v1','nThreads='+str(config.JobType.numCores),
+            #                                'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags,
+            #                                'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=True']
+
+	    # for 2018E prompt
+            config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Prompt_v11','nThreads='+str(config.JobType.numCores),
                                             'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags,
                                             'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=True']
 
+	    # for 2018 ABC rereco
             #config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Sep2018Rereco_v1','nThreads='+str(config.JobType.numCores),
             #                                'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags,
             #                                'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=False']
