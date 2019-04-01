@@ -1,18 +1,10 @@
-# Auto generated configuration file
-# using: 
-# Revision: 1.19 
-# Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: 
-# 	jwk_reco_data -s RAW2DIGI,L1Reco,RECO,PAT --datatier RECO,MINIAOD --conditions 101X_dataRun2_Prompt_v11 --eventcontent RECO,MINIAOD --era Run2_2018 
-#		--data --runUnscheduled -n 100 --no_exec
-
 import os, re
 import FWCore.ParameterSet.Config as cms
-
+  
 ### CMSSW command line parameter parser
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('python')
-print('Loading Options')
+
 ## LHC Info
 options.register('lhcInfoValid',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to get lhc info');
 
@@ -36,7 +28,7 @@ options.register('nPhosmax',2,VarParsing.multiplicity.singleton,VarParsing.varTy
 
 ## photon storing options
 options.register('splitPho',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'store leading top two photons, OOT and GED');
-options.register('onlyGED',True,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'store only leading GED photons, at most four');
+options.register('onlyGED',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'store only leading GED photons, at most four');
 options.register('onlyOOT',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'store only leading OOT photons, at most four');
 
 ## lepton prep cuts
@@ -71,11 +63,11 @@ options.register('leptondRmin',0.3,VarParsing.multiplicity.singleton,VarParsing.
 options.register('smearjetEmin',0.01,VarParsing.multiplicity.singleton,VarParsing.varType.float,'min jet E for smearing');
 
 ## trigger input
-options.register('inputPaths','../input/HLTpathsWExtras.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'text file list of input signal paths');
-options.register('inputFilters','../input/HLTfilters.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'text file list of input signal filters');
+options.register('inputPaths','/afs/cern.ch/user/k/kmcdermo/public/input/HLTpathsWExtras.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'text file list of input signal paths');
+options.register('inputFilters','/afs/cern.ch/user/k/kmcdermo/public/input/HLTfilters.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'text file list of input signal filters');
 
 ## met filter input
-options.register('inputFlags','../input/METflags.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'text file list of input MET filter flags');
+options.register('inputFlags','/afs/cern.ch/user/k/kmcdermo/public/input/METflags.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'text file list of input MET filter flags');
 
 ## data or MC options
 options.register('isMC',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to indicate data or MC');
@@ -89,13 +81,10 @@ options.register('filterEff',1.0,VarParsing.multiplicity.singleton,VarParsing.va
 options.register('BR',1.0,VarParsing.multiplicity.singleton,VarParsing.varType.float,'branching ratio of MC');
 
 ## GT to be used
-#options.register('globalTag','102X_dataRun2_Prompt_v11',VarParsing.multiplicity.singleton,VarParsing.varType.string,'gloabl tag to be used');
-#options.register('globalTag','102X_dataRun2_Sep2018Rereco_v1',VarParsing.multiplicity.singleton,VarParsing.varType.string,'gloabl tag to be used');
-options.register('globalTag','101X_dataRun2_Prompt_v11',VarParsing.multiplicity.singleton,VarParsing.varType.string,'gloabl tag to be used');
+options.register('globalTag','94X_mc2017_realistic_v14',VarParsing.multiplicity.singleton,VarParsing.varType.string,'gloabl tag to be used');
 
 ## do a demo run over only 1k events
-#options.register('demoMode',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to run over only 1k events');
-options.register('demoMode',True,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to run over only 1k events');
+options.register('demoMode',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to run over only 1k events');
 
 ## processName
 options.register('processName','TREE',VarParsing.multiplicity.singleton,VarParsing.varType.string,'process name to be considered');
@@ -108,7 +97,6 @@ options.register('nThreads',8,VarParsing.multiplicity.singleton,VarParsing.varTy
 options.register('deleteEarly',True,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'delete temp products early if not needed');
 options.register('runUnscheduled',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'run unscheduled for products');
 
-print('Parsing command line arguments')
 ## parsing command line arguments
 options.parseArguments()
 
@@ -191,53 +179,23 @@ print "LHC Info       : ",options.lhcInfoValid
 
 print "     #####################"
 
-print("Defining Process")
 ## Define the CMSSW process
-from Configuration.StandardSequences.Eras import eras
+process = cms.Process(options.processName)
 
-process = cms.Process('RECO',eras.Run2_2018)
-
-# import of standard configurations
+## Load the standard set of configuration modules
+process.load("Configuration.Geometry.GeometryRecoDB_cff")
 process.load('Configuration.StandardSequences.Services_cff')
-process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
-process.load('FWCore.MessageService.MessageLogger_cfi')
-process.load('Configuration.EventContent.EventContent_cff')
-process.load('Configuration.StandardSequences.GeometryRecoDB_cff')
-process.load('Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cff')
-process.load('Configuration.StandardSequences.RawToDigi_Data_cff')
-process.load('Configuration.StandardSequences.L1Reco_cff')
-process.load('Configuration.StandardSequences.Reconstruction_Data_cff')
-process.load('PhysicsTools.PatAlgos.slimming.metFilterPaths_cff')
-process.load('Configuration.StandardSequences.PAT_cff')
-process.load('Configuration.StandardSequences.EndOfProcess_cff')
-process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-
+process.load('Configuration.StandardSequences.GeometryDB_cff')
+process.load('Configuration.StandardSequences.MagneticField_cff')
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_condDBv2_cff')
 process.load("Geometry.CaloEventSetup.CaloTowerConstituents_cfi")
 
-process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(10)
-#    input = cms.untracked.int32(-1)
-)
-
-# Input source
-#process.source = cms.Source("PoolSource",
-#    fileNames = cms.untracked.vstring('file:jwk_reco_data_DIGI2RAW.root'),
-#    secondaryFileNames = cms.untracked.vstring()
-#)
-process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring(#'file:jwk_reco_data_DIGI2RAW.root'),
-        #'/store/data/Run2018D/ZeroBias/RAW/v1/000/325/240/00000/FFA4CC2A-A63C-8440-ADC4-D7E2FF53BB4F.root'
-	'/store/data/Run2018A/EGamma/RAW/v1/000/315/973/00000/2E81C787-2D53-E811-BAFC-FA163E2CD5B1.root'
-        ),
-    secondaryFileNames = cms.untracked.vstring()
-)
-
-process.options = cms.untracked.PSet(
-
-)
+## Message Logger settings
+process.load("FWCore.MessageService.MessageLogger_cfi")
+process.MessageLogger.destinations = ['cout', 'cerr']
+process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 # LHC Info
-print('LHC Info reader')
 process.LHCInfoReader = cms.ESSource("PoolDBESSource",
 				     DBParameters = cms.PSet(
 		messageLevel = cms.untracked.int32(0),
@@ -253,126 +211,79 @@ process.LHCInfoReader = cms.ESSource("PoolDBESSource",
 
 process.lhcinfo_prefer = cms.ESPrefer("PoolDBESSource","LHCInfoReader")
 
-# Message Logger settings
-print('Message Logger settings')
-process.load("FWCore.MessageService.MessageLogger_cfi")
-process.MessageLogger.destinations = ['cout', 'cerr']
-process.MessageLogger.cerr.FwkReport.reportEvery = 10
 
-# Production Info
-process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('jwk_reco_data nevts:100'),
-    name = cms.untracked.string('Applications'),
-    version = cms.untracked.string('$Revision: 1.19 $')
-)
+## Define the input source
+process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring( 
+		# reminiaod data: 94X_dataRun2_v6
+		#'/store/user/kmcdermo/files/miniAOD/SPH_2017E_miniAODv2.root'
+		# reminiaod GJets, GT: 94X_mc2017_realistic_v14
+		#'/store/user/kmcdermo/files/miniAOD/GJets_600toInf_miniAODv2.root'
+		# miniaodv2 GMSB, GT: 94X_mc2017_realistic_v14
+		#'/store/user/kmcdermo/files/miniAOD/GMSB_L600TeV_Ctau400cm_miniAODv2.root'
+		# Run2018A, GT: 102X_dataRun2_Sep2018Rereco_v1
+		#'/store/data/Run2018A/EGamma/MINIAOD/17Sep2018-v2/110000/C82A2CFA-C92D-C648-A574-3ED3E09BDB07.root'
+		# Run2018B, GT: 102X_dataRun2_Sep2018Rereco_v1
+		#'/store/data/Run2018B/EGamma/MINIAOD/17Sep2018-v1/60000/FF5A89A5-453C-684D-813A-369B457AD498.root'
+		# Run2018C, GT: 102X_dataRun2_Sep2018Rereco_v1 
+		'/store/data/Run2018C/EGamma/MINIAOD/17Sep2018-v1/270000/8972BD30-85EF-7447-9E61-920DE246370E.root'
+		# Run2016D, GT:102X_dataRun2_Prompt_v1
+		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/262/00000/180E59D4-F7A1-E811-90B8-FA163E30F0B0.root' #TEST
+		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/712/00000/64812F26-EBA8-E811-AF9B-FA163E067929.root'
+		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/776/00000/62FBACDD-71AC-E811-95C7-02163E019FE5.root'
+		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/007/00000/6A6E9A39-C29C-E811-8820-FA163EA76F2E.root'
+		# Run2016E, GT: 102X_dataRun2_Prompt_v1
+		#'/store/data/Run2018E/EGamma/MINIAOD/PromptReco-v1/000/325/520/00000/2F6163F4-934A-AD4D-B9FE-9B2EDBBE99FE.root'
+		#'Inputfile.root'
+		))
 
-# Output definition
-print('Create RECO output file')
-process.RECOoutput = cms.OutputModule("PoolOutputModule",
-    dataset = cms.untracked.PSet(
-        dataTier = cms.untracked.string('RECO'),
-        filterName = cms.untracked.string('')
-    ),
-    fileName = cms.untracked.string('jwk_root_reco_data_RAW2DIGI_L1Reco_RECO_PAT.root'),
-    outputCommands = process.RECOEventContent.outputCommands,
-    splitLevel = cms.untracked.int32(0)
-)
+## How many events to process
+if   options.demoMode : process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
+else                  : process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents))
 
-process.MINIAODoutput = cms.OutputModule("PoolOutputModule",
-    compressionAlgorithm = cms.untracked.string('LZMA'),
-    compressionLevel = cms.untracked.int32(4),
-    dataset = cms.untracked.PSet(
-        dataTier = cms.untracked.string('MINIAOD'),
-        filterName = cms.untracked.string('')
-    ),
-    dropMetaData = cms.untracked.string('ALL'),
-    eventAutoFlushCompressedSize = cms.untracked.int32(-900),
-    fastCloning = cms.untracked.bool(False),
-    fileName = cms.untracked.string('jwk_root_reco_data_RAW2DIGI_L1Reco_RECO_PAT_inMINIAOD.root'),
-    outputCommands = process.MINIAODEventContent.outputCommands,
-    overrideBranchesSplitLevel = cms.untracked.VPSet(
-        cms.untracked.PSet(
-            branch = cms.untracked.string('patPackedCandidates_packedPFCandidates__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('recoGenParticles_prunedGenParticles__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('patTriggerObjectStandAlones_slimmedPatTrigger__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('patPackedGenParticles_packedGenParticles__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('patJets_slimmedJets__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('recoVertexs_offlineSlimmedPrimaryVertices__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('recoCaloClusters_reducedEgamma_reducedESClusters_*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('EcalRecHitsSorted_reducedEgamma_reducedEBRecHits_*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('EcalRecHitsSorted_reducedEgamma_reducedEERecHits_*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('recoGenJets_slimmedGenJets__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('patJets_slimmedJetsPuppi__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('EcalRecHitsSorted_reducedEgamma_reducedESRecHits_*'),
-            splitLevel = cms.untracked.int32(99)
-        )
-    ),
-    overrideInputFileSplitLevels = cms.untracked.bool(True),
-    splitLevel = cms.untracked.int32(0)
-)
+# Set the global tag depending on the sample type
+from Configuration.AlCa.GlobalTag import GlobalTag
+process.GlobalTag.globaltag = options.globalTag  
 
-# Additional output definition
-
-print('Create TTree output file')
 ## Create output file
 ## Setup the service to make a ROOT TTree
 process.TFileService = cms.Service("TFileService", 
 		                   fileName = cms.string(options.outputFileName))
-
-print('Decide which label to use for MET Flags')
+				   
 ## Decide which label to use for MET Flags
 if   options.isMC : triggerFlagsProcess = "PAT"
 else              : triggerFlagsProcess = "RECO"
-
-# Other statements
-from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '101X_dataRun2_Prompt_v11', '')
 
 ## generate track collection at miniAOD
 from PhysicsTools.PatAlgos.slimming.unpackedTracksAndVertices_cfi import unpackedTracksAndVertices
 process.unpackedTracksAndVertices = unpackedTracksAndVertices.clone()
 
-#print('Apply IDs in pat::Photon')
+## MET corrections for 2017 data: https://twiki.cern.ch/twiki/bin/view/CMS/MissingETUncertaintyPrescription#Instructions_for_9_4_X_X_9_for_2
+#from PhysicsTools.PatUtils.tools.runMETCorrectionsAndUncertainties import runMetCorAndUncFromMiniAOD
+#runMetCorAndUncFromMiniAOD (
+#        process,
+#        isData = not options.isMC,
+#        fixEE2017 = True,
+#	fixEE2017Params = {'userawPt':True, 'ptThreshold':50.0, 'minEtaThreshold':2.65, 'maxEtaThreshold':3.139},
+#        postfix = "ModifiedMET"
+#)
+
+## Apply JECs : https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookJetEnergyCorrections#CorrPatJets
+#from PhysicsTools.PatAlgos.tools.jetTools import updateJetCollection
+#updateJetCollection (
+#   process,
+#   jetSource = cms.InputTag('slimmedJets'),
+#   labelName = 'UpdatedJEC',
+#   jetCorrections = ('AK4PFchs', cms.vstring(['L1FastJet', 'L2Relative', 'L3Absolute', 'L2L3Residual']), 'None')
+#)
+
+
 ## Apply IDs in pat::Photon
-#from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
-#setupEgammaPostRecoSeq(process,
-#                       isMiniAOD=True,
-#                       runVID=True,
-#                       runEnergyCorrections=False, #as energy corrections are not yet availible for 2018
-#                       era='2018-Prompt')
+from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
+setupEgammaPostRecoSeq(process,
+		       isMiniAOD=True,
+		       runVID=True,
+		       runEnergyCorrections=False, #as energy corrections are not yet availible for 2018
+		       era='2018-Prompt') 
 
 
 ## Rerun one MET filter: https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#How_to_run_ecal_BadCalibReducedM
@@ -390,15 +301,19 @@ baddetEcallist = cms.vuint32(
 process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter("EcalBadCalibFilter",
     EcalRecHitSource = cms.InputTag("reducedEgamma:reducedEERecHits"),
     ecalMinEt        = cms.double(50.),
-    baddetEcal       = baddetEcallist,
+    baddetEcal       = baddetEcallist, 
     taggingMode      = cms.bool(True),
     debug            = cms.bool(False)
 )
 
+## Apply Scale/Smearing + GED and OOT VID to ootPhotons
+#from RecoEgamma.EgammaTools.OOTPhotonPostRecoTools import setupOOTPhotonPostRecoSeq
+#setupOOTPhotonPostRecoSeq(process)
 
-print('Make the tree')
+
+
 # Make the tree 
-process.dispho = cms.EDAnalyzer("DisPho",
+process.tree = cms.EDAnalyzer("DisPho",
    ## LHC Info
    lhcInfoValid = cms.bool(options.lhcInfoValid),
    ## blinding 
@@ -427,7 +342,7 @@ process.dispho = cms.EDAnalyzer("DisPho",
    muhighpTmin = cms.double(options.muhighpTmin),
    ## recHit storing options
    storeRecHits = cms.bool(options.storeRecHits),
-   ## pr-selection
+   ## pre-selection
    applyTrigger = cms.bool(options.applyTrigger),
    minHT        = cms.double(options.minHT),
    applyHT      = cms.bool(options.applyHT),
@@ -494,104 +409,33 @@ process.dispho = cms.EDAnalyzer("DisPho",
    genJets      = cms.InputTag("slimmedGenJets"),
 )
 
-#process.seq = cms.Sequence(
-#   process.egammaPostRecoSeq
-#)
+process.seq = cms.Sequence(
+	process.egammaPostRecoSeq
+	)
 
-print('Set up the path')
 # Set up the path
-
-process.ecalBadCalibReducedMINIAODFilter_step = cms.Path(process.ecalBadCalibReducedMINIAODFilter)
-
-process.tree_step = cms.EndPath(
+process.treePath = cms.Path(
 	#process.seq +
-	##process.patJetCorrFactorsUpdatedJEC +
-	##process.updatedPatJetsUpdatedJEC +
-	##process.fullPatMetSequenceModifiedMET +
-	#process.ecalBadCalibReducedMINIAODFilter +
+	#process.patJetCorrFactorsUpdatedJEC +
+	#process.updatedPatJetsUpdatedJEC +
+	#process.fullPatMetSequenceModifiedMET +
+	process.ecalBadCalibReducedMINIAODFilter +
 	process.unpackedTracksAndVertices +
-        process.dispho
+	#process.ootPhotonPostRecoSeq +
+	#process.egammaPostRecoSeq+
+	process.tree
 )
 
-# Path and EndPath definitions
-process.raw2digi_step = cms.Path(process.RawToDigi)
-process.L1Reco_step = cms.Path(process.L1Reco)
-process.reconstruction_step = cms.Path(process.reconstruction)
-process.Flag_trackingFailureFilter = cms.Path(process.goodVertices+process.trackingFailureFilter)
-process.Flag_goodVertices = cms.Path(process.primaryVertexFilter)
-process.Flag_CSCTightHaloFilter = cms.Path(process.CSCTightHaloFilter)
-process.Flag_trkPOGFilters = cms.Path(process.trkPOGFilters)
-process.Flag_HcalStripHaloFilter = cms.Path(process.HcalStripHaloFilter)
-process.Flag_trkPOG_logErrorTooManyClusters = cms.Path(~process.logErrorTooManyClusters)
-process.Flag_EcalDeadCellTriggerPrimitiveFilter = cms.Path(process.EcalDeadCellTriggerPrimitiveFilter)
-process.Flag_ecalLaserCorrFilter = cms.Path(process.ecalLaserCorrFilter)
-process.Flag_globalSuperTightHalo2016Filter = cms.Path(process.globalSuperTightHalo2016Filter)
-process.Flag_eeBadScFilter = cms.Path(process.eeBadScFilter)
-process.Flag_METFilters = cms.Path(process.metFilters)
-process.Flag_chargedHadronTrackResolutionFilter = cms.Path(process.chargedHadronTrackResolutionFilter)
-process.Flag_globalTightHalo2016Filter = cms.Path(process.globalTightHalo2016Filter)
-process.Flag_CSCTightHaloTrkMuUnvetoFilter = cms.Path(process.CSCTightHaloTrkMuUnvetoFilter)
-process.Flag_HBHENoiseIsoFilter = cms.Path(process.HBHENoiseFilterResultProducer+process.HBHENoiseIsoFilter)
-process.Flag_BadChargedCandidateSummer16Filter = cms.Path(process.BadChargedCandidateSummer16Filter)
-process.Flag_hcalLaserEventFilter = cms.Path(process.hcalLaserEventFilter)
-process.Flag_BadPFMuonFilter = cms.Path(process.BadPFMuonFilter)
-process.Flag_ecalBadCalibFilter = cms.Path(process.ecalBadCalibFilter)
-process.Flag_HBHENoiseFilter = cms.Path(process.HBHENoiseFilterResultProducer+process.HBHENoiseFilter)
-process.Flag_trkPOG_toomanystripclus53X = cms.Path(~process.toomanystripclus53X)
-process.Flag_EcalDeadCellBoundaryEnergyFilter = cms.Path(process.EcalDeadCellBoundaryEnergyFilter)
-process.Flag_BadChargedCandidateFilter = cms.Path(process.BadChargedCandidateFilter)
-process.Flag_trkPOG_manystripclus53X = cms.Path(~process.manystripclus53X)
-process.Flag_BadPFMuonSummer16Filter = cms.Path(process.BadPFMuonSummer16Filter)
-process.Flag_muonBadTrackFilter = cms.Path(process.muonBadTrackFilter)
-process.Flag_CSCTightHalo2015Filter = cms.Path(process.CSCTightHalo2015Filter)
-process.endjob_step = cms.EndPath(process.endOfProcess)
-process.RECOoutput_step = cms.EndPath(process.RECOoutput)
-process.MINIAODoutput_step = cms.EndPath(process.MINIAODoutput)
-
-process.tree_from_raw_path = cms.Path(
-	process.RawToDigi + 
-	process.L1Reco + 
-	process.reconstruction +
-        #process.seq +
-        ##process.patJetCorrFactorsUpdatedJEC +
-        ##process.updatedPatJetsUpdatedJEC +
-        ##process.fullPatMetSequenceModifiedMET +
-        process.ecalBadCalibReducedMINIAODFilter +
-        process.unpackedTracksAndVertices +
-        process.dispho
+### Extra bits from other configs
+process.options = cms.untracked.PSet(
+	numberOfThreads=cms.untracked.uint32(options.nThreads),
+	numberOfStreams=cms.untracked.uint32(options.nThreads/2)
 )
-# Schedule definition
-#process.schedule = cms.Schedule(process.tree_from_raw_path)
-#process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.endjob_step,process.RECOoutput_step)
-process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.ecalBadCalibReducedMINIAODFilter_step,process.endjob_step,process.tree_step)
-#process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.pretree_step,process.endjob_step,process.RECOoutput_step,process.tree_step)
-#process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.tree_step,process.endjob_step)
-#,process.RECOoutput_step,process.MINIAODoutput_step,process.tree_step)
-process.schedule.associate(process.patTask)
-from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
-associatePatAlgosToolsTask(process)
 
-#do not add changes to your config after this point (unless you know what you are doing)
 from FWCore.ParameterSet.Utilities import convertToUnscheduled
-process=convertToUnscheduled(process)
+if options.runUnscheduled : 
+	process = convertToUnscheduled(process)
 
-# customisation of the process.
-
-# Automatic addition of the customisation function from PhysicsTools.PatAlgos.slimming.miniAOD_tools
-from PhysicsTools.PatAlgos.slimming.miniAOD_tools import miniAOD_customizeAllData 
-
-#call to customisation function miniAOD_customizeAllData imported from PhysicsTools.PatAlgos.slimming.miniAOD_tools
-process = miniAOD_customizeAllData(process)
-
-# End of customisation functions
-
-# Customisation from command line
-
-#Have logErrorHarvester wait for the same EDProducers to finish as those providing data for the OutputModule
-from FWCore.Modules.logErrorHarvester_cff import customiseLogErrorHarvesterUsingOutputCommands
-process = customiseLogErrorHarvesterUsingOutputCommands(process)
-
-# Add early deletion of temporary data products to reduce peak memory need
 from Configuration.StandardSequences.earlyDeleteSettings_cff import customiseEarlyDelete
-process = customiseEarlyDelete(process)
-# End adding early deletion
+if options.deleteEarly:
+	process = customiseEarlyDelete(process)
