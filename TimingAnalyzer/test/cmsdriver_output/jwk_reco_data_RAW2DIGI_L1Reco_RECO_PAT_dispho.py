@@ -215,8 +215,8 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load("Geometry.CaloEventSetup.CaloTowerConstituents_cfi")
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(10)
-#    input = cms.untracked.int32(-1)
+ #   input = cms.untracked.int32(10)
+    input = cms.untracked.int32(-1)
 )
 
 # Input source
@@ -257,7 +257,7 @@ process.lhcinfo_prefer = cms.ESPrefer("PoolDBESSource","LHCInfoReader")
 print('Message Logger settings')
 process.load("FWCore.MessageService.MessageLogger_cfi")
 process.MessageLogger.destinations = ['cout', 'cerr']
-process.MessageLogger.cerr.FwkReport.reportEvery = 10
+process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
