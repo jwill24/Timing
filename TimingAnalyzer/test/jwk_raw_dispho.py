@@ -71,11 +71,11 @@ options.register('leptondRmin',0.3,VarParsing.multiplicity.singleton,VarParsing.
 options.register('smearjetEmin',0.01,VarParsing.multiplicity.singleton,VarParsing.varType.float,'min jet E for smearing');
 
 ## trigger input
-options.register('inputPaths','../input/HLTpathsWExtras.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'text file list of input signal paths');
-options.register('inputFilters','../input/HLTfilters.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'text file list of input signal filters');
+options.register('inputPaths','input/HLTpathsWExtras.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'text file list of input signal paths');
+options.register('inputFilters','input/HLTfilters.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'text file list of input signal filters');
 
 ## met filter input
-options.register('inputFlags','../input/METflags.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'text file list of input MET filter flags');
+options.register('inputFlags','input/METflags.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'text file list of input MET filter flags');
 
 ## data or MC options
 options.register('isMC',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to indicate data or MC');
@@ -212,18 +212,18 @@ process.load('Configuration.StandardSequences.PAT_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
-process.load("EventFilter.EcalRawToDigi.EcalUnpackerMapping_cfi")
-process.load("EventFilter.EcalRawToDigi.EcalUnpackerData_cfi")
-
-
 process.load("Geometry.CaloEventSetup.CaloTowerConstituents_cfi")
 
-# Only run 100 events
 process.maxEvents = cms.untracked.PSet(
  #   input = cms.untracked.int32(10)
     input = cms.untracked.int32(-1)
 )
 
+# Input source
+#process.source = cms.Source("PoolSource",
+#    fileNames = cms.untracked.vstring('file:jwk_reco_data_DIGI2RAW.root'),
+#    secondaryFileNames = cms.untracked.vstring()
+#)
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(#'file:jwk_reco_data_DIGI2RAW.root'),
         #'/store/data/Run2018D/ZeroBias/RAW/v1/000/325/240/00000/FFA4CC2A-A63C-8440-ADC4-D7E2FF53BB4F.root'
@@ -231,7 +231,9 @@ process.source = cms.Source("PoolSource",
         ),
     secondaryFileNames = cms.untracked.vstring()
 )
+
 process.options = cms.untracked.PSet(
+
 )
 
 # LHC Info
@@ -250,30 +252,6 @@ process.LHCInfoReader = cms.ESSource("PoolDBESSource",
 				     )
 
 process.lhcinfo_prefer = cms.ESPrefer("PoolDBESSource","LHCInfoReader")
-
-
-# Get ECAL Uncalibrated recHits
-
-# get uncalibrechits with weights method
-#import RecoLocalCalo.EcalRecProducers.ecalWeightUncalibRecHit_cfi
-#process.ecalUncalibHitWeights = RecoLocalCalo.EcalRecProducers.ecalWeightUncalibRecHit_cfi.ecalWeightUncalibRecHit.clone()
-#process.ecalUncalibHitWeights.EBdigiCollection = 'ecalEBunpacker:ebDigis'
-#process.ecalUncalibHitWeights.EEdigiCollection = 'ecalEBunpacker:eeDigis'
-
-# get uncalibrechits with ratio method
-#print('Getting uncalib rechits')
-#import RecoLocalCalo.EcalRecProducers.ecalRatioUncalibRecHit_cfi
-#process.ecalUncalibHitRatio = RecoLocalCalo.EcalRecProducers.ecalRatioUncalibRecHit_cfi.ecalRatioUncalibRecHit.clone()
-#process.ecalUncalibHitRatio.EBdigiCollection = 'ecalEBunpacker:ebDigis'
-#process.ecalUncalibHitRatio.EEdigiCollection = 'ecalEBunpacker:eeDigis'
-
-# get rechits from the weights, ratio, etc.
-#process.load("CalibCalorimetry.EcalLaserCorrection.ecalLaserCorrectionService_cfi")
-#process.load("RecoLocalCalo.EcalRecProducers.ecalRecHit_cfi")
-#process.ecalRecHit.EBuncalibRecHitCollection = 'ecalUncalibHit:EcalUncalibRecHitsEB'
-#process.ecalRecHit.EEuncalibRecHitCollection = 'ecalUncalibHit:EcalUncalibRecHitsEE'
-
-process.content = cms.EDAnalyzer("EventContentAnalyzer")
 
 # Message Logger settings
 print('Message Logger settings')
@@ -299,8 +277,6 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
     outputCommands = process.RECOEventContent.outputCommands,
     splitLevel = cms.untracked.int32(0)
 )
-process.RECOoutput.outputCommands.append('keep *_ecalUncalibHit*_*_*')
-
 
 process.MINIAODoutput = cms.OutputModule("PoolOutputModule",
     compressionAlgorithm = cms.untracked.string('LZMA'),
@@ -367,7 +343,6 @@ process.MINIAODoutput = cms.OutputModule("PoolOutputModule",
     overrideInputFileSplitLevels = cms.untracked.bool(True),
     splitLevel = cms.untracked.int32(0)
 )
-process.MINIAODoutput.outputCommands.append('keep *_ecalUncalibHit*_*_*')
 
 # Additional output definition
 
@@ -390,11 +365,8 @@ process.GlobalTag = GlobalTag(process.GlobalTag, '101X_dataRun2_Prompt_v11', '')
 from PhysicsTools.PatAlgos.slimming.unpackedTracksAndVertices_cfi import unpackedTracksAndVertices
 process.unpackedTracksAndVertices = unpackedTracksAndVertices.clone()
 
-## Apply IDs in pat::Photon
-<<<<<<< HEAD
 #print('Apply IDs in pat::Photon')
-=======
->>>>>>> 0419f166684b200bf4d8ac1032293ad487e1f9d9
+## Apply IDs in pat::Photon
 #from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
 #setupEgammaPostRecoSeq(process,
 #                       isMiniAOD=True,
@@ -505,14 +477,6 @@ process.dispho = cms.EDAnalyzer("DisPho",
    ## ecal recHits
    recHitsEB = cms.InputTag("reducedEgamma", "reducedEBRecHits"),
    recHitsEE = cms.InputTag("reducedEgamma", "reducedEERecHits"),
-   ## ecal uncalib recHits
-   #uncalibratedRecHitsEB = cms.InputTag("ecalUncalibHitRatio","EcalUncalibRecHitsEB"),
-   #uncalibratedRecHitsEE = cms.InputTag("ecalUncalibHitRatio","EcalUncalibRecHitsEE"),
-   #uncalibratedRecHitsEB = cms.InputTag("ecalWeightUncalibRecHit","EcalUncalibRecHitsEB"),
-   #uncalibratedRecHitsEE = cms.InputTag("ecalWeightUncalibRecHit","EcalUncalibRecHitsEE"),
-   uncalibratedRecHitsEB = cms.InputTag("ecalMultiFitUncalibRecHit","EcalUncalibRecHitsEB"),
-   uncalibratedRecHitsEE = cms.InputTag("ecalMultiFitUncalibRecHit","EcalUncalibRecHitsEE"),
-
    ## gen info
    isGMSB       = cms.bool(options.isGMSB),
    isHVDS       = cms.bool(options.isHVDS),
@@ -530,21 +494,6 @@ process.dispho = cms.EDAnalyzer("DisPho",
    genJets      = cms.InputTag("slimmedGenJets"),
 )
 
-<<<<<<< HEAD
-#process.egammaSeq = cms.Sequence(
-#   process.egammaPostRecoSeq
-#)
-
-#process.ecalTestRecoLocal = cms.Sequence(process.ecalEBunpacker
-#					 *process.ecalUncalibHitWeights
-#					 *process.ecalUncalibHitRatio
-#)
-
-print('Set up the path')
-# Set up the path
-process.tree_step = cms.EndPath(
-	#process.egammaSeq +
-=======
 #process.seq = cms.Sequence(
 #   process.egammaPostRecoSeq
 #)
@@ -556,7 +505,6 @@ process.ecalBadCalibReducedMINIAODFilter_step = cms.Path(process.ecalBadCalibRed
 
 process.tree_step = cms.EndPath(
 	#process.seq +
->>>>>>> 0419f166684b200bf4d8ac1032293ad487e1f9d9
 	##process.patJetCorrFactorsUpdatedJEC +
 	##process.updatedPatJetsUpdatedJEC +
 	##process.fullPatMetSequenceModifiedMET +
@@ -566,10 +514,6 @@ process.tree_step = cms.EndPath(
 )
 
 # Path and EndPath definitions
-process.ecalBadCalibReducedMINIAODFilter_step = cms.Path(process.ecalBadCalibReducedMINIAODFilter)
-#process.ecalTestRecoLocal_step = cms.Path(process.ecalTestRecoLocal)
-#process.content_step = cms.Path(process.content)
-
 process.raw2digi_step = cms.Path(process.RawToDigi)
 process.L1Reco_step = cms.Path(process.L1Reco)
 process.reconstruction_step = cms.Path(process.reconstruction)
@@ -604,19 +548,6 @@ process.endjob_step = cms.EndPath(process.endOfProcess)
 process.RECOoutput_step = cms.EndPath(process.RECOoutput)
 process.MINIAODoutput_step = cms.EndPath(process.MINIAODoutput)
 
-<<<<<<< HEAD
-
-process.schedule = cms.Schedule(#process.content_step,
-				process.raw2digi_step,
-				#process.ecalTestRecoLocal_step,
-				process.L1Reco_step,
-				process.reconstruction_step,
-				process.ecalBadCalibReducedMINIAODFilter_step,
-				process.endjob_step,
-				process.tree_step)
-
-
-=======
 process.tree_from_raw_path = cms.Path(
 	process.RawToDigi + 
 	process.L1Reco + 
@@ -635,7 +566,6 @@ process.tree_from_raw_path = cms.Path(
 process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.ecalBadCalibReducedMINIAODFilter_step,process.endjob_step,process.tree_step)
 #process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.pretree_step,process.endjob_step,process.RECOoutput_step,process.tree_step)
 #process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.tree_step,process.endjob_step)
->>>>>>> 0419f166684b200bf4d8ac1032293ad487e1f9d9
 #,process.RECOoutput_step,process.MINIAODoutput_step,process.tree_step)
 process.schedule.associate(process.patTask)
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
