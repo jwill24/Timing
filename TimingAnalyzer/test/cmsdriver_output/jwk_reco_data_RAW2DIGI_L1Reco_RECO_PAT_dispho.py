@@ -212,18 +212,18 @@ process.load('Configuration.StandardSequences.PAT_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
+process.load("EventFilter.EcalRawToDigi.EcalUnpackerMapping_cfi")
+process.load("EventFilter.EcalRawToDigi.EcalUnpackerData_cfi")
+
+
 process.load("Geometry.CaloEventSetup.CaloTowerConstituents_cfi")
 
+# Only run 100 events
 process.maxEvents = cms.untracked.PSet(
     input = cms.untracked.int32(100)
 #    input = cms.untracked.int32(-1)
 )
 
-# Input source
-#process.source = cms.Source("PoolSource",
-#    fileNames = cms.untracked.vstring('file:jwk_reco_data_DIGI2RAW.root'),
-#    secondaryFileNames = cms.untracked.vstring()
-#)
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(#'file:jwk_reco_data_DIGI2RAW.root'),
         #'/store/data/Run2018D/ZeroBias/RAW/v1/000/325/240/00000/FFA4CC2A-A63C-8440-ADC4-D7E2FF53BB4F.root'
@@ -231,9 +231,7 @@ process.source = cms.Source("PoolSource",
         ),
     secondaryFileNames = cms.untracked.vstring()
 )
-
 process.options = cms.untracked.PSet(
-
 )
 
 # LHC Info
@@ -252,6 +250,30 @@ process.LHCInfoReader = cms.ESSource("PoolDBESSource",
 				     )
 
 process.lhcinfo_prefer = cms.ESPrefer("PoolDBESSource","LHCInfoReader")
+
+
+# Get ECAL Uncalibrated recHits
+
+# get uncalibrechits with weights method
+#import RecoLocalCalo.EcalRecProducers.ecalWeightUncalibRecHit_cfi
+#process.ecalUncalibHitWeights = RecoLocalCalo.EcalRecProducers.ecalWeightUncalibRecHit_cfi.ecalWeightUncalibRecHit.clone()
+#process.ecalUncalibHitWeights.EBdigiCollection = 'ecalEBunpacker:ebDigis'
+#process.ecalUncalibHitWeights.EEdigiCollection = 'ecalEBunpacker:eeDigis'
+
+# get uncalibrechits with ratio method
+#print('Getting uncalib rechits')
+#import RecoLocalCalo.EcalRecProducers.ecalRatioUncalibRecHit_cfi
+#process.ecalUncalibHitRatio = RecoLocalCalo.EcalRecProducers.ecalRatioUncalibRecHit_cfi.ecalRatioUncalibRecHit.clone()
+#process.ecalUncalibHitRatio.EBdigiCollection = 'ecalEBunpacker:ebDigis'
+#process.ecalUncalibHitRatio.EEdigiCollection = 'ecalEBunpacker:eeDigis'
+
+# get rechits from the weights, ratio, etc.
+#process.load("CalibCalorimetry.EcalLaserCorrection.ecalLaserCorrectionService_cfi")
+#process.load("RecoLocalCalo.EcalRecProducers.ecalRecHit_cfi")
+#process.ecalRecHit.EBuncalibRecHitCollection = 'ecalUncalibHit:EcalUncalibRecHitsEB'
+#process.ecalRecHit.EEuncalibRecHitCollection = 'ecalUncalibHit:EcalUncalibRecHitsEE'
+
+process.content = cms.EDAnalyzer("EventContentAnalyzer")
 
 # Message Logger settings
 print('Message Logger settings')
@@ -277,6 +299,8 @@ process.RECOoutput = cms.OutputModule("PoolOutputModule",
     outputCommands = process.RECOEventContent.outputCommands,
     splitLevel = cms.untracked.int32(0)
 )
+process.RECOoutput.outputCommands.append('keep *_ecalUncalibHit*_*_*')
+
 
 process.MINIAODoutput = cms.OutputModule("PoolOutputModule",
     compressionAlgorithm = cms.untracked.string('LZMA'),
@@ -343,6 +367,7 @@ process.MINIAODoutput = cms.OutputModule("PoolOutputModule",
     overrideInputFileSplitLevels = cms.untracked.bool(True),
     splitLevel = cms.untracked.int32(0)
 )
+process.MINIAODoutput.outputCommands.append('keep *_ecalUncalibHit*_*_*')
 
 # Additional output definition
 
@@ -365,14 +390,14 @@ process.GlobalTag = GlobalTag(process.GlobalTag, '101X_dataRun2_Prompt_v11', '')
 from PhysicsTools.PatAlgos.slimming.unpackedTracksAndVertices_cfi import unpackedTracksAndVertices
 process.unpackedTracksAndVertices = unpackedTracksAndVertices.clone()
 
-#print('Apply IDs in pat::Photon')
 ## Apply IDs in pat::Photon
-from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
-setupEgammaPostRecoSeq(process,
-                       isMiniAOD=False,
-                       runVID=True,
-                       runEnergyCorrections=False, #as energy corrections are not yet availible for 2018
-                       era='2018-Prompt')
+#print('Apply IDs in pat::Photon')
+#from RecoEgamma.EgammaTools.EgammaPostRecoTools import setupEgammaPostRecoSeq
+#setupEgammaPostRecoSeq(process,
+#                       isMiniAOD=True,
+#                       runVID=True,
+#                       runEnergyCorrections=False, #as energy corrections are not yet availible for 2018
+#                       era='2018-Prompt')
 
 
 ## Rerun one MET filter: https://twiki.cern.ch/twiki/bin/viewauth/CMS/MissingETOptionalFiltersRun2#How_to_run_ecal_BadCalibReducedM
@@ -477,6 +502,14 @@ process.dispho = cms.EDAnalyzer("DisPho",
    ## ecal recHits
    recHitsEB = cms.InputTag("reducedEgamma", "reducedEBRecHits"),
    recHitsEE = cms.InputTag("reducedEgamma", "reducedEERecHits"),
+   ## ecal uncalib recHits
+   #uncalibratedRecHitsEB = cms.InputTag("ecalUncalibHitRatio","EcalUncalibRecHitsEB"),
+   #uncalibratedRecHitsEE = cms.InputTag("ecalUncalibHitRatio","EcalUncalibRecHitsEE"),
+   #uncalibratedRecHitsEB = cms.InputTag("ecalWeightUncalibRecHit","EcalUncalibRecHitsEB"),
+   #uncalibratedRecHitsEE = cms.InputTag("ecalWeightUncalibRecHit","EcalUncalibRecHitsEE"),
+   uncalibratedRecHitsEB = cms.InputTag("ecalMultiFitUncalibRecHit","EcalUncalibRecHitsEB"),
+   uncalibratedRecHitsEE = cms.InputTag("ecalMultiFitUncalibRecHit","EcalUncalibRecHitsEE"),
+
    ## gen info
    isGMSB       = cms.bool(options.isGMSB),
    isHVDS       = cms.bool(options.isHVDS),
@@ -494,23 +527,32 @@ process.dispho = cms.EDAnalyzer("DisPho",
    genJets      = cms.InputTag("slimmedGenJets"),
 )
 
-process.seq = cms.Sequence(
-   process.egammaPostRecoSeq
-)
+#process.egammaSeq = cms.Sequence(
+#   process.egammaPostRecoSeq
+#)
+
+#process.ecalTestRecoLocal = cms.Sequence(process.ecalEBunpacker
+#					 *process.ecalUncalibHitWeights
+#					 *process.ecalUncalibHitRatio
+#)
 
 print('Set up the path')
 # Set up the path
-process.tree_step = cms.Path(
-	process.seq +
+process.tree_step = cms.EndPath(
+	#process.egammaSeq +
 	##process.patJetCorrFactorsUpdatedJEC +
 	##process.updatedPatJetsUpdatedJEC +
 	##process.fullPatMetSequenceModifiedMET +
-	process.ecalBadCalibReducedMINIAODFilter +
+	#process.ecalBadCalibReducedMINIAODFilter +
 	process.unpackedTracksAndVertices +
         process.dispho
 )
 
 # Path and EndPath definitions
+process.ecalBadCalibReducedMINIAODFilter_step = cms.Path(process.ecalBadCalibReducedMINIAODFilter)
+#process.ecalTestRecoLocal_step = cms.Path(process.ecalTestRecoLocal)
+#process.content_step = cms.Path(process.content)
+
 process.raw2digi_step = cms.Path(process.RawToDigi)
 process.L1Reco_step = cms.Path(process.L1Reco)
 process.reconstruction_step = cms.Path(process.reconstruction)
@@ -545,10 +587,17 @@ process.endjob_step = cms.EndPath(process.endOfProcess)
 process.RECOoutput_step = cms.EndPath(process.RECOoutput)
 process.MINIAODoutput_step = cms.EndPath(process.MINIAODoutput)
 
-# Schedule definition
-#process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.endjob_step,process.RECOoutput_step)
-#process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.pretree_step,process.endjob_step,process.RECOoutput_step,process.tree_step)
-process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.tree_step,process.endjob_step)
+
+process.schedule = cms.Schedule(#process.content_step,
+				process.raw2digi_step,
+				#process.ecalTestRecoLocal_step,
+				process.L1Reco_step,
+				process.reconstruction_step,
+				process.ecalBadCalibReducedMINIAODFilter_step,
+				process.endjob_step,
+				process.tree_step)
+
+
 #,process.RECOoutput_step,process.MINIAODoutput_step,process.tree_step)
 process.schedule.associate(process.patTask)
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask

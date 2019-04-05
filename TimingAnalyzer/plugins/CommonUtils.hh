@@ -208,6 +208,9 @@ namespace oot
   void PrepRecHits(const EcalRecHitCollection * recHitsEB, 
 		   const EcalRecHitCollection * recHitsEE,
 		   uiiumap & recHitMap, const float rhEmin = 0.f);
+  void PrepURecHits(const EcalUncalibratedRecHitCollection * recHitsEB, 
+		    const EcalUncalibratedRecHitCollection * recHitsEE,
+		    uiiumap & uncalibratedRecHitMap);
 
   //////////////////////////////////
   // Photon (+MET) Prep Functions //

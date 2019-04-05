@@ -42,6 +42,7 @@
 // Ecal RecHits
 #include "DataFormats/EcalRecHit/interface/EcalRecHit.h"
 #include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
+#include "DataFormats/EcalRecHit/interface/EcalUncalibratedRecHit.h"
 
 // Supercluster info
 #include "DataFormats/EgammaReco/interface/SuperCluster.h"
@@ -223,6 +224,7 @@ public:
   void InitializeRecHitBranches();
   void SetRecHitBranches();
   void SetRecHitBranches(const EcalRecHitCollection * recHits, const CaloSubdetectorGeometry * geometry, const float adcToGeV);
+  void SetURecHitBranches(const EcalUncalibratedRecHitCollection * recHits, const CaloSubdetectorGeometry * geometry);
 
   void InitializePhoBranches();
   void SetPhoBranches();
@@ -397,8 +399,21 @@ private:
   edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > recHitsEEH;
   const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * recHitsEE;
 
+  // EB Uncalibrated RecHits
+  const edm::InputTag uncalibratedRecHitsEBTag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEBToken;
+  edm::Handle<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEBH;
+  const edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > * uncalibratedRecHitsEB;
+
+  // EE Uncalibrated RecHits
+  const edm::InputTag uncalibratedRecHitsEETag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEEToken;
+  edm::Handle<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEEH;
+  const edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > * uncalibratedRecHitsEE;
+
   // Output rechit map
   uiiumap recHitMap;
+  uiiumap uncalibratedRecHitMap;
 
   // gedPhotons
   const edm::InputTag gedPhotonsTag;
@@ -492,7 +507,7 @@ private:
   ///////////////////////////
 
   float wgt;
-  int nJets, nRecHits, nPhotons;
+  int nJets, nRecHits, nURecHits, nPhotons;
 
   ////////////////////
   // Output Members //
@@ -593,6 +608,12 @@ private:
   std::vector<float> rhadcToGeV;
   std::vector<float> rhped12, rhped6, rhped1;
   std::vector<float> rhpedrms12, rhpedrms6, rhpedrms1;
+
+  // Uncalibrated RecHits
+  int nurechits;
+  std::vector<unsigned int> uRhId;
+  std::vector<float> amplitude, amplitudeError, pedestal, jitter, chi2, outOfTimeAmplitude, jitterError;
+  std::vector<bool> isSaturated, isJitterValid, isJitterErrorValid;
 
   // photon info
   int nphotons;

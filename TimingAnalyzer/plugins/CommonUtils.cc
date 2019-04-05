@@ -181,6 +181,27 @@ namespace oot
       }
     }
   }
+
+  void PrepURecHits(const EcalUncalibratedRecHitCollection * recHitsEB, 
+		    const EcalUncalibratedRecHitCollection * recHitsEE,
+		    uiiumap & uncalibratedRecHitMap)
+  {
+    auto i = 0;
+    for (const auto & recHit : *recHitsEB)
+      {
+	if (recHit.amplitude() > 0.)
+	  {
+	    uncalibratedRecHitMap[recHit.id().rawId()] = i++;
+	  }
+      }
+    for (const auto & recHit : *recHitsEE)
+      {
+	if (recHit.amplitude() > 0.)
+	  {
+	    uncalibratedRecHitMap[recHit.id().rawId()] = i++;
+	  }
+      }
+  }
     
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   //                                             Photon Cross-Cleaning and MET Corrections                                                          //
