@@ -477,6 +477,19 @@ process.dispho = cms.EDAnalyzer("DisPho",
    ## ecal recHits
    recHitsEB = cms.InputTag("reducedEgamma", "reducedEBRecHits"),
    recHitsEE = cms.InputTag("reducedEgamma", "reducedEERecHits"),
+   ## ecal uncalib recHits
+   #uncalibratedRecHitsEB = cms.InputTag("ecalUncalibHitRatio","EcalUncalibRecHitsEB"),
+   #uncalibratedRecHitsEE = cms.InputTag("ecalUncalibHitRatio","EcalUncalibRecHitsEE"),
+   #uncalibratedRecHitsEB = cms.InputTag("ecalWeightUncalibRecHit","EcalUncalibRecHitsEB"),
+   #uncalibratedRecHitsEE = cms.InputTag("ecalWeightUncalibRecHit","EcalUncalibRecHitsEE"),
+   uncalibratedRecHitsEB = cms.InputTag("ecalMultiFitUncalibRecHit","EcalUncalibRecHitsEB"),
+   uncalibratedRecHitsEE = cms.InputTag("ecalMultiFitUncalibRecHit","EcalUncalibRecHitsEE"),
+   ## digis
+   EBdigiCollection = cms.InputTag("ecalDigis","ebDigis"),
+   EEdigiCollection = cms.InputTag("ecalDigis","eeDigis"),
+   #ecalDigisEB = cms.InputTag("selectDigi","selectedEcalEBDigiCollection"),
+   #ecalDigisEE = cms.InputTag("selectDigi","selectedEcalEEDigiCollection"),
+
    ## gen info
    isGMSB       = cms.bool(options.isGMSB),
    isHVDS       = cms.bool(options.isHVDS),
@@ -549,8 +562,17 @@ process.endjob_step = cms.EndPath(process.endOfProcess)
 #process.MINIAODoutput_step = cms.EndPath(process.MINIAODoutput)
 
 # Schedule definition
-process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.ecalBadCalibReducedMINIAODFilter_step,process.endjob_step,process.tree_step)
+process.schedule = cms.Schedule(
+		process.raw2digi_step,
+		process.L1Reco_step,
+		process.reconstruction_step,
+		process.ecalBadCalibReducedMINIAODFilter_step,
+		process.endjob_step,
+		process.tree_step
+)
+
 #process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.pretree_step,process.endjob_step,process.RECOoutput_step,process.tree_step)
+
 process.schedule.associate(process.patTask)
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 associatePatAlgosToolsTask(process)
