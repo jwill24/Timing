@@ -261,88 +261,88 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('jwk_reco_data nevts:100'),
+    annotation = cms.untracked.string('jwk_reco_data nevts:all'),
     name = cms.untracked.string('Applications'),
     version = cms.untracked.string('$Revision: 1.19 $')
 )
 
 # Output definition
-print('Create RECO output file')
-process.RECOoutput = cms.OutputModule("PoolOutputModule",
-    dataset = cms.untracked.PSet(
-        dataTier = cms.untracked.string('RECO'),
-        filterName = cms.untracked.string('')
-    ),
-    fileName = cms.untracked.string('jwk_root_reco_data_RAW2DIGI_L1Reco_RECO_PAT.root'),
-    outputCommands = process.RECOEventContent.outputCommands,
-    splitLevel = cms.untracked.int32(0)
-)
-
-process.MINIAODoutput = cms.OutputModule("PoolOutputModule",
-    compressionAlgorithm = cms.untracked.string('LZMA'),
-    compressionLevel = cms.untracked.int32(4),
-    dataset = cms.untracked.PSet(
-        dataTier = cms.untracked.string('MINIAOD'),
-        filterName = cms.untracked.string('')
-    ),
-    dropMetaData = cms.untracked.string('ALL'),
-    eventAutoFlushCompressedSize = cms.untracked.int32(-900),
-    fastCloning = cms.untracked.bool(False),
-    fileName = cms.untracked.string('jwk_root_reco_data_RAW2DIGI_L1Reco_RECO_PAT_inMINIAOD.root'),
-    outputCommands = process.MINIAODEventContent.outputCommands,
-    overrideBranchesSplitLevel = cms.untracked.VPSet(
-        cms.untracked.PSet(
-            branch = cms.untracked.string('patPackedCandidates_packedPFCandidates__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('recoGenParticles_prunedGenParticles__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('patTriggerObjectStandAlones_slimmedPatTrigger__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('patPackedGenParticles_packedGenParticles__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('patJets_slimmedJets__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('recoVertexs_offlineSlimmedPrimaryVertices__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('recoCaloClusters_reducedEgamma_reducedESClusters_*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('EcalRecHitsSorted_reducedEgamma_reducedEBRecHits_*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('EcalRecHitsSorted_reducedEgamma_reducedEERecHits_*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('recoGenJets_slimmedGenJets__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('patJets_slimmedJetsPuppi__*'),
-            splitLevel = cms.untracked.int32(99)
-        ), 
-        cms.untracked.PSet(
-            branch = cms.untracked.string('EcalRecHitsSorted_reducedEgamma_reducedESRecHits_*'),
-            splitLevel = cms.untracked.int32(99)
-        )
-    ),
-    overrideInputFileSplitLevels = cms.untracked.bool(True),
-    splitLevel = cms.untracked.int32(0)
-)
+#print('Create RECO output file')
+#process.RECOoutput = cms.OutputModule("PoolOutputModule",
+#    dataset = cms.untracked.PSet(
+#        dataTier = cms.untracked.string('RECO'),
+#        filterName = cms.untracked.string('')
+#    ),
+#    fileName = cms.untracked.string('jwk_root_reco_data_RAW2DIGI_L1Reco_RECO_PAT.root'),
+#    outputCommands = process.RECOEventContent.outputCommands,
+#    splitLevel = cms.untracked.int32(0)
+#)
+#
+#process.MINIAODoutput = cms.OutputModule("PoolOutputModule",
+#    compressionAlgorithm = cms.untracked.string('LZMA'),
+#    compressionLevel = cms.untracked.int32(4),
+#    dataset = cms.untracked.PSet(
+#        dataTier = cms.untracked.string('MINIAOD'),
+#        filterName = cms.untracked.string('')
+#    ),
+#    dropMetaData = cms.untracked.string('ALL'),
+#    eventAutoFlushCompressedSize = cms.untracked.int32(-900),
+#    fastCloning = cms.untracked.bool(False),
+#    fileName = cms.untracked.string('jwk_root_reco_data_RAW2DIGI_L1Reco_RECO_PAT_inMINIAOD.root'),
+#    outputCommands = process.MINIAODEventContent.outputCommands,
+#    overrideBranchesSplitLevel = cms.untracked.VPSet(
+#        cms.untracked.PSet(
+#            branch = cms.untracked.string('patPackedCandidates_packedPFCandidates__*'),
+#            splitLevel = cms.untracked.int32(99)
+#        ), 
+#        cms.untracked.PSet(
+#            branch = cms.untracked.string('recoGenParticles_prunedGenParticles__*'),
+#            splitLevel = cms.untracked.int32(99)
+#        ), 
+#        cms.untracked.PSet(
+#            branch = cms.untracked.string('patTriggerObjectStandAlones_slimmedPatTrigger__*'),
+#            splitLevel = cms.untracked.int32(99)
+#        ), 
+#        cms.untracked.PSet(
+#            branch = cms.untracked.string('patPackedGenParticles_packedGenParticles__*'),
+#            splitLevel = cms.untracked.int32(99)
+#        ), 
+#        cms.untracked.PSet(
+#            branch = cms.untracked.string('patJets_slimmedJets__*'),
+#            splitLevel = cms.untracked.int32(99)
+#        ), 
+#        cms.untracked.PSet(
+#            branch = cms.untracked.string('recoVertexs_offlineSlimmedPrimaryVertices__*'),
+#            splitLevel = cms.untracked.int32(99)
+#        ), 
+#        cms.untracked.PSet(
+#            branch = cms.untracked.string('recoCaloClusters_reducedEgamma_reducedESClusters_*'),
+#            splitLevel = cms.untracked.int32(99)
+#        ), 
+#        cms.untracked.PSet(
+#            branch = cms.untracked.string('EcalRecHitsSorted_reducedEgamma_reducedEBRecHits_*'),
+#            splitLevel = cms.untracked.int32(99)
+#        ), 
+#        cms.untracked.PSet(
+#            branch = cms.untracked.string('EcalRecHitsSorted_reducedEgamma_reducedEERecHits_*'),
+#            splitLevel = cms.untracked.int32(99)
+#        ), 
+#        cms.untracked.PSet(
+#            branch = cms.untracked.string('recoGenJets_slimmedGenJets__*'),
+#            splitLevel = cms.untracked.int32(99)
+#        ), 
+#        cms.untracked.PSet(
+#            branch = cms.untracked.string('patJets_slimmedJetsPuppi__*'),
+#            splitLevel = cms.untracked.int32(99)
+#        ), 
+#        cms.untracked.PSet(
+#            branch = cms.untracked.string('EcalRecHitsSorted_reducedEgamma_reducedESRecHits_*'),
+#            splitLevel = cms.untracked.int32(99)
+#        )
+#    ),
+#    overrideInputFileSplitLevels = cms.untracked.bool(True),
+#    splitLevel = cms.untracked.int32(0)
+#)
 
 # Additional output definition
 
@@ -396,7 +396,7 @@ process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter("EcalBadCalibFilter",
 )
 
 
-print('Make the tree')
+print('Setting up DisPho')
 # Make the tree 
 process.dispho = cms.EDAnalyzer("DisPho",
    ## LHC Info
@@ -498,8 +498,8 @@ process.dispho = cms.EDAnalyzer("DisPho",
 #   process.egammaPostRecoSeq
 #)
 
-print('Set up the path')
-# Set up the path
+print('Set up Path and EndPath Definitions')
+# DisPho Path and EndPath definitions
 
 process.ecalBadCalibReducedMINIAODFilter_step = cms.Path(process.ecalBadCalibReducedMINIAODFilter)
 
@@ -513,7 +513,7 @@ process.tree_step = cms.EndPath(
         process.dispho
 )
 
-# Path and EndPath definitions
+# RAW Path and EndPath definitions
 process.raw2digi_step = cms.Path(process.RawToDigi)
 process.L1Reco_step = cms.Path(process.L1Reco)
 process.reconstruction_step = cms.Path(process.reconstruction)
@@ -545,28 +545,12 @@ process.Flag_BadPFMuonSummer16Filter = cms.Path(process.BadPFMuonSummer16Filter)
 process.Flag_muonBadTrackFilter = cms.Path(process.muonBadTrackFilter)
 process.Flag_CSCTightHalo2015Filter = cms.Path(process.CSCTightHalo2015Filter)
 process.endjob_step = cms.EndPath(process.endOfProcess)
-process.RECOoutput_step = cms.EndPath(process.RECOoutput)
-process.MINIAODoutput_step = cms.EndPath(process.MINIAODoutput)
+#process.RECOoutput_step = cms.EndPath(process.RECOoutput)
+#process.MINIAODoutput_step = cms.EndPath(process.MINIAODoutput)
 
-process.tree_from_raw_path = cms.Path(
-	process.RawToDigi + 
-	process.L1Reco + 
-	process.reconstruction +
-        #process.seq +
-        ##process.patJetCorrFactorsUpdatedJEC +
-        ##process.updatedPatJetsUpdatedJEC +
-        ##process.fullPatMetSequenceModifiedMET +
-        process.ecalBadCalibReducedMINIAODFilter +
-        process.unpackedTracksAndVertices +
-        process.dispho
-)
 # Schedule definition
-#process.schedule = cms.Schedule(process.tree_from_raw_path)
-#process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.endjob_step,process.RECOoutput_step)
 process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.ecalBadCalibReducedMINIAODFilter_step,process.endjob_step,process.tree_step)
 #process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.pretree_step,process.endjob_step,process.RECOoutput_step,process.tree_step)
-#process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.tree_step,process.endjob_step)
-#,process.RECOoutput_step,process.MINIAODoutput_step,process.tree_step)
 process.schedule.associate(process.patTask)
 from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 associatePatAlgosToolsTask(process)
@@ -595,3 +579,11 @@ process = customiseLogErrorHarvesterUsingOutputCommands(process)
 from Configuration.StandardSequences.earlyDeleteSettings_cff import customiseEarlyDelete
 process = customiseEarlyDelete(process)
 # End adding early deletion
+
+### Extra bits from other configs
+process.options = cms.untracked.PSet(
+        numberOfThreads=cms.untracked.uint32(options.nThreads),
+        numberOfStreams=cms.untracked.uint32(options.nThreads/2)
+)
+
+

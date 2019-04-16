@@ -76,17 +76,20 @@ def main():
 
         config.JobType.pluginName  = 'Analysis'
         config.JobType.psetName    = 'jwk_raw_dispho.py'
-        #config.JobType.numCores    = 8
+        config.JobType.numCores    = 8
+        config.JobType.maxMemoryMB = 4000
+        config.JobType.maxJobRuntimeMin = 1600
         config.JobType.pyCfgParams = None
         config.JobType.inputFiles  = [ inputDir+inputPaths , inputDir+inputFilters , inputDir+inputFlags ]
 
         config.Data.inputDataset = None
         config.Data.lumiMask     = inputJSON
-#        config.Data.splitting    = 'EventAwareLumiBased'
-        config.Data.splitting    = 'Automatic'
-        #config.Data.unitsPerJob  = 200000
+        #config.Data.splitting    = 'LumiBased'
+        config.Data.splitting    = 'EventAwareLumiBased'
+        #config.Data.splitting    = 'Automatic'
+        config.Data.unitsPerJob  =  25000
 
-        config.Data.outputDatasetTag = 'RAW_EGamma_ntuple'
+        #config.Data.outputDatasetTag = 'RAW_EGamma_ntuple'
         config.Data.publication      = False
         config.Site.storageSite      = 'T2_US_Nebraska'
         config.Data.outLFNDirBase    = '/store/user/jaking/ecalTiming/'
@@ -94,21 +97,23 @@ def main():
 
         # Will submit one task for each of these input datasets.
         inputDataAndOpts = [
-            ['/EGamma/Run2018D-v1/RAW'],
-            ]
+            #['/EGamma/Run2018D-v1/RAW'],
+            ['/EGamma/Run2018B-v1/RAW'],
+	    ]
  
         for inDO in inputDataAndOpts:
             # inDO[0] is of the form /A/B/C. Since A+B is unique for each inDS, use this in the CRAB request name.
             primaryDataset = inDO[0].split('/')[1]
             runEra         = inDO[0].split('/')[2]
+	    dataset	   = inDO[0].split('/')[3]
 
-            config.General.requestName   = "EGammaRaw_Run2018D"
-						#primaryDataset+"_"+runEra+"_v7"
+            config.General.requestName   = primaryDataset+"_"+runEra+"_t2_"+dataset
+            config.Data.outputDatasetTag = primaryDataset+"_"+runEra+"_"+dataset
 
             # for 2018 EGamma RAW
-            config.JobType.pyCfgParams   = ['globalTag=101X_dataRun2_Prompt_v11'#,'nThreads='+str(config.JobType.numCores),
+            config.JobType.pyCfgParams   = ['globalTag=101X_dataRun2_Prompt_v11','nThreads='+str(config.JobType.numCores),
                                             'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags,
-                                            'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=True']
+                                            'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=False']
 
 	    # for 2018D prompt
             #config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Prompt_v1','nThreads='+str(config.JobType.numCores),
