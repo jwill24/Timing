@@ -44,6 +44,13 @@
 #include "DataFormats/EcalRecHit/interface/EcalRecHitCollections.h"
 #include "DataFormats/EcalRecHit/interface/EcalUncalibratedRecHit.h"
 
+// Ecal Digis
+#include "DataFormats/EcalDigi/interface/EcalDigiCollections.h"
+#include "DataFormats/EcalDigi/interface/EcalTriggerPrimitiveDigi.h"
+#include "DataFormats/EcalDigi/interface/EcalTimeDigi.h"
+#include "DataFormats/EcalDigi/interface/EBSrFlag.h"
+#include "DataFormats/EcalDigi/interface/EESrFlag.h"
+
 // Supercluster info
 #include "DataFormats/EgammaReco/interface/SuperCluster.h"
 #include "DataFormats/CaloRecHit/interface/CaloCluster.h"
@@ -225,6 +232,10 @@ public:
   void SetRecHitBranches();
   void SetRecHitBranches(const EcalRecHitCollection * recHits, const CaloSubdetectorGeometry * geometry, const float adcToGeV);
   void SetURecHitBranches(const EcalUncalibratedRecHitCollection * recHits, const CaloSubdetectorGeometry * geometry);
+
+  void InitializeDigiBranches();
+  void SetDigiBranches();
+  void SetDigiBranches(const EBDigiCollection * ebDigis, const EEDigiCollection * eeDigis, const CaloSubdetectorGeometry * geometry);
 
   void InitializePhoBranches();
   void SetPhoBranches();
@@ -411,9 +422,52 @@ private:
   edm::Handle<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEEH;
   const edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > * uncalibratedRecHitsEE;
 
+  /*
+  // EB Digis
+  const edm::InputTag ecalDigisEBTag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > > ecalDigisEBToken;
+  edm::Handle<edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > > ecalDigisEBH;
+  const edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > * ecalDigisEB;
+
+  // EE Digis
+  const edm::InputTag ecalDigisEETag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > > ecalDigisEEToken;
+  edm::Handle<edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > > ecalDigisEEH;
+  const edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > * ecalDigisEE;
+  
+
+  // EB Digis
+  const edm::InputTag ecalDigisEBTag;
+  edm::EDGetTokenT<edm::SortedCollection<EBSrFlag,edm::StrictWeakOrdering<EBSrFlag> > > ecalDigisEBToken;
+  edm::Handle<edm::SortedCollection<EBSrFlag,edm::StrictWeakOrdering<EBSrFlag> > > ecalDigisEBH;
+  const edm::SortedCollection<EBSrFlag,edm::StrictWeakOrdering<EBSrFlag> > * ecalDigisEB;
+
+  // EE Digis
+  const edm::InputTag ecalDigisEETag;
+  edm::EDGetTokenT<edm::SortedCollection<EESrFlag,edm::StrictWeakOrdering<EESrFlag> > > ecalDigisEEToken;
+  edm::Handle<edm::SortedCollection<EESrFlag,edm::StrictWeakOrdering<EESrFlag> > > ecalDigisEEH;
+  const edm::SortedCollection<EESrFlag,edm::StrictWeakOrdering<EESrFlag> > * ecalDigisEE;
+  */
+
+  
+  // EB Digis test
+  const edm::InputTag ecalDigisEBTag;
+  edm::EDGetTokenT<EBDigiCollection> ebDigiCollectionToken_;
+  edm::Handle<EBDigiCollection> pEBDigis;
+  const EBDigiCollection * EBdigiCollection;
+
+  // EE Digis test
+  const edm::InputTag ecalDigisEETag;
+  edm::EDGetTokenT<EEDigiCollection> eeDigiCollectionToken_;
+  edm::Handle<EEDigiCollection> pEEDigis;
+  const EEDigiCollection * EEdigiCollection;
+
   // Output rechit map
   uiiumap recHitMap;
   uiiumap uncalibratedRecHitMap;
+
+  // Output digi map
+  uiiumap digiMap;
 
   // gedPhotons
   const edm::InputTag gedPhotonsTag;
@@ -507,7 +561,7 @@ private:
   ///////////////////////////
 
   float wgt;
-  int nJets, nRecHits, nURecHits, nPhotons;
+  int nJets, nRecHits, nURecHits, nDigis, nPhotons;
 
   ////////////////////
   // Output Members //
@@ -614,6 +668,11 @@ private:
   std::vector<unsigned int> uRhId;
   std::vector<float> amplitude, amplitudeError, pedestal, jitter, chi2, outOfTimeAmplitude, jitterError;
   std::vector<bool> isSaturated, isJitterValid, isJitterErrorValid;
+
+  // Digis
+  int ndigis;
+  std::vector<unsigned int> digiID;
+  std::vector<float> digiData;
 
   // photon info
   int nphotons;

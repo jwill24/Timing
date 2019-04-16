@@ -24,6 +24,11 @@
 #include "DataFormats/EcalDetId/interface/EEDetId.h"
 #include "DataFormats/EcalDetId/interface/EcalSubdetector.h"
 #include "DataFormats/Math/interface/deltaR.h"
+#include "DataFormats/EcalDigi/interface/EcalDigiCollections.h"
+#include "DataFormats/EcalDigi/interface/EcalTriggerPrimitiveDigi.h"
+#include "DataFormats/EcalDigi/interface/EcalTimeDigi.h"
+#include "DataFormats/EcalDigi/interface/EBSrFlag.h"
+#include "DataFormats/EcalDigi/interface/EESrFlag.h"
 
 // basic C++ types
 #include <string>
@@ -211,6 +216,9 @@ namespace oot
   void PrepURecHits(const EcalUncalibratedRecHitCollection * recHitsEB, 
 		    const EcalUncalibratedRecHitCollection * recHitsEE,
 		    uiiumap & uncalibratedRecHitMap);
+  void PrepDigis(const EBDigiCollection * ebDigis,
+		 const EEDigiCollection * eeDigis,
+		 uiiumap & digiMap);
 
   //////////////////////////////////
   // Photon (+MET) Prep Functions //

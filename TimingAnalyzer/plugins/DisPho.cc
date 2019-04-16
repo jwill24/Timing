@@ -99,6 +99,10 @@ DisPho::DisPho(const edm::ParameterSet & iConfig) :
   uncalibratedRecHitsEBTag(iConfig.getParameter<edm::InputTag>("uncalibratedRecHitsEB")),
   uncalibratedRecHitsEETag(iConfig.getParameter<edm::InputTag>("uncalibratedRecHitsEE")),
 
+  // digis
+  ecalDigisEBTag(iConfig.getParameter<edm::InputTag>("EBdigiCollection")),
+  ecalDigisEETag(iConfig.getParameter<edm::InputTag>("EEdigiCollection")),
+
   // gedphotons
   gedPhotonsTag(iConfig.getParameter<edm::InputTag>("gedPhotons")),
 
@@ -188,6 +192,12 @@ void DisPho::ConsumeTokens()
   uncalibratedRecHitsEBToken = consumes<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > (uncalibratedRecHitsEBTag);
   uncalibratedRecHitsEEToken = consumes<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > (uncalibratedRecHitsEETag);
   
+  // digis
+  //ecalDigisEBToken = consumes<edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > > (ecalDigisEBTag);
+  //ecalDigisEEToken = consumes<edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > > (ecalDigisEETag);
+  ebDigiCollectionToken_ = consumes<EBDigiCollection> (ecalDigisEBTag);
+  eeDigiCollectionToken_ = consumes<EEDigiCollection> (ecalDigisEETag);
+
   // photons
   gedPhotonsToken = consumes<std::vector<pat::Photon> > (gedPhotonsTag);
   ootPhotonsToken = consumes<std::vector<pat::Photon> > (ootPhotonsTag);
@@ -209,8 +219,6 @@ DisPho::~DisPho() {}
 void DisPho::analyze(const edm::Event & iEvent, const edm::EventSetup & iSetup)
 {
 
-
-  cout << ">>>>>>>>>>>>Begin Analyze" << endl;
 
   /////////////////
   // Get Objects //
@@ -483,16 +491,19 @@ bool DisPho::GetStandardObjects(const edm::Event & iEvent)
   iEvent.getByToken(recHitsEEToken,recHitsEEH);
   if (oot::BadHandle(recHitsEEH,"recHitsEE")) return false;
 
-
-  cout << ">>>Get Uncalib RecHits" << endl;
-
-
   // ECAL UNCALIBRATED RECHITS
   iEvent.getByToken(uncalibratedRecHitsEBToken,uncalibratedRecHitsEBH);
   if (oot::BadHandle(uncalibratedRecHitsEBH,"uncalibratedRecHitsEB")) return false;
 
   iEvent.getByToken(uncalibratedRecHitsEEToken,uncalibratedRecHitsEEH);
   if (oot::BadHandle(uncalibratedRecHitsEEH,"uncalibratedRecHitsEE")) return false;
+
+  // DIGIS
+  iEvent.getByToken(ebDigiCollectionToken_,pEBDigis);
+  if (oot::BadHandle(pEBDigis,"EBdigiCollection")) return false;
+
+  iEvent.getByToken(eeDigiCollectionToken_,pEEDigis);
+  if (oot::BadHandle(pEEDigis,"EEdigiCollection")) return false;
 
   // PHOTONS
   iEvent.getByToken(gedPhotonsToken,gedPhotonsH);
@@ -610,6 +621,13 @@ void DisPho::InitializeObjects(const edm::Event & iEvent)
   // OUTPUT UNCALIBRATED RECHIT MAP
   uncalibratedRecHitMap.clear();
 
+  // INPUT ECAL DIGIS
+  EBdigiCollection = pEBDigis.product();
+  EEdigiCollection = pEEDigis.product();
+
+  // OUTPUT ECAL DIGIS
+  digiMap.clear();
+
   // OUTPUT PHOTONS
   photons.clear();
   photons.reserve(gedPhotonsH->size()+ootPhotonsH->size());
@@ -725,6 +743,7 @@ void DisPho::PrepObjects(const edm::Event & iEvent)
 
   oot::PrepRecHits(recHitsEB,recHitsEE,recHitMap,rhEmin);
   oot::PrepURecHits(uncalibratedRecHitsEB,uncalibratedRecHitsEE,uncalibratedRecHitMap);
+  oot::PrepDigis(EBdigiCollection,EEdigiCollection,digiMap);
 
   ///////////////////
   // Extra Pruning //
@@ -755,6 +774,7 @@ void DisPho::PrepObjects(const edm::Event & iEvent)
   //nJets    = std::min(int(jets.size()),Config::nJets);
   nRecHits = recHitMap.size();
   nURecHits = uncalibratedRecHitMap.size();
+  nDigis = digiMap.size();
   nPhotons = std::min(int(photons.size()),Config::nPhotons);
 }
 
@@ -936,6 +956,9 @@ void DisPho::FillTreeFromObjects(const edm::Event & iEvent)
 
   DisPho::InitializeRecHitBranches();
   DisPho::SetRecHitBranches();
+
+  DisPho::InitializeDigiBranches();
+  DisPho::SetDigiBranches();
 
   //////////////////
   // Reco Photons //
@@ -1756,6 +1779,21 @@ void DisPho::InitializeRecHitBranches()
 
   }  
 
+void DisPho::InitializeDigiBranches()
+{
+  digiID.clear();
+  digiData.clear();
+
+  digiID.resize(nDigis);
+  digiData.resize(nDigis);
+
+  for (auto i = 0; i < nRecHits; i++)
+    {
+      digiID[i] = 0.;
+      digiData[i] = -9999.f;
+    }
+}
+
 void DisPho::SetRecHitBranches()
 {
   nrechits = recHitMap.size();
@@ -1768,6 +1806,13 @@ void DisPho::SetRecHitBranches()
   DisPho::SetURecHitBranches(uncalibratedRecHitsEB,barrelGeometry);
   DisPho::SetURecHitBranches(uncalibratedRecHitsEE,endcapGeometry);
 
+}
+
+void DisPho::SetDigiBranches()
+{
+  ndigis = digiMap.size();
+
+  DisPho::SetDigiBranches(EBdigiCollection,EEdigiCollection,barrelGeometry);
 }
 
 void DisPho::SetRecHitBranches(const EcalRecHitCollection * recHits, const CaloSubdetectorGeometry * geometry, const float adcToGeV)
@@ -1837,6 +1882,7 @@ void DisPho::SetURecHitBranches(const EcalUncalibratedRecHitCollection * recHits
 	  const auto pos = recHitMap.at(rawId);
 	  
 	  // Assign values
+	  if ( recHit.amplitude() < 0. ) continue;
 	  amplitude[pos] = recHit.amplitude();
 	  amplitudeError[pos] = recHit.amplitudeError();
 	  pedestal[pos] = recHit.pedestal();
@@ -1851,6 +1897,50 @@ void DisPho::SetURecHitBranches(const EcalUncalibratedRecHitCollection * recHits
 	}
     }
 }
+
+void DisPho::SetDigiBranches(const EBDigiCollection * ebDigis, const EEDigiCollection * eeDigis,  const CaloSubdetectorGeometry * geometry)
+{
+
+  for (const auto digi : *ebDigis)
+    {
+      const auto digiId(digi.id());
+      //const auto rawId = digiId;.rawId();
+      if (digiMap.count(digiId))
+	{
+	  const auto pos = digiMap.at(digiId);
+	  
+	  // Assign values
+	  digiID[pos] = digiId;
+
+	  for ( unsigned int i=0; i < digi.size(); i++ ) { 
+	    EBDataFrame df( digi );
+	    digiData[pos] = df.sample( i );
+	  }
+
+	}
+    }
+  
+    for (const auto digi : *eeDigis)
+    {
+
+      const auto digiId(digi.id());
+      //const auto rawId = digiId.rawId();
+      if (digiMap.count(digiId))
+	{
+	  const auto pos = digiMap.at(digiId);
+	  
+	  // Assign values
+	  digiID[pos] = digiId;
+	  
+	  for (unsigned int i=0; i < digi.size(); i++ ) {
+	    EEDataFrame df( digi );
+	    digiData[pos] = df.sample( i );
+	  }
+
+	}
+    }
+}
+
 void DisPho::InitializePhoBranches()
 {
   for (auto iphoton = 0; iphoton < Config::nPhotons; iphoton++)
@@ -1904,6 +1994,7 @@ void DisPho::InitializePhoBranches()
 
       // Fix me maybe?
       phoBranch.uncalibratedRecHits_.clear();
+      phoBranch.digis_.clear();
     }
     else
     {
@@ -2043,12 +2134,13 @@ void DisPho::SetPhoBranches()
     if (storeRecHits)
     {
       for (auto rhiter = phrhIDmap.begin(); rhiter != phrhIDmap.end(); ++rhiter) // loop over only good rec hit ids
-      {
-	phoBranch.recHits_.emplace_back(rhiter->first);
+	{
+	  phoBranch.recHits_.emplace_back(rhiter->first);
 
-	// Fix me maybe?
-	phoBranch.uncalibratedRecHits_.emplace_back(rhiter->first);
-      }
+	  // Fix me maybe?
+	  phoBranch.uncalibratedRecHits_.emplace_back(rhiter->first);
+	  phoBranch.digis_.emplace_back(rhiter->first);
+	}
 
       //  sort rec hit list in photon by rechitE which is already stored for this event
       std::sort(phoBranch.recHits_.begin(),phoBranch.recHits_.end(),
@@ -2645,6 +2737,7 @@ void DisPho::MakeEventTree()
     disphotree->Branch("rhpedrms6", &rhpedrms6);
     disphotree->Branch("rhpedrms1", &rhpedrms1);
 
+
     disphotree->Branch("amplitude", &amplitude);
     disphotree->Branch("amplitudeError", &amplitudeError);
     disphotree->Branch("pedestal", &pedestal);
@@ -2655,7 +2748,16 @@ void DisPho::MakeEventTree()
     disphotree->Branch("isSaturated", &isSaturated);
     disphotree->Branch("isJitterValid", &isJitterValid);
     disphotree->Branch("isJitterErrorValid", &isJitterErrorValid);
+
   }
+  
+  // Digi Info
+  disphotree->Branch("ndigis", &ndigis);
+  if (storeRecHits)
+    {
+      disphotree->Branch("digiID", &digiID);
+      disphotree->Branch("digiData", &digiData);
+    }
 
   // Photon Info
   disphotree->Branch("nphotons", &nphotons);

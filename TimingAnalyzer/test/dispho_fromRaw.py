@@ -509,6 +509,11 @@ process.dispho = cms.EDAnalyzer("DisPho",
    #uncalibratedRecHitsEE = cms.InputTag("ecalWeightUncalibRecHit","EcalUncalibRecHitsEE"),
    uncalibratedRecHitsEB = cms.InputTag("ecalMultiFitUncalibRecHit","EcalUncalibRecHitsEB"),
    uncalibratedRecHitsEE = cms.InputTag("ecalMultiFitUncalibRecHit","EcalUncalibRecHitsEE"),
+   ## digis
+   EBdigiCollection = cms.InputTag("ecalDigis","ebDigis"),
+   EEdigiCollection = cms.InputTag("ecalDigis","eeDigis"),
+   #ecalDigisEB = cms.InputTag("selectDigi","selectedEcalEBDigiCollection"),
+   #ecalDigisEE = cms.InputTag("selectDigi","selectedEcalEEDigiCollection"),
 
    ## gen info
    isGMSB       = cms.bool(options.isGMSB),

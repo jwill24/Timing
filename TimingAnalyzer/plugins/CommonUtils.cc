@@ -189,17 +189,32 @@ namespace oot
     auto i = 0;
     for (const auto & recHit : *recHitsEB)
       {
-	if (recHit.amplitude() > 0.)
+	if ( recHit.amplitude() > 0. )
 	  {
 	    uncalibratedRecHitMap[recHit.id().rawId()] = i++;
 	  }
       }
     for (const auto & recHit : *recHitsEE)
       {
-	if (recHit.amplitude() > 0.)
+	if ( recHit.amplitude() > 0. )
 	  {
 	    uncalibratedRecHitMap[recHit.id().rawId()] = i++;
 	  }
+      }
+  }
+
+  void PrepDigis(const EBDigiCollection * ebDigis,
+		 const EEDigiCollection * eeDigis,
+		 uiiumap & digiMap)
+  {
+    auto i = 0;
+    for (const auto & digi: *ebDigis)
+      {
+	digiMap[digi.id()] = i++;
+      }
+    for (const auto & digi: *eeDigis)
+      {
+	digiMap[digi.id()] = i++;
       }
   }
     
