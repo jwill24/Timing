@@ -89,8 +89,6 @@ options.register('filterEff',1.0,VarParsing.multiplicity.singleton,VarParsing.va
 options.register('BR',1.0,VarParsing.multiplicity.singleton,VarParsing.varType.float,'branching ratio of MC');
 
 ## GT to be used
-#options.register('globalTag','102X_dataRun2_Prompt_v11',VarParsing.multiplicity.singleton,VarParsing.varType.string,'gloabl tag to be used');
-#options.register('globalTag','102X_dataRun2_Sep2018Rereco_v1',VarParsing.multiplicity.singleton,VarParsing.varType.string,'gloabl tag to be used');
 options.register('globalTag','101X_dataRun2_Prompt_v11',VarParsing.multiplicity.singleton,VarParsing.varType.string,'gloabl tag to be used');
 
 ## do a demo run over only 1k events
@@ -218,16 +216,14 @@ process.load("EventFilter.EcalRawToDigi.EcalUnpackerData_cfi")
 
 process.load("Geometry.CaloEventSetup.CaloTowerConstituents_cfi")
 
-# Only run 100 events
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(100)
-#    input = cms.untracked.int32(-1)
+#    input = cms.untracked.int32(20)
+    input = cms.untracked.int32(-1)
 )
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(#'file:jwk_reco_data_DIGI2RAW.root'),
-        #'/store/data/Run2018D/ZeroBias/RAW/v1/000/325/240/00000/FFA4CC2A-A63C-8440-ADC4-D7E2FF53BB4F.root'
-	'/store/data/Run2018A/EGamma/RAW/v1/000/315/973/00000/2E81C787-2D53-E811-BAFC-FA163E2CD5B1.root'
+ 	'/store/data/Run2018A/EGamma/RAW/v1/000/315/973/00000/2E81C787-2D53-E811-BAFC-FA163E2CD5B1.root'
         ),
     secondaryFileNames = cms.untracked.vstring()
 )
@@ -253,7 +249,6 @@ process.lhcinfo_prefer = cms.ESPrefer("PoolDBESSource","LHCInfoReader")
 
 
 # Get ECAL Uncalibrated recHits
-
 # get uncalibrechits with weights method
 #import RecoLocalCalo.EcalRecProducers.ecalWeightUncalibRecHit_cfi
 #process.ecalUncalibHitWeights = RecoLocalCalo.EcalRecProducers.ecalWeightUncalibRecHit_cfi.ecalWeightUncalibRecHit.clone()

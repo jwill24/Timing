@@ -210,9 +210,15 @@ namespace oot
   void PrepJets(const edm::Handle<std::vector<pat::Jet> > & jetsH, 
 		std::vector<pat::Jet> & jets, const float jetpTmin = 0.f, 
 		const float jetEtamax = 100.f, const int jetID = -1);
-  void PrepRecHits(const EcalRecHitCollection * recHitsEB, 
+  //void PrepRecHits(const EcalRecHitCollection * recHitsEB, 
+  //		   const EcalRecHitCollection * recHitsEE,
+  //		   uiiumap & recHitMap, const float rhEmin = 0.f);
+
+ void PrepRecHits(const EcalRecHitCollection * recHitsEB, 
 		   const EcalRecHitCollection * recHitsEE,
-		   uiiumap & recHitMap, const float rhEmin = 0.f);
+		  uiiumap & recHitMap, 
+		  const float rhEmin = 0.f);
+
   void PrepURecHits(const EcalUncalibratedRecHitCollection * recHitsEB, 
 		    const EcalUncalibratedRecHitCollection * recHitsEE,
 		    uiiumap & uncalibratedRecHitMap);

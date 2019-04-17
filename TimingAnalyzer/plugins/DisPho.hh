@@ -113,6 +113,7 @@
 #include "Timing/TimingAnalyzer/plugins/DisPhoTypes.hh"
 
 #define BUNCHES 3564
+#define SAMPLES 10
 
 using namespace std;
 using namespace edm;
@@ -666,13 +667,14 @@ private:
   // Uncalibrated RecHits
   int nurechits;
   std::vector<unsigned int> uRhId;
-  std::vector<float> amplitude, amplitudeError, pedestal, jitter, chi2, outOfTimeAmplitude, jitterError;
+  std::vector<float> amplitude, amplitudeError, pedestal, jitter, chi2, jitterError;
+  std::vector<std::vector<float> > outOfTimeAmplitude;
   std::vector<bool> isSaturated, isJitterValid, isJitterErrorValid;
 
   // Digis
   int ndigis;
   std::vector<unsigned int> digiID;
-  std::vector<float> digiData;
+  std::vector<std::vector<float> > digiData;
 
   // photon info
   int nphotons;

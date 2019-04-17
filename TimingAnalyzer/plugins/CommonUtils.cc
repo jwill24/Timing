@@ -161,9 +161,11 @@ namespace oot
     }
   }  
 
+  
   void PrepRecHits(const EcalRecHitCollection * recHitsEB,
 		   const EcalRecHitCollection * recHitsEE,
-		   uiiumap & recHitMap, const float rhEmin)
+		   uiiumap & recHitMap,
+		   const float rhEmin)
   {
     auto i = 0;
     for (const auto & recHit : *recHitsEB)
@@ -191,14 +193,14 @@ namespace oot
       {
 	if ( recHit.amplitude() > 0. )
 	  {
-	    uncalibratedRecHitMap[recHit.id().rawId()] = i++;
+	    uncalibratedRecHitMap[recHit.id()] = i++;
 	  }
       }
     for (const auto & recHit : *recHitsEE)
       {
 	if ( recHit.amplitude() > 0. )
 	  {
-	    uncalibratedRecHitMap[recHit.id().rawId()] = i++;
+	    uncalibratedRecHitMap[recHit.id()] = i++;
 	  }
       }
   }

@@ -976,6 +976,8 @@ void DisPho::FillTreeFromObjects(const edm::Event & iEvent)
   // Fill Tree //
   ///////////////
 
+  cout << "Filling the tree" << endl;
+
   disphotree->Fill();
 }
 
@@ -1697,6 +1699,7 @@ void DisPho::InitializeRecHitBranches()
   jitter.clear();
   chi2.clear();
   outOfTimeAmplitude.clear();
+  //for (unsigned int i; i<SAMPLES; i++) outOfTimeAmplitude[i].clear();
   jitterError.clear();
   isSaturated.clear();
   isJitterValid.clear();
@@ -1728,6 +1731,7 @@ void DisPho::InitializeRecHitBranches()
   jitter.resize(nURecHits);
   chi2.resize(nURecHits);
   outOfTimeAmplitude.resize(nURecHits);
+  for (int i; i<nURecHits; i++) outOfTimeAmplitude[i].resize(SAMPLES);
   jitterError.resize(nURecHits);
   isSaturated.resize(nURecHits);
   isJitterValid.resize(nURecHits);
@@ -1770,7 +1774,7 @@ void DisPho::InitializeRecHitBranches()
       pedestal[i] = -9999.f;
       jitter[i] = -9999.f;
       chi2[i] = -9999.f;
-      outOfTimeAmplitude[i] = -9999.f;
+      for (unsigned int j; j<SAMPLES; j++) outOfTimeAmplitude[i][j] = -9999.f;
       jitterError[i] = -9999.f;
       isSaturated[i] = false;
       isJitterValid[i] = false;
@@ -1781,16 +1785,18 @@ void DisPho::InitializeRecHitBranches()
 
 void DisPho::InitializeDigiBranches()
 {
+
   digiID.clear();
   digiData.clear();
 
   digiID.resize(nDigis);
   digiData.resize(nDigis);
+  for (int i; i<nDigis; i++) digiData[i].resize(SAMPLES);
 
   for (auto i = 0; i < nRecHits; i++)
     {
       digiID[i] = 0.;
-      digiData[i] = -9999.f;
+      for (unsigned int j; j<SAMPLES; j++) digiData[i][j] = -9999.f;
     }
 }
 
@@ -1876,23 +1882,27 @@ void DisPho::SetURecHitBranches(const EcalUncalibratedRecHitCollection * recHits
   for (const auto recHit : *recHits)
     {
       const auto recHitId(recHit.id());
-      const auto rawId = recHitId.rawId();
-      if (recHitMap.count(rawId))
+      //const auto rawId = recHitId.rawId();
+      if (uncalibratedRecHitMap.count(recHitId))
 	{
-	  const auto pos = recHitMap.at(rawId);
+	  const auto pos = uncalibratedRecHitMap.at(recHitId);
 	  
 	  // Assign values
-	  if ( recHit.amplitude() < 0. ) continue;
 	  amplitude[pos] = recHit.amplitude();
 	  amplitudeError[pos] = recHit.amplitudeError();
 	  pedestal[pos] = recHit.pedestal();
 	  jitter[pos] = recHit.jitter();
 	  chi2[pos] = recHit.chi2();
-	  outOfTimeAmplitude[pos] = recHit.outOfTimeAmplitude( fBX+1 );
+	  for (int i=0; i<SAMPLES; i++) {
+	    outOfTimeAmplitude[pos][i] = recHit.outOfTimeAmplitude(i);
+	  }
 	  jitterError[pos] = recHit.jitterError();
 	  isSaturated[pos] = recHit.isSaturated();
 	  isJitterValid[pos] = recHit.isJitterValid();
 	  isJitterErrorValid[pos] = recHit.isJitterErrorValid();
+	  
+	  // Print elements of OOTamp vectors
+	  //for (auto k = outOfTimeAmplitude[pos].begin(); k!=outOfTimeAmplitude[pos].end(); k++) cout << "Element: " << *k << endl;
 	  
 	}
     }
@@ -1907,15 +1917,18 @@ void DisPho::SetDigiBranches(const EBDigiCollection * ebDigis, const EEDigiColle
       //const auto rawId = digiId;.rawId();
       if (digiMap.count(digiId))
 	{
+
 	  const auto pos = digiMap.at(digiId);
-	  
+
 	  // Assign values
 	  digiID[pos] = digiId;
 
-	  for ( unsigned int i=0; i < digi.size(); i++ ) { 
+	  for ( unsigned int i=0; i<SAMPLES; i++ ) { 
 	    EBDataFrame df( digi );
-	    digiData[pos] = df.sample( i );
+	    digiData[pos][i] = df.sample( i );
 	  }
+
+	  //for (auto k = digiData[pos].begin(); k!=digiData[pos].end(); k++) cout << "Element: " << *k << endl;
 
 	}
     }
@@ -1932,9 +1945,9 @@ void DisPho::SetDigiBranches(const EBDigiCollection * ebDigis, const EEDigiColle
 	  // Assign values
 	  digiID[pos] = digiId;
 	  
-	  for (unsigned int i=0; i < digi.size(); i++ ) {
+	  for (unsigned int i=0; i<SAMPLES; i++ ) {
 	    EEDataFrame df( digi );
-	    digiData[pos] = df.sample( i );
+	    digiData[pos][i] = df.sample( i );
 	  }
 
 	}
@@ -2138,8 +2151,8 @@ void DisPho::SetPhoBranches()
 	  phoBranch.recHits_.emplace_back(rhiter->first);
 
 	  // Fix me maybe?
-	  phoBranch.uncalibratedRecHits_.emplace_back(rhiter->first);
-	  phoBranch.digis_.emplace_back(rhiter->first);
+	  //phoBranch.uncalibratedRecHits_.emplace_back(rhiter->first);
+	  //phoBranch.digis_.emplace_back(rhiter->first);
 	}
 
       //  sort rec hit list in photon by rechitE which is already stored for this event
@@ -2743,7 +2756,7 @@ void DisPho::MakeEventTree()
     disphotree->Branch("pedestal", &pedestal);
     disphotree->Branch("jitter", &jitter);
     disphotree->Branch("chi2", &chi2);
-    disphotree->Branch("outOfTimeAmplitude", &outOfTimeAmplitude);
+    disphotree->Branch("outOfTimeAmplitude", &outOfTimeAmplitude, "outOfTimeAmplitude/F");
     disphotree->Branch("jitterError", &jitterError);
     disphotree->Branch("isSaturated", &isSaturated);
     disphotree->Branch("isJitterValid", &isJitterValid);
@@ -2756,7 +2769,7 @@ void DisPho::MakeEventTree()
   if (storeRecHits)
     {
       disphotree->Branch("digiID", &digiID);
-      disphotree->Branch("digiData", &digiData);
+      disphotree->Branch("digiData", &digiData, "digiData/F");
     }
 
   // Photon Info
