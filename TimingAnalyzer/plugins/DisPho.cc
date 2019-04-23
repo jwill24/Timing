@@ -1358,7 +1358,8 @@ void DisPho::SetMETBranches()
 {
   t1pfMETpt    = t1pfMET.pt();
   t1pfMETphi   = t1pfMET.phi();
-  t1pfMETsumEt = t1pfMET.userFloat("sumEt");
+  // TEST REMOVAL
+  //t1pfMETsumEt = t1pfMET.userFloat("sumEt");
 }
 
 void DisPho::InitializeMETBranchesMC()
