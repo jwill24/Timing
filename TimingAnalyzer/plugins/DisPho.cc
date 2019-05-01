@@ -1889,6 +1889,7 @@ void DisPho::SetURecHitBranches(const EcalUncalibratedRecHitCollection * recHits
 	  const auto pos = uncalibratedRecHitMap.at(recHitId);
 	  
 	  // Assign values
+	  uRhId[pos] = recHitId;
 	  amplitude[pos] = recHit.amplitude();
 	  amplitudeError[pos] = recHit.amplitudeError();
 	  pedestal[pos] = recHit.pedestal();
@@ -2751,7 +2752,7 @@ void DisPho::MakeEventTree()
     disphotree->Branch("rhpedrms6", &rhpedrms6);
     disphotree->Branch("rhpedrms1", &rhpedrms1);
 
-
+    disphotree->Branch("uRhId", &uRhId);
     disphotree->Branch("amplitude", &amplitude);
     disphotree->Branch("amplitudeError", &amplitudeError);
     disphotree->Branch("pedestal", &pedestal);
