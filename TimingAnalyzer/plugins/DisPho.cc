@@ -2883,3 +2883,4 @@ void DisPho::fillDescriptions(edm::ConfigurationDescriptions & descriptions)
 }
 
 DEFINE_FWK_MODULE(DisPho);
+
