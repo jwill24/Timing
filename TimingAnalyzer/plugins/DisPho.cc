@@ -1358,7 +1358,8 @@ void DisPho::SetMETBranches()
 {
   t1pfMETpt    = t1pfMET.pt();
   t1pfMETphi   = t1pfMET.phi();
-  t1pfMETsumEt = t1pfMET.userFloat("sumEt");
+  // TEST REMOVAL
+  //t1pfMETsumEt = t1pfMET.userFloat("sumEt");
 }
 
 void DisPho::InitializeMETBranchesMC()
@@ -1888,6 +1889,7 @@ void DisPho::SetURecHitBranches(const EcalUncalibratedRecHitCollection * recHits
 	  const auto pos = uncalibratedRecHitMap.at(recHitId);
 	  
 	  // Assign values
+	  uRhId[pos] = recHitId;
 	  amplitude[pos] = recHit.amplitude();
 	  amplitudeError[pos] = recHit.amplitudeError();
 	  pedestal[pos] = recHit.pedestal();
@@ -2750,7 +2752,7 @@ void DisPho::MakeEventTree()
     disphotree->Branch("rhpedrms6", &rhpedrms6);
     disphotree->Branch("rhpedrms1", &rhpedrms1);
 
-
+    disphotree->Branch("uRhId", &uRhId);
     disphotree->Branch("amplitude", &amplitude);
     disphotree->Branch("amplitudeError", &amplitudeError);
     disphotree->Branch("pedestal", &pedestal);
