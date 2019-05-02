@@ -443,23 +443,23 @@ bool DisPho::GetLHCInfo(const edm::Event & iEvent, const edm::EventSetup & iSetu
 bool DisPho::GetStandardObjects(const edm::Event & iEvent)
 {
   // TRIGGER RESULTS
-  iEvent.getByToken(triggerResultsToken,triggerResultsH);
-  if (oot::BadHandle(triggerResultsH,"triggerResults")) return false;
+  //jwk iEvent.getByToken(triggerResultsToken,triggerResultsH);
+  //jwk if (oot::BadHandle(triggerResultsH,"triggerResults")) return false;
       
   // TRIGGER OBJECTS
-  iEvent.getByToken(triggerObjectsToken,triggerObjectsH);
-  if (oot::BadHandle(triggerObjectsH,"triggerObjects")) return false;
+  //jwk iEvent.getByToken(triggerObjectsToken,triggerObjectsH);
+  //jwk if (oot::BadHandle(triggerObjectsH,"triggerObjects")) return false;
 
   // MET FLAGS
   //iEvent.getByToken(triggerFlagsToken,triggerFlagsH);
   //if (oot::BadHandle(triggerFlagsH,"triggerFlags")) return false;
 
-  iEvent.getByToken(ecalBadCalibFlagToken,ecalBadCalibFlagH);
-  if (oot::BadHandle(ecalBadCalibFlagH,"ecalBadCalibFlag")) return false;
+  //jwk iEvent.getByToken(ecalBadCalibFlagToken,ecalBadCalibFlagH);
+  //jwk if (oot::BadHandle(ecalBadCalibFlagH,"ecalBadCalibFlag")) return false;
 
   // TRACKS
-  iEvent.getByToken(tracksToken,tracksH);
-  if (oot::BadHandle(tracksH,"tracks")) return false;
+  //jwk iEvent.getByToken(tracksToken,tracksH);
+  //jwk if (oot::BadHandle(tracksH,"tracks")) return false;
 
   // VERTICES
   iEvent.getByToken(verticesToken,verticesH);
@@ -733,11 +733,11 @@ void DisPho::PrepObjects(const edm::Event & iEvent)
   if (isHVDS) oot::PrepVPions(genParticlesH,vPions);
   if (isToy)  oot::PrepToys(genParticlesH,toys);
 
-  oot::PrepTriggerBits(triggerResultsH,iEvent,triggerBitMap);
+  //jwk oot::PrepTriggerBits(triggerResultsH,iEvent,triggerBitMap);
 
   //oot::PrepTriggerBits(triggerFlagsH,iEvent,triggerFlagMap);
 
-  oot::PrepTriggerObjects(triggerResultsH,triggerObjectsH,iEvent,triggerObjectsByFilterMap);
+  //jwk oot::PrepTriggerObjects(triggerResultsH,triggerObjectsH,iEvent,triggerObjectsByFilterMap);
 
   //oot::PrepJets(jetsH,jets,jetpTmin,jetEtamax,jetIDmin);
 
@@ -1358,8 +1358,7 @@ void DisPho::SetMETBranches()
 {
   t1pfMETpt    = t1pfMET.pt();
   t1pfMETphi   = t1pfMET.phi();
-  // TEST REMOVAL
-  //t1pfMETsumEt = t1pfMET.userFloat("sumEt");
+  t1pfMETsumEt = t1pfMET.userFloat("sumEt");
 }
 
 void DisPho::InitializeMETBranchesMC()
@@ -1732,7 +1731,7 @@ void DisPho::InitializeRecHitBranches()
   jitter.resize(nURecHits);
   chi2.resize(nURecHits);
   outOfTimeAmplitude.resize(nURecHits);
-  for (int i; i<nURecHits; i++) outOfTimeAmplitude[i].resize(SAMPLES);
+  for (auto i = 0; i<nURecHits; i++) outOfTimeAmplitude[i].resize(SAMPLES);
   jitterError.resize(nURecHits);
   isSaturated.resize(nURecHits);
   isJitterValid.resize(nURecHits);
@@ -1792,7 +1791,7 @@ void DisPho::InitializeDigiBranches()
 
   digiID.resize(nDigis);
   digiData.resize(nDigis);
-  for (int i; i<nDigis; i++) digiData[i].resize(SAMPLES);
+  for (auto i = 0; i<nDigis; i++) digiData[i].resize(SAMPLES);
 
   for (auto i = 0; i < nRecHits; i++)
     {
@@ -2212,7 +2211,7 @@ void DisPho::SetPhoBranches()
     phoBranch.isHLT_ = (isHLTMatched.count(filter) ? isHLTMatched[filter] : false);
 
     // check for simple track veto
-    phoBranch.isTrk_ = oot::TrackToObjectMatching(tracksH,photon,trackpTmin,trackdRmin);
+    //jwk phoBranch.isTrk_ = oot::TrackToObjectMatching(tracksH,photon,trackpTmin,trackdRmin);
 
     // other track vetoes
     phoBranch.passEleVeto_ = photon.passElectronVeto();
