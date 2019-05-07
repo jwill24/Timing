@@ -101,7 +101,7 @@ options.register('demoMode',True,VarParsing.multiplicity.singleton,VarParsing.va
 options.register('processName','TREE',VarParsing.multiplicity.singleton,VarParsing.varType.string,'process name to be considered');
 
 ## outputFile Name
-options.register('outputFileName','test_dispho.root',VarParsing.multiplicity.singleton,VarParsing.varType.string,'output file name created by cmsRun');
+options.register('outputFileName','trial_run18A_dispho.root',VarParsing.multiplicity.singleton,VarParsing.varType.string,'output file name created by cmsRun');
 
 ## etra bits
 options.register('nThreads',8,VarParsing.multiplicity.singleton,VarParsing.varType.int,'number of threads per job');
@@ -216,9 +216,9 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 process.load("Geometry.CaloEventSetup.CaloTowerConstituents_cfi")
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(5)
+#    input = cms.untracked.int32(5)
 #    input = cms.untracked.int32(100)
-#    input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(-1)
 )
 
 # Input source

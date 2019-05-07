@@ -1698,8 +1698,17 @@ void DisPho::InitializeRecHitBranches()
   pedestal.clear();
   jitter.clear();
   chi2.clear();
-  outOfTimeAmplitude.clear();
+  //outOfTimeAmplitude.clear();
   //for (unsigned int i; i<SAMPLES; i++) outOfTimeAmplitude[i].clear();
+  ootA0.clear();
+  ootA1.clear();
+  ootA2.clear();
+  ootA3.clear();
+  ootA4.clear();
+  ootA5.clear();
+  ootA6.clear();
+  ootA7.clear();
+  ootA8.clear();
   jitterError.clear();
   isSaturated.clear();
   isJitterValid.clear();
@@ -1730,8 +1739,17 @@ void DisPho::InitializeRecHitBranches()
   pedestal.resize(nURecHits);
   jitter.resize(nURecHits);
   chi2.resize(nURecHits);
-  outOfTimeAmplitude.resize(nURecHits);
-  for (auto i = 0; i<nURecHits; i++) outOfTimeAmplitude[i].resize(SAMPLES);
+  //outOfTimeAmplitude.resize(nURecHits);
+  ootA0.resize(nURecHits);
+  ootA1.resize(nURecHits);
+  ootA2.resize(nURecHits);
+  ootA3.resize(nURecHits);
+  ootA4.resize(nURecHits);
+  ootA5.resize(nURecHits);
+  ootA6.resize(nURecHits);
+  ootA7.resize(nURecHits);
+  ootA8.resize(nURecHits);
+  //for (auto i = 0; i<nURecHits; i++) outOfTimeAmplitude[i].resize(SAMPLES);
   jitterError.resize(nURecHits);
   isSaturated.resize(nURecHits);
   isJitterValid.resize(nURecHits);
@@ -1774,7 +1792,16 @@ void DisPho::InitializeRecHitBranches()
       pedestal[i] = -9999.f;
       jitter[i] = -9999.f;
       chi2[i] = -9999.f;
-      for (unsigned int j; j<SAMPLES; j++) outOfTimeAmplitude[i][j] = -9999.f;
+      //for (unsigned int j; j<SAMPLES; j++) outOfTimeAmplitude[i][j] = -9999.f;
+      ootA0[i] = -9999.f;
+      ootA1[i] = -9999.f;
+      ootA2[i] = -9999.f;
+      ootA3[i] = -9999.f;
+      ootA4[i] = -9999.f;
+      ootA5[i] = -9999.f;
+      ootA6[i] = -9999.f;
+      ootA7[i] = -9999.f;
+      ootA8[i] = -9999.f;
       jitterError[i] = -9999.f;
       isSaturated[i] = false;
       isJitterValid[i] = false;
@@ -1894,9 +1921,20 @@ void DisPho::SetURecHitBranches(const EcalUncalibratedRecHitCollection * recHits
 	  pedestal[pos] = recHit.pedestal();
 	  jitter[pos] = recHit.jitter();
 	  chi2[pos] = recHit.chi2();
-	  for (int i=0; i<SAMPLES; i++) {
-	    outOfTimeAmplitude[pos][i] = recHit.outOfTimeAmplitude(i);
-	  }
+	  //for (int i=0; i<SAMPLES; i++) {
+	  //  outOfTimeAmplitude[pos][i] = recHit.outOfTimeAmplitude(i);
+	  //}
+
+          ootA0[pos] = recHit.outOfTimeAmplitude(0);
+          ootA1[pos] = recHit.outOfTimeAmplitude(1);
+          ootA2[pos] = recHit.outOfTimeAmplitude(2);
+          ootA3[pos] = recHit.outOfTimeAmplitude(3);
+          ootA4[pos] = recHit.outOfTimeAmplitude(4);
+          ootA5[pos] = recHit.outOfTimeAmplitude(5);
+          ootA6[pos] = recHit.outOfTimeAmplitude(6);
+          ootA7[pos] = recHit.outOfTimeAmplitude(7);
+          ootA8[pos] = recHit.outOfTimeAmplitude(8);
+
 	  jitterError[pos] = recHit.jitterError();
 	  isSaturated[pos] = recHit.isSaturated();
 	  isJitterValid[pos] = recHit.isJitterValid();
@@ -2757,7 +2795,17 @@ void DisPho::MakeEventTree()
     disphotree->Branch("pedestal", &pedestal);
     disphotree->Branch("jitter", &jitter);
     disphotree->Branch("chi2", &chi2);
-    disphotree->Branch("outOfTimeAmplitude", &outOfTimeAmplitude, "outOfTimeAmplitude/F");
+//    disphotree->Branch("outOfTimeAmplitude", &outOfTimeAmplitude);
+    disphotree->Branch("ootA0", &ootA0);
+    disphotree->Branch("ootA1", &ootA1);
+    disphotree->Branch("ootA2", &ootA2);
+    disphotree->Branch("ootA3", &ootA3);
+    disphotree->Branch("ootA4", &ootA4);
+    disphotree->Branch("ootA5", &ootA5);
+    disphotree->Branch("ootA6", &ootA6);
+    disphotree->Branch("ootA7", &ootA7);
+    disphotree->Branch("ootA8", &ootA8);
+//    disphotree->Branch("outOfTimeAmplitude", &outOfTimeAmplitude, "outOfTimeAmplitude/F");
     disphotree->Branch("jitterError", &jitterError);
     disphotree->Branch("isSaturated", &isSaturated);
     disphotree->Branch("isJitterValid", &isJitterValid);
