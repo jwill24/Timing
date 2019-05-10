@@ -266,7 +266,7 @@ def submit_run2018D():
 	subcrab( "320673-320673" )
 
 #submit_run2018A()
-#submit_run2018B()
-submit_run2018C()
+submit_run2018B()
+#submit_run2018C()
 #submit_run2018D()
 
