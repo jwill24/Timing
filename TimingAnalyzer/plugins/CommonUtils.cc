@@ -278,8 +278,7 @@ namespace oot
     // Correct the MET //
     /////////////////////
 
-    // TEST REMOVAL
-    //oot::CorrectMET(gedPhotonsH,nGED,ootPhotonsH,nOOT,oot_to_ged,t1pfMET);
+    oot::CorrectMET(gedPhotonsH,nGED,ootPhotonsH,nOOT,oot_to_ged,t1pfMET);
   }
 
   void FindOverlapPhotons(const edm::Handle<std::vector<pat::Photon> > & gedPhotonsH, const int nGED, std::vector<int> & ged_to_oot,
