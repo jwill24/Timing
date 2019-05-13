@@ -217,18 +217,29 @@ process.load("EventFilter.EcalRawToDigi.EcalUnpackerData_cfi")
 process.load("Geometry.CaloEventSetup.CaloTowerConstituents_cfi")
 
 process.maxEvents = cms.untracked.PSet(
-#    input = cms.untracked.int32(20)
-    input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(10)
+#    input = cms.untracked.int32(-1)
 )
+
+eventFile = open('events2018.txt','r')
+#eventList = eventFile.readlines()
+eventList = eventFile.read().splitlines()
+print eventList
+
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(#'file:jwk_reco_data_DIGI2RAW.root'),
- 	'/store/data/Run2018A/EGamma/RAW/v1/000/315/973/00000/2E81C787-2D53-E811-BAFC-FA163E2CD5B1.root'
+ 	#'/store/data/Run2018A/EGamma/RAW/v1/000/315/973/00000/2E81C787-2D53-E811-BAFC-FA163E2CD5B1.root'
+	'/store/data/Run2018B/EGamma/RAW/v1/000/317/527/00000/30F85A35-026A-E811-A1D7-FA163ECAF49A.root'
         ),
-    secondaryFileNames = cms.untracked.vstring()
+    secondaryFileNames = cms.untracked.vstring(),
+    eventsToProcess = cms.untracked.VEventRange(eventList),
 )
+
+# Skip events
 process.options = cms.untracked.PSet(
-)
+	#SkipEvent = cms.untracked.vstring('BadEventNum')
+	)
 
 # LHC Info
 print('LHC Info reader')
@@ -415,6 +426,8 @@ process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter("EcalBadCalibFilter",
     debug            = cms.bool(False)
 )
 
+#process.EventNumFilter = cms.EDFilter("EventNumFilter")
+
 
 print('Make the tree')
 # Make the tree 
@@ -550,6 +563,8 @@ process.tree_step = cms.EndPath(
 
 # Path and EndPath definitions
 process.ecalBadCalibReducedMINIAODFilter_step = cms.Path(process.ecalBadCalibReducedMINIAODFilter)
+#process.EventNumFilter_step = cms.Path(process.EventNumFilter)
+
 #process.ecalTestRecoLocal_step = cms.Path(process.ecalTestRecoLocal)
 #process.content_step = cms.Path(process.content)
 
@@ -589,6 +604,7 @@ process.MINIAODoutput_step = cms.EndPath(process.MINIAODoutput)
 
 
 process.schedule = cms.Schedule(#process.content_step,
+				#process.EventNumFilter_step,
 				process.raw2digi_step,
 				#process.ecalTestRecoLocal_step,
 				process.L1Reco_step,
