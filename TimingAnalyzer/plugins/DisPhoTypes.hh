@@ -86,6 +86,8 @@ struct phoStruct
 
   float HoE_;
   float r9_;
+  float dz_;
+  float tdz_;
 
   float ChgHadIso_;
   float NeuHadIso_;

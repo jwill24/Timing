@@ -458,8 +458,8 @@ bool DisPho::GetStandardObjects(const edm::Event & iEvent)
   //jwk if (oot::BadHandle(ecalBadCalibFlagH,"ecalBadCalibFlag")) return false;
 
   // TRACKS
-  //jwk iEvent.getByToken(tracksToken,tracksH);
-  //jwk if (oot::BadHandle(tracksH,"tracks")) return false;
+  iEvent.getByToken(tracksToken,tracksH);
+  if (oot::BadHandle(tracksH,"tracks")) return false;
 
   // VERTICES
   iEvent.getByToken(verticesToken,verticesH);
@@ -1709,6 +1709,7 @@ void DisPho::InitializeRecHitBranches()
   ootA6.clear();
   ootA7.clear();
   ootA8.clear();
+  ootA9.clear();
   jitterError.clear();
   isSaturated.clear();
   isJitterValid.clear();
@@ -1749,6 +1750,7 @@ void DisPho::InitializeRecHitBranches()
   ootA6.resize(nURecHits);
   ootA7.resize(nURecHits);
   ootA8.resize(nURecHits);
+  ootA9.resize(nURecHits);
   //for (auto i = 0; i<nURecHits; i++) outOfTimeAmplitude[i].resize(SAMPLES);
   jitterError.resize(nURecHits);
   isSaturated.resize(nURecHits);
@@ -1802,6 +1804,7 @@ void DisPho::InitializeRecHitBranches()
       ootA6[i] = -9999.f;
       ootA7[i] = -9999.f;
       ootA8[i] = -9999.f;
+      ootA9[i] = -9999.f;
       jitterError[i] = -9999.f;
       isSaturated[i] = false;
       isJitterValid[i] = false;
@@ -1934,6 +1937,7 @@ void DisPho::SetURecHitBranches(const EcalUncalibratedRecHitCollection * recHits
           ootA6[pos] = recHit.outOfTimeAmplitude(6);
           ootA7[pos] = recHit.outOfTimeAmplitude(7);
           ootA8[pos] = recHit.outOfTimeAmplitude(8);
+          ootA9[pos] = recHit.outOfTimeAmplitude(9);
 
 	  jitterError[pos] = recHit.jitterError();
 	  isSaturated[pos] = recHit.isSaturated();
@@ -2093,7 +2097,14 @@ void DisPho::SetPhoBranches()
     // get objects
     const auto & photon = photons[iphoton];
     auto & phoBranch = phoBranches[iphoton];
-    
+
+    //std::cout << "Getting track" << std::endl;
+    auto track = photon.bestTrack();
+    //std::cout << "Setting dz" << std::endl;
+    if ( track != nullptr ) phoBranch.dz_  = track->dz();
+    else phoBranch.dz_  = 0.f;
+    //std::cout << "Done" << std::endl;
+
     // basic kinematic with v2: https://twiki.cern.ch/twiki/bin/viewauth/CMS/EgammaMiniAODV2#Applying_the_Energy_Scale_and_sm
     const auto phop4 = photon.p4(); //* (photon.userFloat("ecalEnergyPostCorr") / photon.energy());
     phoBranch.E_   = phop4.energy();
@@ -2249,7 +2260,13 @@ void DisPho::SetPhoBranches()
     phoBranch.isHLT_ = (isHLTMatched.count(filter) ? isHLTMatched[filter] : false);
 
     // check for simple track veto
-    //jwk phoBranch.isTrk_ = oot::TrackToObjectMatching(tracksH,photon,trackpTmin,trackdRmin);
+    //phoBranch.isTrk_ = oot::TrackToObjectMatching(tracksH,photon,trackpTmin,trackdRmin,temp_dz);
+    for (const auto & track : *tracksH){
+      if (track.pt() < trackpTmin) continue;
+      if (reco::deltaR(photon,track) < trackdRmin){
+        phoBranch.tdz_ = track.dz();
+      } // end check over deltaR
+    } // end loop over tracks
 
     // other track vetoes
     phoBranch.passEleVeto_ = photon.passElectronVeto();
@@ -2805,6 +2822,7 @@ void DisPho::MakeEventTree()
     disphotree->Branch("ootA6", &ootA6);
     disphotree->Branch("ootA7", &ootA7);
     disphotree->Branch("ootA8", &ootA8);
+    disphotree->Branch("ootA9", &ootA9);
 //    disphotree->Branch("outOfTimeAmplitude", &outOfTimeAmplitude, "outOfTimeAmplitude/F");
     disphotree->Branch("jitterError", &jitterError);
     disphotree->Branch("isSaturated", &isSaturated);
@@ -2837,6 +2855,8 @@ void DisPho::MakeEventTree()
     disphotree->Branch(Form("phoscE_%i",iphoton), &phoBranch.scE_);
     disphotree->Branch(Form("phosceta_%i",iphoton), &phoBranch.sceta_);
     disphotree->Branch(Form("phoscphi_%i",iphoton), &phoBranch.scphi_);
+    disphotree->Branch(Form("phodz_%i",iphoton), &phoBranch.dz_);
+    disphotree->Branch(Form("photdz_%i",iphoton), &phoBranch.tdz_);
 
     disphotree->Branch(Form("phoHoE_%i",iphoton), &phoBranch.HoE_);
     disphotree->Branch(Form("phor9_%i",iphoton), &phoBranch.r9_);

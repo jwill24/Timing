@@ -101,7 +101,7 @@ options.register('demoMode',True,VarParsing.multiplicity.singleton,VarParsing.va
 options.register('processName','TREE',VarParsing.multiplicity.singleton,VarParsing.varType.string,'process name to be considered');
 
 ## outputFile Name
-options.register('outputFileName','trial_run18A_dispho.root',VarParsing.multiplicity.singleton,VarParsing.varType.string,'output file name created by cmsRun');
+options.register('outputFileName','very_short_trial_run18A_dispho.root',VarParsing.multiplicity.singleton,VarParsing.varType.string,'output file name created by cmsRun');
 
 ## etra bits
 options.register('nThreads',8,VarParsing.multiplicity.singleton,VarParsing.varType.int,'number of threads per job');
@@ -525,7 +525,7 @@ process.tree_step = cms.EndPath(
 	##process.updatedPatJetsUpdatedJEC +
 	##process.fullPatMetSequenceModifiedMET +
 	#process.ecalBadCalibReducedMINIAODFilter +
-	#process.unpackedTracksAndVertices +
+	process.unpackedTracksAndVertices +
         process.dispho
 )
 

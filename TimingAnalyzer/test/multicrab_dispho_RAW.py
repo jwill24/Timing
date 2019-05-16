@@ -102,8 +102,8 @@ def subcrab( runs ):
         inputDataAndOpts = [
 
             #['/EGamma/Run2018D-v1/RAW'],
-            ['/EGamma/Run2018C-v1/RAW'],
-            #['/EGamma/Run2018B-v1/RAW'],
+            #['/EGamma/Run2018C-v1/RAW'],
+            ['/EGamma/Run2018B-v1/RAW'],
             #['/EGamma/Run2018A-v1/RAW'],
 
 	    ]
@@ -194,8 +194,8 @@ def submit_run2018A():
 	subcrab( "315721-315790" )
 	subcrab( "315690-315713" )
 	subcrab( "315640-315689" )
-	#subcrab( "315489-315557" )
-	#subcrab( "315420-315488" )
+	subcrab( "315489-315557" )
+	subcrab( "315420-315488" )
 	subcrab( "315339-315366" )
 	subcrab( "315257-315322" )
 
@@ -205,10 +205,10 @@ def submit_run2018B():
 	subcrab( "317641-317650" )
 	subcrab( "317591-317640" )
 	subcrab( "317438-317527" )
-	subcrab( "317382-317435" )
+	#subcrab( "317382-317435" )
 	subcrab( "317319-317340" )
 	subcrab( "317212-317297" )
-	subcrab( "317080-317182" )
+	#subcrab( "317080-317182" )
 
 def submit_run2018C():
 	subcrab( "320039-320065" )
@@ -266,7 +266,7 @@ def submit_run2018D():
 	subcrab( "320673-320673" )
 
 #submit_run2018A()
-#submit_run2018B()
-submit_run2018C()
+submit_run2018B()
+#submit_run2018C()
 #submit_run2018D()
 
