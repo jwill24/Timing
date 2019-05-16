@@ -669,7 +669,7 @@ private:
   std::vector<unsigned int> uRhId;
   std::vector<float> amplitude, amplitudeError, pedestal, jitter, chi2, jitterError;
   //std::vector<std::vector<float> > outOfTimeAmplitude;
-  std::vector<float> ootA0, ootA1, ootA2, ootA3, ootA4, ootA5, ootA6, ootA7, ootA8;
+  std::vector<float> ootA0, ootA1, ootA2, ootA3, ootA4, ootA5, ootA6, ootA7, ootA8, ootA9;
 
   std::vector<bool> isSaturated, isJitterValid, isJitterErrorValid;
 

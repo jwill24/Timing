@@ -1709,6 +1709,7 @@ void DisPho::InitializeRecHitBranches()
   ootA6.clear();
   ootA7.clear();
   ootA8.clear();
+  ootA9.clear();
   jitterError.clear();
   isSaturated.clear();
   isJitterValid.clear();
@@ -1749,6 +1750,7 @@ void DisPho::InitializeRecHitBranches()
   ootA6.resize(nURecHits);
   ootA7.resize(nURecHits);
   ootA8.resize(nURecHits);
+  ootA9.resize(nURecHits);
   //for (auto i = 0; i<nURecHits; i++) outOfTimeAmplitude[i].resize(SAMPLES);
   jitterError.resize(nURecHits);
   isSaturated.resize(nURecHits);
@@ -1802,6 +1804,7 @@ void DisPho::InitializeRecHitBranches()
       ootA6[i] = -9999.f;
       ootA7[i] = -9999.f;
       ootA8[i] = -9999.f;
+      ootA9[i] = -9999.f;
       jitterError[i] = -9999.f;
       isSaturated[i] = false;
       isJitterValid[i] = false;
@@ -1934,6 +1937,7 @@ void DisPho::SetURecHitBranches(const EcalUncalibratedRecHitCollection * recHits
           ootA6[pos] = recHit.outOfTimeAmplitude(6);
           ootA7[pos] = recHit.outOfTimeAmplitude(7);
           ootA8[pos] = recHit.outOfTimeAmplitude(8);
+          ootA9[pos] = recHit.outOfTimeAmplitude(9);
 
 	  jitterError[pos] = recHit.jitterError();
 	  isSaturated[pos] = recHit.isSaturated();
@@ -2818,6 +2822,7 @@ void DisPho::MakeEventTree()
     disphotree->Branch("ootA6", &ootA6);
     disphotree->Branch("ootA7", &ootA7);
     disphotree->Branch("ootA8", &ootA8);
+    disphotree->Branch("ootA9", &ootA9);
 //    disphotree->Branch("outOfTimeAmplitude", &outOfTimeAmplitude, "outOfTimeAmplitude/F");
     disphotree->Branch("jitterError", &jitterError);
     disphotree->Branch("isSaturated", &isSaturated);
