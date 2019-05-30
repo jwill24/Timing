@@ -81,7 +81,7 @@ def main():
         config.JobType.inputFiles  = [ inputDir+inputPaths , inputDir+inputFilters , inputDir+inputFlags ]
 
         config.Data.inputDataset = None
-        config.Data.lumiMask     = inputJSON
+        #config.Data.lumiMask     = inputJSON
 #        config.Data.splitting    = 'EventAwareLumiBased'
         config.Data.splitting    = 'Automatic'
         #config.Data.unitsPerJob  = 200000
@@ -136,7 +136,7 @@ def main():
             #                                'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=False']
 
             config.Data.inputDataset     = inDO[0]
-            #config.Data.outputDatasetTag = '%s_%s' % (config.General.workArea, config.General.requestName)
+            config.Data.outputDatasetTag = '%s_%s' % (config.General.workArea, config.General.requestName)
             # Submit.
             try:
                 print "Submitting for input dataset %s" % (inDO[0])

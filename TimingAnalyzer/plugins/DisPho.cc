@@ -96,12 +96,12 @@ DisPho::DisPho(const edm::ParameterSet & iConfig) :
   recHitsEETag(iConfig.getParameter<edm::InputTag>("recHitsEE")),
 
   // uncalibrated recHits
-  uncalibratedRecHitsEBTag(iConfig.getParameter<edm::InputTag>("uncalibratedRecHitsEB")),
-  uncalibratedRecHitsEETag(iConfig.getParameter<edm::InputTag>("uncalibratedRecHitsEE")),
+  //uncalibratedRecHitsEBTag(iConfig.getParameter<edm::InputTag>("uncalibratedRecHitsEB")),
+  //uncalibratedRecHitsEETag(iConfig.getParameter<edm::InputTag>("uncalibratedRecHitsEE")),
 
   // digis
-  ecalDigisEBTag(iConfig.getParameter<edm::InputTag>("EBdigiCollection")),
-  ecalDigisEETag(iConfig.getParameter<edm::InputTag>("EEdigiCollection")),
+  //ecalDigisEBTag(iConfig.getParameter<edm::InputTag>("EBdigiCollection")),
+  //ecalDigisEETag(iConfig.getParameter<edm::InputTag>("EEdigiCollection")),
 
   // gedphotons
   gedPhotonsTag(iConfig.getParameter<edm::InputTag>("gedPhotons")),
@@ -189,14 +189,14 @@ void DisPho::ConsumeTokens()
   recHitsEEToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (recHitsEETag);
 
   // uncalibrated recHits
-  uncalibratedRecHitsEBToken = consumes<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > (uncalibratedRecHitsEBTag);
-  uncalibratedRecHitsEEToken = consumes<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > (uncalibratedRecHitsEETag);
+  //uncalibratedRecHitsEBToken = consumes<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > (uncalibratedRecHitsEBTag);
+  //uncalibratedRecHitsEEToken = consumes<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > (uncalibratedRecHitsEETag);
   
   // digis
   //ecalDigisEBToken = consumes<edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > > (ecalDigisEBTag);
   //ecalDigisEEToken = consumes<edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > > (ecalDigisEETag);
-  ebDigiCollectionToken_ = consumes<EBDigiCollection> (ecalDigisEBTag);
-  eeDigiCollectionToken_ = consumes<EEDigiCollection> (ecalDigisEETag);
+  //ebDigiCollectionToken_ = consumes<EBDigiCollection> (ecalDigisEBTag);
+  //eeDigiCollectionToken_ = consumes<EEDigiCollection> (ecalDigisEETag);
 
   // photons
   gedPhotonsToken = consumes<std::vector<pat::Photon> > (gedPhotonsTag);
@@ -236,7 +236,7 @@ void DisPho::analyze(const edm::Event & iEvent, const edm::EventSetup & iSetup)
   /// LHC Info ///
   /////////////////
 
-  DisPho::GetLHCInfo(iEvent,iSetup);
+  //DisPho::GetLHCInfo(iEvent,iSetup);
 
   /////////////////
   // Get Weights //
@@ -492,18 +492,18 @@ bool DisPho::GetStandardObjects(const edm::Event & iEvent)
   if (oot::BadHandle(recHitsEEH,"recHitsEE")) return false;
 
   // ECAL UNCALIBRATED RECHITS
-  iEvent.getByToken(uncalibratedRecHitsEBToken,uncalibratedRecHitsEBH);
-  if (oot::BadHandle(uncalibratedRecHitsEBH,"uncalibratedRecHitsEB")) return false;
+  //iEvent.getByToken(uncalibratedRecHitsEBToken,uncalibratedRecHitsEBH);
+  //if (oot::BadHandle(uncalibratedRecHitsEBH,"uncalibratedRecHitsEB")) return false;
 
-  iEvent.getByToken(uncalibratedRecHitsEEToken,uncalibratedRecHitsEEH);
-  if (oot::BadHandle(uncalibratedRecHitsEEH,"uncalibratedRecHitsEE")) return false;
+  //iEvent.getByToken(uncalibratedRecHitsEEToken,uncalibratedRecHitsEEH);
+  //if (oot::BadHandle(uncalibratedRecHitsEEH,"uncalibratedRecHitsEE")) return false;
 
   // DIGIS
-  iEvent.getByToken(ebDigiCollectionToken_,pEBDigis);
-  if (oot::BadHandle(pEBDigis,"EBdigiCollection")) return false;
+  //iEvent.getByToken(ebDigiCollectionToken_,pEBDigis);
+  //if (oot::BadHandle(pEBDigis,"EBdigiCollection")) return false;
 
-  iEvent.getByToken(eeDigiCollectionToken_,pEEDigis);
-  if (oot::BadHandle(pEEDigis,"EEdigiCollection")) return false;
+  //iEvent.getByToken(eeDigiCollectionToken_,pEEDigis);
+  //if (oot::BadHandle(pEEDigis,"EEdigiCollection")) return false;
 
   // PHOTONS
   iEvent.getByToken(gedPhotonsToken,gedPhotonsH);
@@ -615,18 +615,18 @@ void DisPho::InitializeObjects(const edm::Event & iEvent)
   recHitMap.clear();
 
   // INPUT ECAL UNCALIBRATED RECHITS
-  uncalibratedRecHitsEB = uncalibratedRecHitsEBH.product();
-  uncalibratedRecHitsEE = uncalibratedRecHitsEEH.product();
+  //uncalibratedRecHitsEB = uncalibratedRecHitsEBH.product();
+  //uncalibratedRecHitsEE = uncalibratedRecHitsEEH.product();
 
   // OUTPUT UNCALIBRATED RECHIT MAP
-  uncalibratedRecHitMap.clear();
+  //uncalibratedRecHitMap.clear();
 
   // INPUT ECAL DIGIS
-  EBdigiCollection = pEBDigis.product();
-  EEdigiCollection = pEEDigis.product();
+  //EBdigiCollection = pEBDigis.product();
+  //EEdigiCollection = pEEDigis.product();
 
   // OUTPUT ECAL DIGIS
-  digiMap.clear();
+  //digiMap.clear();
 
   // OUTPUT PHOTONS
   photons.clear();
@@ -742,8 +742,8 @@ void DisPho::PrepObjects(const edm::Event & iEvent)
   //oot::PrepJets(jetsH,jets,jetpTmin,jetEtamax,jetIDmin);
 
   oot::PrepRecHits(recHitsEB,recHitsEE,recHitMap,rhEmin);
-  oot::PrepURecHits(uncalibratedRecHitsEB,uncalibratedRecHitsEE,uncalibratedRecHitMap);
-  oot::PrepDigis(EBdigiCollection,EEdigiCollection,digiMap);
+  //oot::PrepURecHits(uncalibratedRecHitsEB,uncalibratedRecHitsEE,uncalibratedRecHitMap);
+  //oot::PrepDigis(EBdigiCollection,EEdigiCollection,digiMap);
 
   ///////////////////
   // Extra Pruning //
@@ -756,9 +756,9 @@ void DisPho::PrepObjects(const edm::Event & iEvent)
   // Photon Storing Options  //
   /////////////////////////////
 
-  if (splitPho) oot::SplitPhotons(photons,Config::nPhotons/2);     // split photons by OOT and GED (store at most nPhotons/2 of each)
+ // if (splitPho) oot::SplitPhotons(photons,Config::nPhotons/2);     // split photons by OOT and GED (store at most nPhotons/2 of each)
   if (onlyGED)  oot::StoreOnlyPho(photons,Config::nPhotons,false); // store only GED photons, top nPhotons only
-  if (onlyOOT)  oot::StoreOnlyPho(photons,Config::nPhotons,true);  // store only OOT photons, top nPhotons only
+ // if (onlyOOT)  oot::StoreOnlyPho(photons,Config::nPhotons,true);  // store only OOT photons, top nPhotons only
 
   /////////////////////
   // Lepton Prepping //
@@ -773,8 +773,8 @@ void DisPho::PrepObjects(const edm::Event & iEvent)
 
   //nJets    = std::min(int(jets.size()),Config::nJets);
   nRecHits = recHitMap.size();
-  nURecHits = uncalibratedRecHitMap.size();
-  nDigis = digiMap.size();
+  //nURecHits = uncalibratedRecHitMap.size();
+  //nDigis = digiMap.size();
   nPhotons = std::min(int(photons.size()),Config::nPhotons);
 }
 
@@ -947,8 +947,8 @@ void DisPho::FillTreeFromObjects(const edm::Event & iEvent)
   // Muons //
   ///////////
 
-  DisPho::InitializeMuonBranches();
-  DisPho::SetMuonBranches();
+  //DisPho::InitializeMuonBranches();
+  //DisPho::SetMuonBranches();
 
   //////////////
   // Rec Hits //
@@ -957,8 +957,8 @@ void DisPho::FillTreeFromObjects(const edm::Event & iEvent)
   DisPho::InitializeRecHitBranches();
   DisPho::SetRecHitBranches();
 
-  DisPho::InitializeDigiBranches();
-  DisPho::SetDigiBranches();
+  //DisPho::InitializeDigiBranches();
+  //DisPho::SetDigiBranches();
 
   //////////////////
   // Reco Photons //
@@ -1691,7 +1691,7 @@ void DisPho::InitializeRecHitBranches()
   rhpedrms12.clear();
   rhpedrms6.clear();
   rhpedrms1.clear();
-
+/*
   uRhId.clear();
   amplitude.clear();
   amplitudeError.clear();
@@ -1714,7 +1714,7 @@ void DisPho::InitializeRecHitBranches()
   isSaturated.clear();
   isJitterValid.clear();
   isJitterErrorValid.clear();
-
+*/
   rhX.resize(nRecHits);
   rhY.resize(nRecHits);
   rhZ.resize(nRecHits);
@@ -1734,28 +1734,28 @@ void DisPho::InitializeRecHitBranches()
   rhpedrms6.resize(nRecHits);
   rhpedrms1.resize(nRecHits);
 
-  uRhId.resize(nURecHits);
-  amplitude.resize(nURecHits);
-  amplitudeError.resize(nURecHits);
-  pedestal.resize(nURecHits);
-  jitter.resize(nURecHits);
-  chi2.resize(nURecHits);
+  //uRhId.resize(nURecHits);
+  //amplitude.resize(nURecHits);
+  //amplitudeError.resize(nURecHits);
+  //pedestal.resize(nURecHits);
+  //jitter.resize(nURecHits);
+  //chi2.resize(nURecHits);
   //outOfTimeAmplitude.resize(nURecHits);
-  ootA0.resize(nURecHits);
-  ootA1.resize(nURecHits);
-  ootA2.resize(nURecHits);
-  ootA3.resize(nURecHits);
-  ootA4.resize(nURecHits);
-  ootA5.resize(nURecHits);
-  ootA6.resize(nURecHits);
-  ootA7.resize(nURecHits);
-  ootA8.resize(nURecHits);
-  ootA9.resize(nURecHits);
+  //ootA0.resize(nURecHits);
+  //ootA1.resize(nURecHits);
+  //ootA2.resize(nURecHits);
+  //ootA3.resize(nURecHits);
+  //ootA4.resize(nURecHits);
+  //ootA5.resize(nURecHits);
+  //ootA6.resize(nURecHits);
+  //ootA7.resize(nURecHits);
+  //ootA8.resize(nURecHits);
+  //ootA9.resize(nURecHits);
   //for (auto i = 0; i<nURecHits; i++) outOfTimeAmplitude[i].resize(SAMPLES);
-  jitterError.resize(nURecHits);
-  isSaturated.resize(nURecHits);
-  isJitterValid.resize(nURecHits);
-  isJitterErrorValid.resize(nURecHits);
+  //jitterError.resize(nURecHits);
+  //isSaturated.resize(nURecHits);
+  //isJitterValid.resize(nURecHits);
+  //isJitterErrorValid.resize(nURecHits);
 
   for (auto i = 0; i < nRecHits; i++)
   {
@@ -1786,7 +1786,7 @@ void DisPho::InitializeRecHitBranches()
   }
 
 
-  for (auto i = 0; i < nURecHits; i++)
+/*  for (auto i = 0; i < nURecHits; i++)
     {
       uRhId[i] = 0;
       amplitude[i] = -9999.f;
@@ -1810,12 +1810,12 @@ void DisPho::InitializeRecHitBranches()
       isJitterValid[i] = false;
       isJitterErrorValid[i] = false;
     }
-
+*/
   }  
 
 void DisPho::InitializeDigiBranches()
 {
-
+/*
   digiID.clear();
   digiData.clear();
 
@@ -1828,6 +1828,7 @@ void DisPho::InitializeDigiBranches()
       digiID[i] = 0.;
       for (unsigned int j; j<SAMPLES; j++) digiData[i][j] = -9999.f;
     }
+*/
 }
 
 void DisPho::SetRecHitBranches()
@@ -1837,18 +1838,18 @@ void DisPho::SetRecHitBranches()
   DisPho::SetRecHitBranches(recHitsEB,barrelGeometry,adcToGeVEB);
   DisPho::SetRecHitBranches(recHitsEE,endcapGeometry,adcToGeVEE);
 
-  nurechits = uncalibratedRecHitMap.size();
+  //nurechits = uncalibratedRecHitMap.size();
 
-  DisPho::SetURecHitBranches(uncalibratedRecHitsEB,barrelGeometry);
-  DisPho::SetURecHitBranches(uncalibratedRecHitsEE,endcapGeometry);
+  //DisPho::SetURecHitBranches(uncalibratedRecHitsEB,barrelGeometry);
+  //DisPho::SetURecHitBranches(uncalibratedRecHitsEE,endcapGeometry);
 
 }
 
 void DisPho::SetDigiBranches()
 {
-  ndigis = digiMap.size();
+ // ndigis = digiMap.size();
 
-  DisPho::SetDigiBranches(EBdigiCollection,EEdigiCollection,barrelGeometry);
+ // DisPho::SetDigiBranches(EBdigiCollection,EEdigiCollection,barrelGeometry);
 }
 
 void DisPho::SetRecHitBranches(const EcalRecHitCollection * recHits, const CaloSubdetectorGeometry * geometry, const float adcToGeV)
@@ -1909,6 +1910,7 @@ void DisPho::SetRecHitBranches(const EcalRecHitCollection * recHits, const CaloS
 
 void DisPho::SetURecHitBranches(const EcalUncalibratedRecHitCollection * recHits, const CaloSubdetectorGeometry * geometry)
 {
+/*
   for (const auto recHit : *recHits)
     {
       const auto recHitId(recHit.id());
@@ -1949,11 +1951,12 @@ void DisPho::SetURecHitBranches(const EcalUncalibratedRecHitCollection * recHits
 	  
 	}
     }
+*/
 }
 
 void DisPho::SetDigiBranches(const EBDigiCollection * ebDigis, const EEDigiCollection * eeDigis,  const CaloSubdetectorGeometry * geometry)
 {
-
+/*
   for (const auto digi : *ebDigis)
     {
       const auto digiId(digi.id());
@@ -1995,6 +1998,7 @@ void DisPho::SetDigiBranches(const EBDigiCollection * ebDigis, const EEDigiColle
 
 	}
     }
+*/
 }
 
 void DisPho::InitializePhoBranches()
@@ -2784,7 +2788,7 @@ void DisPho::MakeEventTree()
 
   // RecHit Info
   disphotree->Branch("nrechits", &nrechits);
-  disphotree->Branch("nurechits", &nurechits);
+//  disphotree->Branch("nurechits", &nurechits);
   if (storeRecHits)
   {
     disphotree->Branch("rhX", &rhX);
@@ -2806,6 +2810,7 @@ void DisPho::MakeEventTree()
     disphotree->Branch("rhpedrms6", &rhpedrms6);
     disphotree->Branch("rhpedrms1", &rhpedrms1);
 
+/*
     disphotree->Branch("uRhId", &uRhId);
     disphotree->Branch("amplitude", &amplitude);
     disphotree->Branch("amplitudeError", &amplitudeError);
@@ -2828,17 +2833,18 @@ void DisPho::MakeEventTree()
     disphotree->Branch("isSaturated", &isSaturated);
     disphotree->Branch("isJitterValid", &isJitterValid);
     disphotree->Branch("isJitterErrorValid", &isJitterErrorValid);
-
+*/
   }
   
   // Digi Info
+/*
   disphotree->Branch("ndigis", &ndigis);
   if (storeRecHits)
     {
       disphotree->Branch("digiID", &digiID);
       disphotree->Branch("digiData", &digiData, "digiData/F");
     }
-
+*/
   // Photon Info
   disphotree->Branch("nphotons", &nphotons);
 

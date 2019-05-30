@@ -412,16 +412,16 @@ private:
   const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * recHitsEE;
 
   // EB Uncalibrated RecHits
-  const edm::InputTag uncalibratedRecHitsEBTag;
-  edm::EDGetTokenT<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEBToken;
-  edm::Handle<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEBH;
-  const edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > * uncalibratedRecHitsEB;
+//  const edm::InputTag uncalibratedRecHitsEBTag;
+//  edm::EDGetTokenT<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEBToken;
+//  edm::Handle<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEBH;
+//  const edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > * uncalibratedRecHitsEB;
 
   // EE Uncalibrated RecHits
-  const edm::InputTag uncalibratedRecHitsEETag;
-  edm::EDGetTokenT<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEEToken;
-  edm::Handle<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEEH;
-  const edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > * uncalibratedRecHitsEE;
+//  const edm::InputTag uncalibratedRecHitsEETag;
+//  edm::EDGetTokenT<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEEToken;
+//  edm::Handle<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEEH;
+//  const edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > * uncalibratedRecHitsEE;
 
   /*
   // EB Digis
@@ -450,7 +450,7 @@ private:
   const edm::SortedCollection<EESrFlag,edm::StrictWeakOrdering<EESrFlag> > * ecalDigisEE;
   */
 
-  
+  /*
   // EB Digis test
   const edm::InputTag ecalDigisEBTag;
   edm::EDGetTokenT<EBDigiCollection> ebDigiCollectionToken_;
@@ -462,13 +462,13 @@ private:
   edm::EDGetTokenT<EEDigiCollection> eeDigiCollectionToken_;
   edm::Handle<EEDigiCollection> pEEDigis;
   const EEDigiCollection * EEdigiCollection;
-
+*/
   // Output rechit map
   uiiumap recHitMap;
-  uiiumap uncalibratedRecHitMap;
+  //uiiumap uncalibratedRecHitMap;
 
   // Output digi map
-  uiiumap digiMap;
+ // uiiumap digiMap;
 
   // gedPhotons
   const edm::InputTag gedPhotonsTag;
@@ -663,7 +663,7 @@ private:
   std::vector<float> rhadcToGeV;
   std::vector<float> rhped12, rhped6, rhped1;
   std::vector<float> rhpedrms12, rhpedrms6, rhpedrms1;
-
+/*
   // Uncalibrated RecHits
   int nurechits;
   std::vector<unsigned int> uRhId;
@@ -677,7 +677,7 @@ private:
   int ndigis;
   std::vector<unsigned int> digiID;
   std::vector<std::vector<float> > digiData;
-
+*/
   // photon info
   int nphotons;
   std::vector<phoStruct> phoBranches;
