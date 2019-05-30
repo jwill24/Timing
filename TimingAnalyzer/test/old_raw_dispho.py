@@ -14,8 +14,8 @@ from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing('python')
 print('Loading Options')
 ## LHC Info
-options.register('lhcInfoValid',True,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to get lhc info');
-options.register('rlelist','events2018.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'Events to Process');
+options.register('lhcInfoValid',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to get lhc info');
+
 ## blinding
 options.register('blindSF',1000,VarParsing.multiplicity.singleton,VarParsing.varType.int,'pick every nth SF event');
 options.register('applyBlindSF',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to apply event SF blinding');
@@ -90,8 +90,8 @@ options.register('BR',1.0,VarParsing.multiplicity.singleton,VarParsing.varType.f
 
 ## GT to be used
 #options.register('globalTag','102X_dataRun2_Prompt_v11',VarParsing.multiplicity.singleton,VarParsing.varType.string,'gloabl tag to be used');
-options.register('globalTag','102X_dataRun2_Sep2018Rereco_v1',VarParsing.multiplicity.singleton,VarParsing.varType.string,'gloabl tag to be used');
-#options.register('globalTag','101X_dataRun2_Prompt_v11',VarParsing.multiplicity.singleton,VarParsing.varType.string,'gloabl tag to be used');
+#options.register('globalTag','102X_dataRun2_Sep2018Rereco_v1',VarParsing.multiplicity.singleton,VarParsing.varType.string,'gloabl tag to be used');
+options.register('globalTag','101X_dataRun2_Prompt_v11',VarParsing.multiplicity.singleton,VarParsing.varType.string,'gloabl tag to be used');
 
 ## do a demo run over only 1k events
 #options.register('demoMode',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to run over only 1k events');
@@ -101,10 +101,10 @@ options.register('demoMode',True,VarParsing.multiplicity.singleton,VarParsing.va
 options.register('processName','TREE',VarParsing.multiplicity.singleton,VarParsing.varType.string,'process name to be considered');
 
 ## outputFile Name
-options.register('outputFileName','very_short_trial_run18D_dispho.root',VarParsing.multiplicity.singleton,VarParsing.varType.string,'output file name created by cmsRun');
+options.register('outputFileName','dispho.root',VarParsing.multiplicity.singleton,VarParsing.varType.string,'output file name created by cmsRun');
 
 ## etra bits
-#options.register('nThreads',8,VarParsing.multiplicity.singleton,VarParsing.varType.int,'number of threads per job');
+options.register('nThreads',8,VarParsing.multiplicity.singleton,VarParsing.varType.int,'number of threads per job');
 options.register('deleteEarly',True,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'delete temp products early if not needed');
 options.register('runUnscheduled',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'run unscheduled for products');
 
@@ -183,7 +183,7 @@ print "demoMode       : ",options.demoMode
 print "processName    : ",options.processName	
 print "outputFileName : ",options.outputFileName	
 print "        -- Extra bits --"
-#print "nThreads       : ",options.nThreads
+print "nThreads       : ",options.nThreads
 print "runUnscheduled : ",options.runUnscheduled
 print "deleteEarly    : ",options.deleteEarly
 print " "
@@ -207,18 +207,16 @@ process.load('Configuration.StandardSequences.MagneticField_AutoFromDBCurrent_cf
 process.load('Configuration.StandardSequences.RawToDigi_Data_cff')
 process.load('Configuration.StandardSequences.L1Reco_cff')
 process.load('Configuration.StandardSequences.Reconstruction_Data_cff')
-#process.load('PhysicsTools.PatAlgos.slimming.metFilterPaths_cff')
-#process.load('Configuration.StandardSequences.PAT_cff')
-process.load('Timing.TimingAnalyzer.jwk_PAT_cff')
+process.load('PhysicsTools.PatAlgos.slimming.metFilterPaths_cff')
+process.load('Configuration.StandardSequences.PAT_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.load("Geometry.CaloEventSetup.CaloTowerConstituents_cfi")
 
 process.maxEvents = cms.untracked.PSet(
-#    input = cms.untracked.int32(5)
-#    input = cms.untracked.int32(100)
-    input = cms.untracked.int32(-1)
+    input = cms.untracked.int32(5)
+ #   input = cms.untracked.int32(-1)
 )
 
 # Input source
@@ -226,17 +224,12 @@ process.maxEvents = cms.untracked.PSet(
 #    fileNames = cms.untracked.vstring('file:jwk_reco_data_DIGI2RAW.root'),
 #    secondaryFileNames = cms.untracked.vstring()
 #)
-
-eventList = open(options.rlelist,'r')
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(#'file:jwk_reco_data_DIGI2RAW.root'),
         #'/store/data/Run2018D/ZeroBias/RAW/v1/000/325/240/00000/FFA4CC2A-A63C-8440-ADC4-D7E2FF53BB4F.root'
-	#'file:2E81C787-2D53-E811-BAFC-FA163E2CD5B1.root'
-	'file:30F3675D-F89D-E811-8D66-FA163E884269.root'#run2018D
-	#'/store/data/Run2018A/EGamma/RAW/v1/000/315/973/00000/2E81C787-2D53-E811-BAFC-FA163E2CD5B1.root'
+	'file:2E81C787-2D53-E811-BAFC-FA163E2CD5B1.root'
         ),
-    secondaryFileNames = cms.untracked.vstring(),
-    eventsToProcess = cms.untracked.VEventRange(eventList)
+    secondaryFileNames = cms.untracked.vstring()
 )
 
 process.options = cms.untracked.PSet(
@@ -533,60 +526,37 @@ process.tree_step = cms.EndPath(
         process.dispho
 )
 
-process.jwk_highlevelreco = cms.Sequence(
-			      process.egammaHighLevelRecoPrePF*
-                              process.particleFlowReco*
-                              process.egammaHighLevelRecoPostPF*
-                              process.muoncosmichighlevelreco*
-                              process.muonshighlevelreco *
-                              process.particleFlowLinks*
-                              process.jetHighLevelReco*
-                              process.metrecoPlusHCALNoise*
-                              process.btagging*
-                              process.recoPFMET*
-                              process.PFTau*
-                              process.reducedRecHits #*
-                              #process.cosmicDCTracksSeq
-                             )
-
-process.jwk_reconstruction = cms.Sequence(
-				process.localreco*
-				process.globalreco*
-				process.jwk_highlevelreco*
-				process.logErrorHarvester
-)
-
 # RAW Path and EndPath definitions
 process.raw2digi_step = cms.Path(process.RawToDigi)
 process.L1Reco_step = cms.Path(process.L1Reco)
-process.reconstruction_step = cms.Path(process.jwk_reconstruction)
-#process.Flag_trackingFailureFilter = cms.Path(process.goodVertices+process.trackingFailureFilter)
-#process.Flag_goodVertices = cms.Path(process.primaryVertexFilter)
-#process.Flag_CSCTightHaloFilter = cms.Path(process.CSCTightHaloFilter)
-#process.Flag_trkPOGFilters = cms.Path(process.trkPOGFilters)
-#process.Flag_HcalStripHaloFilter = cms.Path(process.HcalStripHaloFilter)
-#process.Flag_trkPOG_logErrorTooManyClusters = cms.Path(~process.logErrorTooManyClusters)
-#process.Flag_EcalDeadCellTriggerPrimitiveFilter = cms.Path(process.EcalDeadCellTriggerPrimitiveFilter)
-#process.Flag_ecalLaserCorrFilter = cms.Path(process.ecalLaserCorrFilter)
-#process.Flag_globalSuperTightHalo2016Filter = cms.Path(process.globalSuperTightHalo2016Filter)
-#process.Flag_eeBadScFilter = cms.Path(process.eeBadScFilter)
-#process.Flag_METFilters = cms.Path(process.metFilters)
-#process.Flag_chargedHadronTrackResolutionFilter = cms.Path(process.chargedHadronTrackResolutionFilter)
-#process.Flag_globalTightHalo2016Filter = cms.Path(process.globalTightHalo2016Filter)
-#process.Flag_CSCTightHaloTrkMuUnvetoFilter = cms.Path(process.CSCTightHaloTrkMuUnvetoFilter)
-#process.Flag_HBHENoiseIsoFilter = cms.Path(process.HBHENoiseFilterResultProducer+process.HBHENoiseIsoFilter)
-#process.Flag_BadChargedCandidateSummer16Filter = cms.Path(process.BadChargedCandidateSummer16Filter)
-#process.Flag_hcalLaserEventFilter = cms.Path(process.hcalLaserEventFilter)
-#process.Flag_BadPFMuonFilter = cms.Path(process.BadPFMuonFilter)
-#process.Flag_ecalBadCalibFilter = cms.Path(process.ecalBadCalibFilter)
-#process.Flag_HBHENoiseFilter = cms.Path(process.HBHENoiseFilterResultProducer+process.HBHENoiseFilter)
-#process.Flag_trkPOG_toomanystripclus53X = cms.Path(~process.toomanystripclus53X)
-#process.Flag_EcalDeadCellBoundaryEnergyFilter = cms.Path(process.EcalDeadCellBoundaryEnergyFilter)
-#process.Flag_BadChargedCandidateFilter = cms.Path(process.BadChargedCandidateFilter)
-#process.Flag_trkPOG_manystripclus53X = cms.Path(~process.manystripclus53X)
-#process.Flag_BadPFMuonSummer16Filter = cms.Path(process.BadPFMuonSummer16Filter)
-#process.Flag_muonBadTrackFilter = cms.Path(process.muonBadTrackFilter)
-#process.Flag_CSCTightHalo2015Filter = cms.Path(process.CSCTightHalo2015Filter)
+process.reconstruction_step = cms.Path(process.reconstruction)
+process.Flag_trackingFailureFilter = cms.Path(process.goodVertices+process.trackingFailureFilter)
+process.Flag_goodVertices = cms.Path(process.primaryVertexFilter)
+process.Flag_CSCTightHaloFilter = cms.Path(process.CSCTightHaloFilter)
+process.Flag_trkPOGFilters = cms.Path(process.trkPOGFilters)
+process.Flag_HcalStripHaloFilter = cms.Path(process.HcalStripHaloFilter)
+process.Flag_trkPOG_logErrorTooManyClusters = cms.Path(~process.logErrorTooManyClusters)
+process.Flag_EcalDeadCellTriggerPrimitiveFilter = cms.Path(process.EcalDeadCellTriggerPrimitiveFilter)
+process.Flag_ecalLaserCorrFilter = cms.Path(process.ecalLaserCorrFilter)
+process.Flag_globalSuperTightHalo2016Filter = cms.Path(process.globalSuperTightHalo2016Filter)
+process.Flag_eeBadScFilter = cms.Path(process.eeBadScFilter)
+process.Flag_METFilters = cms.Path(process.metFilters)
+process.Flag_chargedHadronTrackResolutionFilter = cms.Path(process.chargedHadronTrackResolutionFilter)
+process.Flag_globalTightHalo2016Filter = cms.Path(process.globalTightHalo2016Filter)
+process.Flag_CSCTightHaloTrkMuUnvetoFilter = cms.Path(process.CSCTightHaloTrkMuUnvetoFilter)
+process.Flag_HBHENoiseIsoFilter = cms.Path(process.HBHENoiseFilterResultProducer+process.HBHENoiseIsoFilter)
+process.Flag_BadChargedCandidateSummer16Filter = cms.Path(process.BadChargedCandidateSummer16Filter)
+process.Flag_hcalLaserEventFilter = cms.Path(process.hcalLaserEventFilter)
+process.Flag_BadPFMuonFilter = cms.Path(process.BadPFMuonFilter)
+process.Flag_ecalBadCalibFilter = cms.Path(process.ecalBadCalibFilter)
+process.Flag_HBHENoiseFilter = cms.Path(process.HBHENoiseFilterResultProducer+process.HBHENoiseFilter)
+process.Flag_trkPOG_toomanystripclus53X = cms.Path(~process.toomanystripclus53X)
+process.Flag_EcalDeadCellBoundaryEnergyFilter = cms.Path(process.EcalDeadCellBoundaryEnergyFilter)
+process.Flag_BadChargedCandidateFilter = cms.Path(process.BadChargedCandidateFilter)
+process.Flag_trkPOG_manystripclus53X = cms.Path(~process.manystripclus53X)
+process.Flag_BadPFMuonSummer16Filter = cms.Path(process.BadPFMuonSummer16Filter)
+process.Flag_muonBadTrackFilter = cms.Path(process.muonBadTrackFilter)
+process.Flag_CSCTightHalo2015Filter = cms.Path(process.CSCTightHalo2015Filter)
 process.endjob_step = cms.EndPath(process.endOfProcess)
 #process.RECOoutput_step = cms.EndPath(process.RECOoutput)
 #process.MINIAODoutput_step = cms.EndPath(process.MINIAODoutput)
@@ -596,7 +566,7 @@ process.schedule = cms.Schedule(
 		process.raw2digi_step,
 		process.L1Reco_step,
 		process.reconstruction_step,
-		#process.ecalBadCalibReducedMINIAODFilter_step,
+		process.ecalBadCalibReducedMINIAODFilter_step,
 		process.endjob_step,
 		process.tree_step
 )
@@ -614,8 +584,7 @@ process=convertToUnscheduled(process)
 # customisation of the process.
 
 # Automatic addition of the customisation function from PhysicsTools.PatAlgos.slimming.miniAOD_tools
-#from PhysicsTools.PatAlgos.slimming.miniAOD_tools import miniAOD_customizeAllData
-from Timing.TimingAnalyzer.jwk_miniAOD_tools import miniAOD_customizeAllData 
+from PhysicsTools.PatAlgos.slimming.miniAOD_tools import miniAOD_customizeAllData 
 
 #call to customisation function miniAOD_customizeAllData imported from PhysicsTools.PatAlgos.slimming.miniAOD_tools
 process = miniAOD_customizeAllData(process)
@@ -634,9 +603,9 @@ process = customiseEarlyDelete(process)
 # End adding early deletion
 
 ### Extra bits from other configs
-#process.options = cms.untracked.PSet(
-#        numberOfThreads=cms.untracked.uint32(options.nThreads),
-#        numberOfStreams=cms.untracked.uint32(options.nThreads/2)
-#)
+process.options = cms.untracked.PSet(
+        numberOfThreads=cms.untracked.uint32(options.nThreads),
+        numberOfStreams=cms.untracked.uint32(options.nThreads/2)
+)
 
 

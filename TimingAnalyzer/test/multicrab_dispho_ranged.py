@@ -80,7 +80,7 @@ def subcrab( runs, events, reqmem ):
 
         config.JobType.pluginName  = 'Analysis'
         #config.JobType.psetName    = 'jwk_raw_dispho.py'
-        config.JobType.psetName    = 'jwk_raw_dispho.py'
+        config.JobType.psetName    = 'dispho.py'
         #config.JobType.numCores    = 8
         config.JobType.maxMemoryMB = reqmem
         #config.JobType.maxJobRuntimeMin = 1600
@@ -92,7 +92,7 @@ def subcrab( runs, events, reqmem ):
         #config.Data.splitting    = 'LumiBased'
         config.Data.splitting    = 'EventAwareLumiBased'
         #config.Data.splitting    = 'Automatic'
-        config.Data.unitsPerJob  =  100    
+        config.Data.unitsPerJob  =  4000    
 	# unitsPerJob = 1000 for 321122-321128 and maxMemoryMB = 4000  on EventAwareLumiBased
 	config.Data.runRange	= runs #'321122-321128'
 
@@ -105,10 +105,11 @@ def subcrab( runs, events, reqmem ):
         # Will submit one task for each of these input datasets.
         inputDataAndOpts = [
 
-            #['/EGamma/Run2018D-v1/RAW'],
-            #['/EGamma/Run2018C-v1/RAW'],
-            ['/EGamma/Run2018B-v1/RAW'],
-            #['/EGamma/Run2018A-v1/RAW'],
+            ['/EGamma/Run2018A-17Sep2018-v2/MINIAOD'],
+            #['/EGamma/Run2018B-26Sep2018-v1/MINIAOD'],
+            #['/EGamma/Run2018C-17Sep2018-v1/MINIAOD'],
+            #['/EGamma/Run2018D-PromptReco-v2/MINIAOD'],
+            #['/EGamma/Run2018E-PromptReco-v1/MINIAOD'],
 
 	    ]
 #'/store/data/Run2018D/EGamma/RAW/v1/000/321/218/00000/5A0A07C1-FE9E-E811-BEDA-FA163E108FC3.root'
@@ -120,8 +121,9 @@ def subcrab( runs, events, reqmem ):
             runEra         = inDO[0].split('/')[2]
 	    dataset	   = inDO[0].split('/')[3]
 	    #infilename	   = inDO[0].split('/')[11]
-	    trial	   = "valtest5"
+	    #trial	   = "valtest5"
 	    #trial	   = "valtest2016gt"
+	    trial         = "valtest_comp"
 
             config.General.requestName   = trial+"_"+primaryDataset+"_"+runEra+"_"+runs+"_"+dataset+"_dispho"
             config.Data.outputDatasetTag = trial+"_"+primaryDataset+"_"+dataset+"_"+runEra+"_"+runs+"_dispho"
@@ -204,6 +206,7 @@ def submit_sample_runs():
 	#subcrab( "297620-299061", event_list_path + "sel_297620v299061_RAW2017B.txt", 3000 )
         #subcrab( "297424-297486", event_list_path + "sel_297424v297486_RAW2017B.txt", 3000 )
 
+	subcrab( "315257-315322", event_list_path + "sel_eg2018/sel_315257v315322_EG2018A.txt", 2500 )
 
 def submit_run2018A():
         #subcrab( "315257-315322", event_list_path + "sel_315257v315322_EG2018A.txt", 3000 )
