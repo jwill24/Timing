@@ -53,6 +53,6 @@ def make_commands( inputfilename ):
 
 
 
-
-
-make_commands( 'Run2018_run_lumi.txt' )
+make_commands( 'Run2016_run_lumi.txt' )
+make_commands( 'Run2017_run_lumi.txt' )
+#make_commands( 'Run2018_run_lumi.txt' )

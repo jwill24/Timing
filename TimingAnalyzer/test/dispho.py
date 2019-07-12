@@ -7,7 +7,7 @@ options = VarParsing('python')
 
 ## LHC Info
 options.register('lhcInfoValid',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to get lhc info');
-
+options.register('rlelist','events2018.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'Events to Process');
 ## blinding
 options.register('blindSF',1000,VarParsing.multiplicity.singleton,VarParsing.varType.int,'pick every nth SF event');
 options.register('applyBlindSF',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to apply event SF blinding');
@@ -213,7 +213,9 @@ process.lhcinfo_prefer = cms.ESPrefer("PoolDBESSource","LHCInfoReader")
 
 
 ## Define the input source
-process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring( 
+eventList = open(options.rlelist,'r')
+process.source = cms.Source("PoolSource", 
+	fileNames = cms.untracked.vstring( 
 		# reminiaod data: 94X_dataRun2_v6
 		#'/store/user/kmcdermo/files/miniAOD/SPH_2017E_miniAODv2.root'
 		# reminiaod GJets, GT: 94X_mc2017_realistic_v14
@@ -221,20 +223,22 @@ process.source = cms.Source("PoolSource", fileNames = cms.untracked.vstring(
 		# miniaodv2 GMSB, GT: 94X_mc2017_realistic_v14
 		#'/store/user/kmcdermo/files/miniAOD/GMSB_L600TeV_Ctau400cm_miniAODv2.root'
 		# Run2018A, GT: 102X_dataRun2_Sep2018Rereco_v1
-		#'/store/data/Run2018A/EGamma/MINIAOD/17Sep2018-v2/110000/C82A2CFA-C92D-C648-A574-3ED3E09BDB07.root'
+		'/store/data/Run2018A/EGamma/MINIAOD/17Sep2018-v2/110000/C82A2CFA-C92D-C648-A574-3ED3E09BDB07.root'
 		# Run2018B, GT: 102X_dataRun2_Sep2018Rereco_v1
 		#'/store/data/Run2018B/EGamma/MINIAOD/17Sep2018-v1/60000/FF5A89A5-453C-684D-813A-369B457AD498.root'
 		# Run2018C, GT: 102X_dataRun2_Sep2018Rereco_v1 
 		#'/store/data/Run2018C/EGamma/MINIAOD/17Sep2018-v1/270000/8972BD30-85EF-7447-9E61-920DE246370E.root'
 		# Run2016D, GT:102X_dataRun2_Prompt_v1
-		'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/262/00000/180E59D4-F7A1-E811-90B8-FA163E30F0B0.root', #TEST
-		'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/712/00000/64812F26-EBA8-E811-AF9B-FA163E067929.root',
-		'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/776/00000/62FBACDD-71AC-E811-95C7-02163E019FE5.root',
-		'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/007/00000/6A6E9A39-C29C-E811-8820-FA163EA76F2E.root',
+		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/262/00000/180E59D4-F7A1-E811-90B8-FA163E30F0B0.root', #TEST
+		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/712/00000/64812F26-EBA8-E811-AF9B-FA163E067929.root',
+		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/776/00000/62FBACDD-71AC-E811-95C7-02163E019FE5.root',
+		#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/321/007/00000/6A6E9A39-C29C-E811-8820-FA163EA76F2E.root',
 		# Run2016E, GT: 102X_dataRun2_Prompt_v1
 		#'/store/data/Run2018E/EGamma/MINIAOD/PromptReco-v1/000/325/520/00000/2F6163F4-934A-AD4D-B9FE-9B2EDBBE99FE.root'
 		#'Inputfile.root'
-		))
+		),
+    	eventsToProcess = cms.untracked.VEventRange(eventList)
+)
 
 ## How many events to process
 if   options.demoMode : process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
@@ -427,15 +431,15 @@ process.treePath = cms.Path(
 )
 
 ### Extra bits from other configs
-process.options = cms.untracked.PSet(
-	numberOfThreads=cms.untracked.uint32(options.nThreads),
-	numberOfStreams=cms.untracked.uint32(options.nThreads/2)
-)
+#process.options = cms.untracked.PSet(
+#	numberOfThreads=cms.untracked.uint32(options.nThreads),
+#	numberOfStreams=cms.untracked.uint32(options.nThreads/2)
+#)
 
 from FWCore.ParameterSet.Utilities import convertToUnscheduled
 if options.runUnscheduled : 
 	process = convertToUnscheduled(process)
 
-from Configuration.StandardSequences.earlyDeleteSettings_cff import customiseEarlyDelete
-if options.deleteEarly:
-	process = customiseEarlyDelete(process)
+#from Configuration.StandardSequences.earlyDeleteSettings_cff import customiseEarlyDelete
+#if options.deleteEarly:
+#	process = customiseEarlyDelete(process)
