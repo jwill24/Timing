@@ -95,6 +95,10 @@ DisPho::DisPho(const edm::ParameterSet & iConfig) :
   recHitsEBTag(iConfig.getParameter<edm::InputTag>("recHitsEB")),  
   recHitsEETag(iConfig.getParameter<edm::InputTag>("recHitsEE")),
 
+  // KU recHits
+  kuRecHitsEBTag(iConfig.getParameter<edm::InputTag>("kuRecHitsEB")),
+  kuRecHitsEETag(iConfig.getParameter<edm::InputTag>("kuRecHitsEE")),
+
   // uncalibrated recHits
   uncalibratedRecHitsEBTag(iConfig.getParameter<edm::InputTag>("uncalibratedRecHitsEB")),
   uncalibratedRecHitsEETag(iConfig.getParameter<edm::InputTag>("uncalibratedRecHitsEE")),
@@ -187,6 +191,8 @@ void DisPho::ConsumeTokens()
   // rechits
   recHitsEBToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (recHitsEBTag);
   recHitsEEToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (recHitsEETag);
+  kuRecHitsEBToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuRecHitsEBTag);
+  kuRecHitsEEToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuRecHitsEETag);
 
   // uncalibrated recHits
   uncalibratedRecHitsEBToken = consumes<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > (uncalibratedRecHitsEBTag);
@@ -491,6 +497,13 @@ bool DisPho::GetStandardObjects(const edm::Event & iEvent)
   iEvent.getByToken(recHitsEEToken,recHitsEEH);
   if (oot::BadHandle(recHitsEEH,"recHitsEE")) return false;
 
+  iEvent.getByToken(kuRecHitsEBToken,kuRecHitsEBH);
+  if (oot::BadHandle(kuRecHitsEBH,"kuRecHitsEB")) return false;
+
+  iEvent.getByToken(kuRecHitsEEToken,kuRecHitsEEH);
+  if (oot::BadHandle(kuRecHitsEEH,"kuRecHitsEE")) return false;
+
+
   // ECAL UNCALIBRATED RECHITS
   iEvent.getByToken(uncalibratedRecHitsEBToken,uncalibratedRecHitsEBH);
   if (oot::BadHandle(uncalibratedRecHitsEBH,"uncalibratedRecHitsEB")) return false;
@@ -610,6 +623,8 @@ void DisPho::InitializeObjects(const edm::Event & iEvent)
   // INPUT ECAL RECHITS
   recHitsEB = recHitsEBH.product();
   recHitsEE = recHitsEEH.product();
+  kuRecHitsEB = kuRecHitsEBH.product();
+  kuRecHitsEE = kuRecHitsEEH.product();
 
   // OUTPUT RECHIT MAP
   recHitMap.clear();
@@ -1836,6 +1851,8 @@ void DisPho::SetRecHitBranches()
 
   DisPho::SetRecHitBranches(recHitsEB,barrelGeometry,adcToGeVEB);
   DisPho::SetRecHitBranches(recHitsEE,endcapGeometry,adcToGeVEE);
+
+  for (const auto recHit : *kuRecHitsEB){std::cout << "Leading Pt KURecHit Time: " << recHit.time() << std::endl; break; }
 
   nurechits = uncalibratedRecHitMap.size();
 

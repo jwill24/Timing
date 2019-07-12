@@ -101,7 +101,7 @@ options.register('demoMode',True,VarParsing.multiplicity.singleton,VarParsing.va
 options.register('processName','TREE',VarParsing.multiplicity.singleton,VarParsing.varType.string,'process name to be considered');
 
 ## outputFile Name
-options.register('outputFileName','very_short_trial_run18D_dispho.root',VarParsing.multiplicity.singleton,VarParsing.varType.string,'output file name created by cmsRun');
+options.register('outputFileName','very_short_kutest_run18D_dispho.root',VarParsing.multiplicity.singleton,VarParsing.varType.string,'output file name created by cmsRun');
 
 ## etra bits
 #options.register('nThreads',8,VarParsing.multiplicity.singleton,VarParsing.varType.int,'number of threads per job');
@@ -210,6 +210,7 @@ process.load('Configuration.StandardSequences.Reconstruction_Data_cff')
 #process.load('PhysicsTools.PatAlgos.slimming.metFilterPaths_cff')
 #process.load('Configuration.StandardSequences.PAT_cff')
 process.load('Timing.TimingAnalyzer.jwk_PAT_cff')
+process.load('Timing.TimingAnalyzer.jwk_ku_ecalLocalRecoSequence_cff')
 process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
@@ -217,7 +218,7 @@ process.load("Geometry.CaloEventSetup.CaloTowerConstituents_cfi")
 
 process.maxEvents = cms.untracked.PSet(
 #    input = cms.untracked.int32(5)
-    input = cms.untracked.int32(100)
+    input = cms.untracked.int32(20)
 #    input = cms.untracked.int32(-1)
 )
 
@@ -227,17 +228,17 @@ process.maxEvents = cms.untracked.PSet(
 #    secondaryFileNames = cms.untracked.vstring()
 #)
 
-eventList = open(options.rlelist,'r')
+#eventList = open(options.rlelist,'r')
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(#'file:jwk_reco_data_DIGI2RAW.root'),
         #'/store/data/Run2018D/ZeroBias/RAW/v1/000/325/240/00000/FFA4CC2A-A63C-8440-ADC4-D7E2FF53BB4F.root'
 	#'file:2E81C787-2D53-E811-BAFC-FA163E2CD5B1.root'
 	'file:30F3675D-F89D-E811-8D66-FA163E884269.root'#run2018D
-        '/store/data/Run2018A/AlCaPhiSym/RAW/v1/000/315/318/00000/FEC219CA-264A-E811-BDD5-FA163E19DD9A.root'
+        #'/store/data/Run2018A/AlCaPhiSym/RAW/v1/000/315/318/00000/FEC219CA-264A-E811-BDD5-FA163E19DD9A.root'
 	#'/store/data/Run2018A/EGamma/RAW/v1/000/315/973/00000/2E81C787-2D53-E811-BAFC-FA163E2CD5B1.root'
         ),
     secondaryFileNames = cms.untracked.vstring(),
-    eventsToProcess = cms.untracked.VEventRange(eventList)
+#    eventsToProcess = cms.untracked.VEventRange(eventList)
 )
 
 process.options = cms.untracked.PSet(
@@ -485,6 +486,8 @@ process.dispho = cms.EDAnalyzer("DisPho",
    ## ecal recHits
    recHitsEB = cms.InputTag("reducedEgamma", "reducedEBRecHits"),
    recHitsEE = cms.InputTag("reducedEgamma", "reducedEERecHits"),
+   kuRecHitsEB = cms.InputTag("kuEcalRecHit", "kuEcalRecHitsEB"),
+   kuRecHitsEE = cms.InputTag("kuEcalRecHit", "kuEcalRecHitsEE"),
    ## ecal uncalib recHits
    #uncalibratedRecHitsEB = cms.InputTag("ecalUncalibHitRatio","EcalUncalibRecHitsEB"),
    #uncalibratedRecHitsEE = cms.InputTag("ecalUncalibHitRatio","EcalUncalibRecHitsEE"),
@@ -534,6 +537,19 @@ process.tree_step = cms.EndPath(
         process.dispho
 )
 
+process.jwk_calolocalreco = cms.Sequence(
+				process.ku_ecalLocalRecoSequence+
+				process.hcalLocalRecoSequence
+				)
+
+process.jwk_localreco = cms.Sequence(
+				process.bunchSpacingProducer+
+				process.trackerlocalreco+
+				process.muonlocalreco+
+				process.jwk_calolocalreco+
+				process.castorreco
+				)
+
 process.jwk_highlevelreco = cms.Sequence(
 			      process.egammaHighLevelRecoPrePF*
                               process.particleFlowReco*
@@ -551,15 +567,28 @@ process.jwk_highlevelreco = cms.Sequence(
                              )
 
 process.jwk_reconstruction = cms.Sequence(
-				process.localreco*
+#				process.localreco*
+                                process.jwk_localreco*
 				process.globalreco*
 				process.jwk_highlevelreco*
 				process.logErrorHarvester
 )
 
+process.ku_reconstruction = cms.Sequence(
+                                process.localreco*
+    				process.ku_supEcalLocalRecoSequence*
+                                process.globalreco*
+                                process.jwk_highlevelreco*
+                                process.logErrorHarvester
+)
+
+process.content = cms.EDAnalyzer("EventContentAnalyzer")
+process.content_step = cms.Path(process.content)
+
 # RAW Path and EndPath definitions
 process.raw2digi_step = cms.Path(process.RawToDigi)
 process.L1Reco_step = cms.Path(process.L1Reco)
+#process.reconstruction_step = cms.Path(process.ku_reconstruction)
 process.reconstruction_step = cms.Path(process.jwk_reconstruction)
 #process.Flag_trackingFailureFilter = cms.Path(process.goodVertices+process.trackingFailureFilter)
 #process.Flag_goodVertices = cms.Path(process.primaryVertexFilter)
@@ -594,12 +623,14 @@ process.endjob_step = cms.EndPath(process.endOfProcess)
 
 # Schedule definition
 process.schedule = cms.Schedule(
+		#process.content_step,
 		process.raw2digi_step,
 		process.L1Reco_step,
 		process.reconstruction_step,
 		#process.ecalBadCalibReducedMINIAODFilter_step,
 		process.endjob_step,
-		process.tree_step
+		process.tree_step,
+		#process.RECOoutput_step
 )
 
 #process.schedule = cms.Schedule(process.raw2digi_step,process.L1Reco_step,process.reconstruction_step,process.Flag_HBHENoiseFilter,process.Flag_HBHENoiseIsoFilter,process.Flag_CSCTightHaloFilter,process.Flag_CSCTightHaloTrkMuUnvetoFilter,process.Flag_CSCTightHalo2015Filter,process.Flag_globalTightHalo2016Filter,process.Flag_globalSuperTightHalo2016Filter,process.Flag_HcalStripHaloFilter,process.Flag_hcalLaserEventFilter,process.Flag_EcalDeadCellTriggerPrimitiveFilter,process.Flag_EcalDeadCellBoundaryEnergyFilter,process.Flag_ecalBadCalibFilter,process.Flag_goodVertices,process.Flag_eeBadScFilter,process.Flag_ecalLaserCorrFilter,process.Flag_trkPOGFilters,process.Flag_chargedHadronTrackResolutionFilter,process.Flag_muonBadTrackFilter,process.Flag_BadChargedCandidateFilter,process.Flag_BadPFMuonFilter,process.Flag_BadChargedCandidateSummer16Filter,process.Flag_BadPFMuonSummer16Filter,process.Flag_trkPOG_manystripclus53X,process.Flag_trkPOG_toomanystripclus53X,process.Flag_trkPOG_logErrorTooManyClusters,process.Flag_METFilters,process.pretree_step,process.endjob_step,process.RECOoutput_step,process.tree_step)

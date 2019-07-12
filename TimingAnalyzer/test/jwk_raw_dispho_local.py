@@ -227,17 +227,17 @@ process.maxEvents = cms.untracked.PSet(
 #    secondaryFileNames = cms.untracked.vstring()
 #)
 
-eventList = open(options.rlelist,'r')
+#eventList = open(options.rlelist,'r')
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(#'file:jwk_reco_data_DIGI2RAW.root'),
         #'/store/data/Run2018D/ZeroBias/RAW/v1/000/325/240/00000/FFA4CC2A-A63C-8440-ADC4-D7E2FF53BB4F.root'
 	#'file:2E81C787-2D53-E811-BAFC-FA163E2CD5B1.root'
-	'file:30F3675D-F89D-E811-8D66-FA163E884269.root'#run2018D
+	#'file:30F3675D-F89D-E811-8D66-FA163E884269.root'#run2018D
         '/store/data/Run2018A/AlCaPhiSym/RAW/v1/000/315/318/00000/FEC219CA-264A-E811-BDD5-FA163E19DD9A.root'
 	#'/store/data/Run2018A/EGamma/RAW/v1/000/315/973/00000/2E81C787-2D53-E811-BAFC-FA163E2CD5B1.root'
         ),
     secondaryFileNames = cms.untracked.vstring(),
-    eventsToProcess = cms.untracked.VEventRange(eventList)
+#    eventsToProcess = cms.untracked.VEventRange(eventList)
 )
 
 process.options = cms.untracked.PSet(
