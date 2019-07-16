@@ -518,9 +518,9 @@ process.dispho = cms.EDAnalyzer("DisPho",
    genJets      = cms.InputTag("slimmedGenJets"),
 )
 
-#process.seq = cms.Sequence(
-#   process.egammaPostRecoSeq
-#)
+process.seq = cms.Sequence(
+   process.egammaPostRecoSeq
+)
 
 print('Set up Path and EndPath Definitions')
 # DisPho Path and EndPath definitions

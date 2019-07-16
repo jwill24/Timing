@@ -57,12 +57,13 @@ def main():
                 print ("Executing (the equivalent of): crab %s %s %s" %
                       (options.crabCmd, task, options.crabCmdOptions))
                 crabCommand(options.crabCmd, task, *options.crabCmdOptions.split())
+		print (">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
             except HTTPException, hte :
                     print 'Command not executed'
         else:
             print ("Executing (the equivalent of): crab %s %s %s" %
                   (options.crabCmd, task, options.crabCmdOptions))
-            os.system('crab resubmit ' + task) 
+            os.system('crab resubmit ' + task)
 
 if __name__ == '__main__':
     main()   

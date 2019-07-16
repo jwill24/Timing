@@ -260,6 +260,10 @@ private:
   ///////////////////
   // Input Members //
   ///////////////////
+ 
+  // Collection Flags
+  const bool rawCollectionsValid;
+  const bool kuRechitValid;
 
   // LHC info  
   std::vector<unsigned int> train_zero, train_notzero, long_train_notzero, subtrain_num, train_num;

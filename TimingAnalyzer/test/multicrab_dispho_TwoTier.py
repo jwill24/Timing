@@ -58,7 +58,7 @@ def main():
     if options.crabCmd == 'submit':
 
         # External files needed by CRAB
-        inputDir     = '/home/t3-ku/jaking/ecaltiming/CMSSW_10_2_5/src/Timing/TimingAnalyzer/test/input/'
+        inputDir     = '/home/t3-ku/jaking/ecaltiming/ku_cmssw_ecaltiming/CMSSW_10_2_5/src/Timing/TimingAnalyzer/test/input/'
         inputPaths   = 'HLTpathsWExtras.txt'
         inputFilters = 'HLTfilters.txt'
         inputFlags   = 'METflags.txt'
@@ -75,21 +75,24 @@ def main():
         config.General.requestName = None
 
         config.JobType.pluginName  = 'Analysis'
-        config.JobType.psetName    = 'dispho.py'
+        config.JobType.psetName    = 'dispho_twotier.py'
         config.JobType.numCores    = 8
         config.JobType.pyCfgParams = None
         config.JobType.inputFiles  = [ inputDir+inputPaths , inputDir+inputFilters , inputDir+inputFlags ]
 
-        config.Data.inputDataset = None
-        config.Data.lumiMask     = inputJSON
-#        config.Data.splitting    = 'EventAwareLumiBased'
-        config.Data.splitting    = 'Automatic'
-        #config.Data.unitsPerJob  = 200000
+        config.Data.inputDataset   = None
+        config.Data.useParent      = True
+        #config.Data.useParent      = False
+        config.Data.lumiMask       = inputJSON
+        config.Data.splitting      = 'EventAwareLumiBased'
+        config.Data.unitsPerJob    = 250000
+        #config.Data.splitting     = 'Automatic'
+        #config.Data.unitsPerJob   = 200000
+        config.Data.runRange       = '321732-321760'
 
-        config.Data.outputDatasetTag = 'EGamma_ntuple_v2'
-        config.Data.publication      = False
-        config.Site.storageSite      = 'T2_US_Nebraska'
-        config.Data.outLFNDirBase    = '/store/user/jaking/ecalTiming/'
+        config.Data.publication    = False
+        config.Site.storageSite    = 'T2_US_Nebraska'
+        config.Data.outLFNDirBase  = '/store/user/jaking/ecalTiming/'
         #--------------------------------------------------------
 
         # Will submit one task for each of these input datasets.
@@ -109,26 +112,34 @@ def main():
             #['/EGamma/Run2018A-17Sep2018-v2/MINIAOD'],
             #['/EGamma/Run2018B-26Sep2018-v1/MINIAOD'],
             #['/EGamma/Run2018C-17Sep2018-v1/MINIAOD'],
-            #['/EGamma/Run2018D-PromptReco-v2/MINIAOD'],
-            ['/EGamma/Run2018E-PromptReco-v1/MINIAOD'],
+            ['/EGamma/Run2018D-PromptReco-v2/MINIAOD'],
+            #['/EGamma/Run2018E-PromptReco-v1/MINIAOD'],
             ]
  
         for inDO in inputDataAndOpts:
             # inDO[0] is of the form /A/B/C. Since A+B is unique for each inDS, use this in the CRAB request name.
             primaryDataset = inDO[0].split('/')[1]
             runEra         = inDO[0].split('/')[2]
+            dataset        = inDO[0].split('/')[3]
+            #trial          = "valtest12_twotier" # useParent=True; rawCollectionsValid=True 
+            #trial          = "valtest13_twotier"  # useParent=True; rawCollectionsValid=False
+            #trial          = "valtest14_twotier"  # useParent=False; rawCollectionsValid=False
+	    runs	   = "321732-321760"
+	    #runs	   = "Full"
 
-            config.General.requestName   = primaryDataset+"_"+runEra+"_v7"
+            #config.General.requestName   = primaryDataset+"_"+runEra+"_v7"
+            config.General.requestName   = trial+"_"+primaryDataset+"_"+runEra+"_"+runs+"_"+dataset+"_dispho"
+            config.Data.outputDatasetTag = trial+"_"+primaryDataset+"_"+dataset+"_"+runEra+"_"+runs+"_dispho"
 
-	    # for 2018D prompt
+	    # for 2018 prompt v1
             #config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Prompt_v1','nThreads='+str(config.JobType.numCores),
             #                                'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags,
             #                                'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=True']
 
-	    # for 2018E prompt
+	    # for 2018  prompt v11
             config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Prompt_v11','nThreads='+str(config.JobType.numCores),
                                             'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags,
-                                            'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=True']
+                                            'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=True', 'rawCollectionsValid=False']
 
 	    # for 2018 ABC rereco
             #config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Sep2018Rereco_v1','nThreads='+str(config.JobType.numCores),
