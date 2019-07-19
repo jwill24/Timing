@@ -183,6 +183,7 @@ print "LHC Info       : ",options.lhcInfoValid
 print "     #####################"
 
 ## Define the CMSSW process
+from Configuration.StandardSequences.Eras import eras
 process = cms.Process(options.processName,eras.Run2_2018)
 
 ## Load the standard set of configuration modules
@@ -263,14 +264,13 @@ process.TFileService = cms.Service("TFileService",
 		                   fileName = cms.string(options.outputFileName))
 				   
 ## Decide which label to use for MET Flags
-if   options.isMC : triggerFlagsProcess = "PAT"
-else              : triggerFlagsProcess = "RECO"
+#if   options.isMC : triggerFlagsProcess = "PAT"
+#else              : triggerFlagsProcess = "RECO"
+triggerFlagsProcess = "RECO"
 
 ## generate track collection at miniAOD
 from PhysicsTools.PatAlgos.slimming.unpackedTracksAndVertices_cfi import unpackedTracksAndVertices
 process.unpackedTracksAndVertices = unpackedTracksAndVertices.clone()
-
-
 
 # Make the tree 
 process.tree = cms.EDAnalyzer("DisPho",
@@ -391,8 +391,8 @@ process.tree_step = cms.EndPath(
 )
 
 process.jwk_calolocalreco = cms.Sequence(
-				#process.ku_ecalLocalRecoSequence+
-                                process.ecalLocalRecoSequence+
+				process.ku_ecalLocalRecoSequence
+                                #process.ecalLocalRecoSequence
 				#process.hcalLocalRecoSequence
 				)
 
@@ -400,7 +400,7 @@ process.jwk_localreco = cms.Sequence(
 				process.bunchSpacingProducer+
 				#process.trackerlocalreco+
 				#process.muonlocalreco+
-				process.jwk_calolocalreco+
+				process.jwk_calolocalreco
 				#process.castorreco
 				)
 
@@ -416,7 +416,7 @@ process.jwk_highlevelreco = cms.Sequence(
                               #process.btagging*
                               #process.recoPFMET*
                               #process.PFTau*
-                              process.reducedRecHits #*
+                              #process.reducedRecHits #*
                               #process.cosmicDCTracksSeq
                              )
 
@@ -424,17 +424,10 @@ process.jwk_reconstruction = cms.Sequence(
 				#process.localreco*
                                 process.jwk_localreco*
 				#process.globalreco*
-				process.jwk_highlevelreco*
+				#process.jwk_highlevelreco*
 				process.logErrorHarvester
 )
 
-process.ku_reconstruction = cms.Sequence(
-                                process.localreco*
-    				process.ku_supEcalLocalRecoSequence*
-                                process.globalreco*
-                                process.jwk_highlevelreco*
-                                process.logErrorHarvester
-)
 
 process.raw2digi_step = cms.Path(process.RawToDigi)
 process.L1Reco_step = cms.Path(process.L1Reco)
@@ -446,14 +439,15 @@ process.schedule = cms.Schedule(
 		process.L1Reco_step,
 		process.reconstruction_step,
 		process.endjob_step,
-		process.tree_step,
+		process.tree_step
 )
 
 ### Extra bits from other configs
-process.options = cms.untracked.PSet(
-	numberOfThreads=cms.untracked.uint32(options.nThreads),
-	numberOfStreams=cms.untracked.uint32(options.nThreads/2)
-)
+#process.options = cms.untracked.PSet(
+#	numberOfThreads=cms.untracked.uint32(options.nThreads),
+#	numberOfStreams=cms.untracked.uint32(options.nThreads/2)
+#)
+process.options = cms.untracked.PSet()
 
 from FWCore.ParameterSet.Utilities import convertToUnscheduled
 if options.runUnscheduled : 

@@ -122,6 +122,7 @@ struct phoStruct
   std::vector<int> recHits_;
   std::vector<int> uncalibratedRecHits_;
   std::vector<int> digis_;
+  std::vector<int> kuRecHits_;
 
   // store seed only
   float seedX_;

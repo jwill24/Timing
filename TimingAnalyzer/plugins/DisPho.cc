@@ -646,6 +646,7 @@ void DisPho::InitializeObjects(const edm::Event & iEvent)
 
   // OUTPUT RECHIT MAP
   recHitMap.clear();
+  kuRecHitMap.clear();
 
   if( rawCollectionsValid ){
   	// INPUT ECAL UNCALIBRATED RECHITS
@@ -777,6 +778,7 @@ void DisPho::PrepObjects(const edm::Event & iEvent)
   //oot::PrepJets(jetsH,jets,jetpTmin,jetEtamax,jetIDmin);
 
   oot::PrepRecHits(recHitsEB,recHitsEE,recHitMap,rhEmin);
+  if( kuRechitValid ){ oot::PrepRecHits(kuRecHitsEB,kuRecHitsEE,kuRecHitMap,rhEmin); } 
   if( rawCollectionsValid ){
   	oot::PrepURecHits(uncalibratedRecHitsEB,uncalibratedRecHitsEE,uncalibratedRecHitMap);
   	oot::PrepDigis(EBdigiCollection,EEdigiCollection,digiMap);
@@ -810,6 +812,7 @@ void DisPho::PrepObjects(const edm::Event & iEvent)
 
   //nJets    = std::min(int(jets.size()),Config::nJets);
   nRecHits = recHitMap.size();
+  nKuRecHits = kuRecHitMap.size();
   nURecHits = uncalibratedRecHitMap.size();
   nDigis = digiMap.size();
   nPhotons = std::min(int(photons.size()),Config::nPhotons);
@@ -993,7 +996,7 @@ void DisPho::FillTreeFromObjects(const edm::Event & iEvent)
   //std::cout << ">>> Rec Hits" << std::endl;
   DisPho::InitializeRecHitBranches();
   DisPho::SetRecHitBranches();
-
+  
   if( rawCollectionsValid ){
   	DisPho::InitializeDigiBranches();
 	DisPho::SetDigiBranches();
@@ -1731,6 +1734,25 @@ void DisPho::InitializeRecHitBranches()
   rhpedrms6.clear();
   rhpedrms1.clear();
 
+  kurhX.clear();
+  kurhY.clear();
+  kurhZ.clear();
+  kurhE.clear();
+  kurhtime.clear();
+  kurhtimeErr.clear();
+  kurhTOF.clear();
+  kurhID.clear();
+  kurhisOOT.clear();
+  kurhisGS6.clear();
+  kurhisGS1.clear();
+  kurhadcToGeV.clear();
+  kurhped12.clear();
+  kurhped6.clear();
+  kurhped1.clear();
+  kurhpedrms12.clear();
+  kurhpedrms6.clear();
+  kurhpedrms1.clear();
+
   uRhId.clear();
   amplitude.clear();
   amplitudeError.clear();
@@ -1772,6 +1794,25 @@ void DisPho::InitializeRecHitBranches()
   rhpedrms12.resize(nRecHits);
   rhpedrms6.resize(nRecHits);
   rhpedrms1.resize(nRecHits);
+
+  kurhX.resize(nKuRecHits);
+  kurhY.resize(nKuRecHits);
+  kurhZ.resize(nKuRecHits);
+  kurhE.resize(nKuRecHits);
+  kurhtime.resize(nKuRecHits);
+  kurhtimeErr.resize(nKuRecHits);
+  kurhTOF.resize(nKuRecHits);
+  kurhID.resize(nKuRecHits);
+  kurhisOOT.resize(nKuRecHits);
+  kurhisGS6.resize(nKuRecHits);
+  kurhisGS1.resize(nKuRecHits);
+  kurhadcToGeV.resize(nKuRecHits);
+  kurhped12.resize(nKuRecHits);
+  kurhped6.resize(nKuRecHits);
+  kurhped1.resize(nKuRecHits);
+  kurhpedrms12.resize(nKuRecHits);
+  kurhpedrms6.resize(nKuRecHits);
+  kurhpedrms1.resize(nKuRecHits);
 
   uRhId.resize(nURecHits);
   amplitude.resize(nURecHits);
@@ -1824,6 +1865,33 @@ void DisPho::InitializeRecHitBranches()
     rhpedrms1 [i] = -9999.f;
   }
 
+  for (auto i = 0; i < nKuRecHits; i++)
+  {
+    kurhX[i] = -9999.f;
+    kurhY[i] = -9999.f;
+    kurhZ[i] = -9999.f;
+    kurhE[i] = -9999.f;
+
+    kurhtime   [i] = -9999.f;
+    kurhtimeErr[i] = -9999.f;
+    kurhTOF    [i] = -9999.f;
+
+    kurhID[i] = 0; // non-ideal
+
+    kurhisOOT[i] = false;
+    kurhisGS6[i] = false;
+    kurhisGS1[i] = false;
+
+    kurhadcToGeV[i] = -9999.f;
+
+    kurhped12[i] = -9999.f;
+    kurhped6 [i] = -9999.f;
+    kurhped1 [i] = -9999.f;
+
+    kurhpedrms12[i] = -9999.f;
+    kurhpedrms6 [i] = -9999.f;
+    kurhpedrms1 [i] = -9999.f;
+  }
 
   for (auto i = 0; i < nURecHits; i++)
     {
@@ -1877,7 +1945,11 @@ void DisPho::SetRecHitBranches()
   DisPho::SetRecHitBranches(recHitsEE,endcapGeometry,adcToGeVEE);
 
   if( kuRechitValid ){	  
-	for (const auto recHit : *kuRecHitsEB){std::cout << "Leading Pt KURecHit Time: " << recHit.time() << std::endl; break; }
+//	for (const auto recHit : *kuRecHitsEB){std::cout << "Leading Pt KURecHit Time: " << recHit.time() << std::endl; break; }
+  	nkurechits = kuRecHitMap.size();
+  	DisPho::SetKuRecHitBranches(kuRecHitsEB,barrelGeometry,adcToGeVEB);
+  	DisPho::SetKuRecHitBranches(kuRecHitsEE,endcapGeometry,adcToGeVEE);
+
   }
 
   if( rawCollectionsValid ){
@@ -1945,6 +2017,63 @@ void DisPho::SetRecHitBranches(const EcalRecHitCollection * recHits, const CaloS
 	rhpedrms12[pos] = ped.rms(1);
 	rhpedrms6 [pos] = ped.rms(2);
 	rhpedrms1 [pos] = ped.rms(3);
+      }
+    }
+  }
+}
+
+void DisPho::SetKuRecHitBranches(const EcalRecHitCollection * recHits, const CaloSubdetectorGeometry * geometry, const float adcToGeV)
+{
+  for (const auto recHit : *recHits)
+  {
+    const auto recHitId(recHit.detid());
+    const auto rawId = recHitId.rawId();
+    if (recHitMap.count(rawId))
+    {
+      const auto pos = recHitMap.at(rawId);
+      const auto recHitPos = geometry->getGeometry(recHitId)->getPosition();
+
+      // save position, energy, and time of each rechit to a vector
+      kurhX[pos] = recHitPos.x();
+      kurhY[pos] = recHitPos.y();
+      kurhZ[pos] = recHitPos.z();
+      kurhE[pos] = recHit.energy();
+
+      // time info: compute TOF
+      const auto d_orig = Config::hypo(kurhX[pos],kurhY[pos],kurhZ[pos]);
+      const auto d_pv   = Config::hypo(kurhX[pos]-vtxX,kurhY[pos]-vtxY,kurhZ[pos]-vtxZ);
+      kurhtime   [pos] = recHit.time();
+      kurhtimeErr[pos] = recHit.timeError();
+      kurhTOF    [pos] = (d_orig-d_pv) / Config::sol;
+
+
+      // detid
+      kurhID[pos] = rawId;
+
+      // flags: isOOT, isGainSwitch6/1
+      kurhisOOT[pos] = recHit.checkFlag(EcalRecHit::kOutOfTime);
+      kurhisGS6[pos] = recHit.checkFlag(EcalRecHit::kHasSwitchToGain6);
+      kurhisGS1[pos] = recHit.checkFlag(EcalRecHit::kHasSwitchToGain1);
+
+      // adcToGeVInfo : http://cmslxr.fnal.gov/source/RecoEcal/EgammaCoreTools/src/EcalClusterLazyTools.cc#0204
+      const auto laser = laserH->getLaserCorrection(recHitId,evTime);
+      const auto interCalibIter = interCalibMap->find(recHitId);
+      const auto interCalib = ((interCalibIter != interCalibMap->end()) ? (*interCalibIter) : - 1.f);
+      if ((laser > 0.f) && (interCalib > 0.f) && (adcToGeV > 0.f)) kurhadcToGeV[pos] = (laser*interCalib*adcToGeV);
+
+      // pedestal info
+      const auto & pediter = pedestalsH->find(recHitId);
+      if (pediter != pedestalsH->end())
+      {
+        const auto & ped = (*pediter);
+
+        kurhped12[pos] = ped.mean(1);
+        kurhped6 [pos] = ped.mean(2);
+        kurhped1 [pos] = ped.mean(3);
+
+        kurhpedrms12[pos] = ped.rms(1);
+        kurhpedrms6 [pos] = ped.rms(2);
+        kurhpedrms1 [pos] = ped.rms(3);
       }
     }
   }
@@ -2090,6 +2219,7 @@ void DisPho::InitializePhoBranches()
     {
       phoBranch.seed_ = -1;
       phoBranch.recHits_.clear();
+      phoBranch.kuRecHits_.clear();
 
       // Fix me maybe?
       phoBranch.uncalibratedRecHits_.clear();
@@ -2828,6 +2958,7 @@ void DisPho::MakeEventTree()
   // RecHit Info
   disphotree->Branch("nrechits", &nrechits);
   disphotree->Branch("nurechits", &nurechits);
+  disphotree->Branch("nkurechits", &nkurechits);
   if (storeRecHits)
   {
     disphotree->Branch("rhX", &rhX);
@@ -2848,6 +2979,25 @@ void DisPho::MakeEventTree()
     disphotree->Branch("rhpedrms12", &rhpedrms12);
     disphotree->Branch("rhpedrms6", &rhpedrms6);
     disphotree->Branch("rhpedrms1", &rhpedrms1);
+
+    disphotree->Branch("kurhX", &kurhX);
+    disphotree->Branch("kurhY", &kurhY);
+    disphotree->Branch("kurhZ", &kurhZ);
+    disphotree->Branch("kurhE", &kurhE);
+    disphotree->Branch("kurhtime", &kurhtime);
+    disphotree->Branch("kurhtimeErr", &kurhtimeErr);
+    disphotree->Branch("kurhTOF", &kurhTOF);
+    disphotree->Branch("kurhID", &kurhID);
+    disphotree->Branch("kurhisOOT", &kurhisOOT);
+    disphotree->Branch("kurhisGS6", &kurhisGS6);
+    disphotree->Branch("kurhisGS1", &kurhisGS1);
+    disphotree->Branch("kurhadcToGeV", &kurhadcToGeV);
+    disphotree->Branch("kurhped12", &kurhped12);
+    disphotree->Branch("kurhped6", &kurhped6);
+    disphotree->Branch("kurhped1", &kurhped1);
+    disphotree->Branch("kurhpedrms12", &kurhpedrms12);
+    disphotree->Branch("kurhpedrms6", &kurhpedrms6);
+    disphotree->Branch("kurhpedrms1", &kurhpedrms1);
 
     disphotree->Branch("uRhId", &uRhId);
     disphotree->Branch("amplitude", &amplitude);

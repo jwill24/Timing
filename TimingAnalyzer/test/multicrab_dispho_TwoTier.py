@@ -50,7 +50,7 @@ def getOptions():
     return options
 
 
-def main():
+def docrab():
 
     options = getOptions()
 
@@ -75,8 +75,9 @@ def main():
         config.General.requestName = None
 
         config.JobType.pluginName  = 'Analysis'
-        config.JobType.psetName    = 'dispho_twotier.py'
-        config.JobType.numCores    = 8
+        #config.JobType.psetName    = 'dispho_twotier.py'
+        config.JobType.psetName    = 'dispho_raw_twotier.py'
+        #config.JobType.numCores    = 8
         config.JobType.pyCfgParams = None
         config.JobType.inputFiles  = [ inputDir+inputPaths , inputDir+inputFilters , inputDir+inputFlags ]
 
@@ -124,6 +125,8 @@ def main():
             #trial          = "valtest12_twotier" # useParent=True; rawCollectionsValid=True 
             #trial          = "valtest13_twotier"  # useParent=True; rawCollectionsValid=False
             #trial          = "valtest14_twotier"  # useParent=False; rawCollectionsValid=False
+            #trial          = "valtest15_twotier"  # raw reco: useParent=True; rawCollectionsValid=True
+            trial          = "valtest16_twotier"  # raw reco w/kurechits: useParent=True; rawCollectionsValid=True
 	    runs	   = "321732-321760"
 	    #runs	   = "Full"
 
@@ -137,9 +140,9 @@ def main():
             #                                'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=True']
 
 	    # for 2018  prompt v11
-            config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Prompt_v11','nThreads='+str(config.JobType.numCores),
+            config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Prompt_v11',#'nThreads='+str(config.JobType.numCores),
                                             'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags,
-                                            'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=True', 'rawCollectionsValid=False']
+                                            'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=True', 'rawCollectionsValid=True']
 
 	    # for 2018 ABC rereco
             #config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Sep2018Rereco_v1','nThreads='+str(config.JobType.numCores),
@@ -178,5 +181,5 @@ def main():
                 print "Failed executing command %s for task %s: %s" % (options.crabCmd, projDir, cle)
 
 
-if __name__ == '__main__':
-    main()
+docrab();
+

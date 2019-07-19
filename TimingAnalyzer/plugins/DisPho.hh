@@ -232,6 +232,7 @@ public:
   void InitializeRecHitBranches();
   void SetRecHitBranches();
   void SetRecHitBranches(const EcalRecHitCollection * recHits, const CaloSubdetectorGeometry * geometry, const float adcToGeV);
+  void SetKuRecHitBranches(const EcalRecHitCollection * recHits, const CaloSubdetectorGeometry * geometry, const float adcToGeV);
   void SetURecHitBranches(const EcalUncalibratedRecHitCollection * recHits, const CaloSubdetectorGeometry * geometry);
 
   void InitializeDigiBranches();
@@ -439,34 +440,6 @@ private:
   edm::Handle<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEEH;
   const edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > * uncalibratedRecHitsEE;
 
-  /*
-  // EB Digis
-  const edm::InputTag ecalDigisEBTag;
-  edm::EDGetTokenT<edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > > ecalDigisEBToken;
-  edm::Handle<edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > > ecalDigisEBH;
-  const edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > * ecalDigisEB;
-
-  // EE Digis
-  const edm::InputTag ecalDigisEETag;
-  edm::EDGetTokenT<edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > > ecalDigisEEToken;
-  edm::Handle<edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > > ecalDigisEEH;
-  const edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > * ecalDigisEE;
-  
-
-  // EB Digis
-  const edm::InputTag ecalDigisEBTag;
-  edm::EDGetTokenT<edm::SortedCollection<EBSrFlag,edm::StrictWeakOrdering<EBSrFlag> > > ecalDigisEBToken;
-  edm::Handle<edm::SortedCollection<EBSrFlag,edm::StrictWeakOrdering<EBSrFlag> > > ecalDigisEBH;
-  const edm::SortedCollection<EBSrFlag,edm::StrictWeakOrdering<EBSrFlag> > * ecalDigisEB;
-
-  // EE Digis
-  const edm::InputTag ecalDigisEETag;
-  edm::EDGetTokenT<edm::SortedCollection<EESrFlag,edm::StrictWeakOrdering<EESrFlag> > > ecalDigisEEToken;
-  edm::Handle<edm::SortedCollection<EESrFlag,edm::StrictWeakOrdering<EESrFlag> > > ecalDigisEEH;
-  const edm::SortedCollection<EESrFlag,edm::StrictWeakOrdering<EESrFlag> > * ecalDigisEE;
-  */
-
-  
   // EB Digis test
   const edm::InputTag ecalDigisEBTag;
   edm::EDGetTokenT<EBDigiCollection> ebDigiCollectionToken_;
@@ -481,6 +454,7 @@ private:
 
   // Output rechit map
   uiiumap recHitMap;
+  uiiumap kuRecHitMap;
   uiiumap uncalibratedRecHitMap;
 
   // Output digi map
@@ -578,7 +552,7 @@ private:
   ///////////////////////////
 
   float wgt;
-  int nJets, nRecHits, nURecHits, nDigis, nPhotons;
+  int nJets, nRecHits, nKuRecHits, nURecHits, nDigis, nPhotons;
 
   ////////////////////
   // Output Members //
@@ -679,6 +653,15 @@ private:
   std::vector<float> rhadcToGeV;
   std::vector<float> rhped12, rhped6, rhped1;
   std::vector<float> rhpedrms12, rhpedrms6, rhpedrms1;
+
+  // kuRecHits
+  int nkurechits;
+  std::vector<float> kurhX, kurhY, kurhZ, kurhE, kurhtime, kurhtimeErr, kurhTOF;
+  std::vector<unsigned int> kurhID;
+  std::vector<bool> kurhisOOT, kurhisGS6, kurhisGS1;
+  std::vector<float> kurhadcToGeV;
+  std::vector<float> kurhped12, kurhped6, kurhped1;
+  std::vector<float> kurhpedrms12, kurhpedrms6, kurhpedrms1;
 
   // Uncalibrated RecHits
   int nurechits;
