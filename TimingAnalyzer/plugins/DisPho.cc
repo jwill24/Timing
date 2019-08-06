@@ -101,12 +101,36 @@ DisPho::DisPho(const edm::ParameterSet & iConfig) :
   recHitsEETag(iConfig.getParameter<edm::InputTag>("recHitsEE")),
 
   // KU recHits
-  kuRecHitsEBTag(iConfig.getParameter<edm::InputTag>("kuRecHitsEB")),
-  kuRecHitsEETag(iConfig.getParameter<edm::InputTag>("kuRecHitsEE")),
+  kuKsRecHitsEBTag(iConfig.getParameter<edm::InputTag>("kuKsRecHitsEB")),
+  kuKsRecHitsEETag(iConfig.getParameter<edm::InputTag>("kuKsRecHitsEE")),
+
+  kuKsStcRecHitsEBTag(iConfig.getParameter<edm::InputTag>("kuKsStcRecHitsEB")),
+  kuKsStcRecHitsEETag(iConfig.getParameter<edm::InputTag>("kuKsStcRecHitsEE")),
+
+  kuWeiRecHitsEBTag(iConfig.getParameter<edm::InputTag>("kuWeiRecHitsEB")),
+  kuWeiRecHitsEETag(iConfig.getParameter<edm::InputTag>("kuWeiRecHitsEE")),
+
+  kuWeiStcRecHitsEBTag(iConfig.getParameter<edm::InputTag>("kuWeiStcRecHitsEB")),
+  kuWeiStcRecHitsEETag(iConfig.getParameter<edm::InputTag>("kuWeiStcRecHitsEE")),
+
+  kuWeiNotRecHitsEBTag(iConfig.getParameter<edm::InputTag>("kuWeiNotRecHitsEB")),
+  kuWeiNotRecHitsEETag(iConfig.getParameter<edm::InputTag>("kuWeiNotRecHitsEE")),
+
+  kuWeiNotStcRecHitsEBTag(iConfig.getParameter<edm::InputTag>("kuWeiNotStcRecHitsEB")),
+  kuWeiNotStcRecHitsEETag(iConfig.getParameter<edm::InputTag>("kuWeiNotStcRecHitsEE")),
 
   // uncalibrated recHits
   uncalibratedRecHitsEBTag(iConfig.getParameter<edm::InputTag>("uncalibratedRecHitsEB")),
   uncalibratedRecHitsEETag(iConfig.getParameter<edm::InputTag>("uncalibratedRecHitsEE")),
+
+  kuKs_uncalibratedRecHitsEBTag(iConfig.getParameter<edm::InputTag>("kuKs_uncalibratedRecHitsEB")),
+  kuKs_uncalibratedRecHitsEETag(iConfig.getParameter<edm::InputTag>("kuKs_uncalibratedRecHitsEE")),
+
+  kuWei_uncalibratedRecHitsEBTag(iConfig.getParameter<edm::InputTag>("kuWei_uncalibratedRecHitsEB")),
+  kuWei_uncalibratedRecHitsEETag(iConfig.getParameter<edm::InputTag>("kuWei_uncalibratedRecHitsEE")),
+
+  kuWeiNot_uncalibratedRecHitsEBTag(iConfig.getParameter<edm::InputTag>("kuWeiNot_uncalibratedRecHitsEB")),
+  kuWeiNot_uncalibratedRecHitsEETag(iConfig.getParameter<edm::InputTag>("kuWeiNot_uncalibratedRecHitsEE")),
 
   // digis
   ecalDigisEBTag(iConfig.getParameter<edm::InputTag>("EBdigiCollection")),
@@ -198,8 +222,24 @@ void DisPho::ConsumeTokens()
   recHitsEEToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (recHitsEETag);
 
   if( kuRechitValid ){
-  	kuRecHitsEBToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuRecHitsEBTag);
-  	kuRecHitsEEToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuRecHitsEETag);
+  	kuKsRecHitsEBToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuKsRecHitsEBTag);
+  	kuKsRecHitsEEToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuKsRecHitsEETag);
+
+        kuKsStcRecHitsEBToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuKsStcRecHitsEBTag);
+        kuKsStcRecHitsEEToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuKsStcRecHitsEETag);
+
+        kuWeiRecHitsEBToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuWeiRecHitsEBTag);
+        kuWeiRecHitsEEToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuWeiRecHitsEETag);
+
+        kuWeiStcRecHitsEBToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuWeiStcRecHitsEBTag);
+        kuWeiStcRecHitsEEToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuWeiStcRecHitsEETag);
+
+        kuWeiNotRecHitsEBToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuWeiNotRecHitsEBTag);
+        kuWeiNotRecHitsEEToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuWeiNotRecHitsEETag);
+
+        kuWeiNotStcRecHitsEBToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuWeiNotStcRecHitsEBTag);
+        kuWeiNotStcRecHitsEEToken = consumes<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > (kuWeiNotStcRecHitsEETag);
+
   }
 
   if( rawCollectionsValid ){
@@ -209,6 +249,23 @@ void DisPho::ConsumeTokens()
   	uncalibratedRecHitsEEToken = 
 	 consumes<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit>>>(uncalibratedRecHitsEETag);
 
+	 if( kuRechitValid ){
+	        kuKs_uncalibratedRecHitsEBToken =
+	         consumes< edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit>>>(kuKs_uncalibratedRecHitsEBTag);
+	        kuKs_uncalibratedRecHitsEEToken =
+	         consumes<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit>>>(kuKs_uncalibratedRecHitsEETag);
+	
+	        kuWei_uncalibratedRecHitsEBToken =
+	         consumes< edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit>>>(kuWei_uncalibratedRecHitsEBTag);
+	        kuWei_uncalibratedRecHitsEEToken =
+	         consumes<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit>>>(kuWei_uncalibratedRecHitsEETag);
+	
+	        kuWeiNot_uncalibratedRecHitsEBToken =
+	         consumes< edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit>>>(kuWeiNot_uncalibratedRecHitsEBTag);
+	        kuWeiNot_uncalibratedRecHitsEEToken =
+	         consumes<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit>>>(kuWeiNot_uncalibratedRecHitsEETag);
+	}
+	
   	// digis
   	//ecalDigisEBToken = consumes<edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > > (ecalDigisEBTag);
   	//ecalDigisEEToken = consumes<edm::SortedCollection<EcalTimeDigi,edm::StrictWeakOrdering<EcalTimeDigi> > > (ecalDigisEETag);
@@ -511,11 +568,42 @@ bool DisPho::GetStandardObjects(const edm::Event & iEvent)
   if (oot::BadHandle(recHitsEEH,"recHitsEE")) return false;
 
   if( kuRechitValid ){
-  	iEvent.getByToken(kuRecHitsEBToken,kuRecHitsEBH);
-  	if (oot::BadHandle(kuRecHitsEBH,"kuRecHitsEB")) return false;
+  	iEvent.getByToken(kuKsRecHitsEBToken,kuKsRecHitsEBH);
+  	if (oot::BadHandle(kuKsRecHitsEBH,"kuKsRecHitsEB")) return false;
 
-  	iEvent.getByToken(kuRecHitsEEToken,kuRecHitsEEH);
-  	if (oot::BadHandle(kuRecHitsEEH,"kuRecHitsEE")) return false;
+  	iEvent.getByToken(kuKsRecHitsEEToken,kuKsRecHitsEEH);
+  	if (oot::BadHandle(kuKsRecHitsEEH,"kuKsRecHitsEE")) return false;
+
+        iEvent.getByToken(kuKsStcRecHitsEBToken,kuKsStcRecHitsEBH);
+        if (oot::BadHandle(kuKsStcRecHitsEBH,"kuKsStcRecHitsEB")) return false;
+ 
+        iEvent.getByToken(kuKsStcRecHitsEEToken,kuKsStcRecHitsEEH);
+        if (oot::BadHandle(kuKsStcRecHitsEEH,"kuKsStcRecHitsEE")) return false;
+
+        iEvent.getByToken(kuWeiRecHitsEBToken,kuWeiRecHitsEBH);
+        if (oot::BadHandle(kuWeiRecHitsEBH,"kuWeiRecHitsEB")) return false;
+ 
+        iEvent.getByToken(kuWeiRecHitsEEToken,kuWeiRecHitsEEH);
+        if (oot::BadHandle(kuWeiRecHitsEEH,"kuWeiRecHitsEE")) return false;
+
+        iEvent.getByToken(kuWeiStcRecHitsEBToken,kuWeiStcRecHitsEBH);
+        if (oot::BadHandle(kuWeiStcRecHitsEBH,"kuWeiStcRecHitsEB")) return false;
+ 
+        iEvent.getByToken(kuWeiStcRecHitsEEToken,kuWeiStcRecHitsEEH);
+        if (oot::BadHandle(kuWeiStcRecHitsEEH,"kuWeiStcRecHitsEE")) return false;
+
+        iEvent.getByToken(kuWeiNotRecHitsEBToken,kuWeiNotRecHitsEBH);
+        if (oot::BadHandle(kuWeiNotRecHitsEBH,"kuWeiNotRecHitsEB")) return false;
+ 
+        iEvent.getByToken(kuWeiNotRecHitsEEToken,kuWeiNotRecHitsEEH);
+        if (oot::BadHandle(kuWeiNotRecHitsEEH,"kuWeiNotRecHitsEE")) return false;
+
+        iEvent.getByToken(kuWeiNotStcRecHitsEBToken,kuWeiNotStcRecHitsEBH);
+        if (oot::BadHandle(kuWeiNotStcRecHitsEBH,"kuWeiNotStcRecHitsEB")) return false;
+ 
+        iEvent.getByToken(kuWeiNotStcRecHitsEEToken,kuWeiNotStcRecHitsEEH);
+        if (oot::BadHandle(kuWeiNotStcRecHitsEEH,"kuWeiNotStcRecHitsEE")) return false;
+
   }
 
   if( rawCollectionsValid ){
@@ -525,6 +613,28 @@ bool DisPho::GetStandardObjects(const edm::Event & iEvent)
 
   	iEvent.getByToken(uncalibratedRecHitsEEToken,uncalibratedRecHitsEEH);
   	if (oot::BadHandle(uncalibratedRecHitsEEH,"uncalibratedRecHitsEE")) return false;
+
+	if( kuRechitValid ){
+
+	        iEvent.getByToken(kuKs_uncalibratedRecHitsEBToken,kuKs_uncalibratedRecHitsEBH);
+	        if (oot::BadHandle(kuKs_uncalibratedRecHitsEBH,"kuKs_uncalibratedRecHitsEB")) return false;
+	
+	        iEvent.getByToken(kuKs_uncalibratedRecHitsEEToken,kuKs_uncalibratedRecHitsEEH);
+	        if (oot::BadHandle(kuKs_uncalibratedRecHitsEEH,"kuKs_uncalibratedRecHitsEE")) return false;
+	
+	        iEvent.getByToken(kuWei_uncalibratedRecHitsEBToken,kuWei_uncalibratedRecHitsEBH);
+	        if (oot::BadHandle(kuWei_uncalibratedRecHitsEBH,"kuWei_uncalibratedRecHitsEB")) return false;
+	
+	        iEvent.getByToken(kuWei_uncalibratedRecHitsEEToken,kuWei_uncalibratedRecHitsEEH);
+	        if (oot::BadHandle(kuWei_uncalibratedRecHitsEEH,"kuWei_uncalibratedRecHitsEE")) return false;
+	
+	        iEvent.getByToken(kuWeiNot_uncalibratedRecHitsEBToken,kuWeiNot_uncalibratedRecHitsEBH);
+	        if (oot::BadHandle(kuWeiNot_uncalibratedRecHitsEBH,"kuWeiNot_uncalibratedRecHitsEB")) return false;
+	
+	        iEvent.getByToken(kuWeiNot_uncalibratedRecHitsEEToken,kuWeiNot_uncalibratedRecHitsEEH);
+	        if (oot::BadHandle(kuWeiNot_uncalibratedRecHitsEEH,"kuWeiNot_uncalibratedRecHitsEE")) return false;
+
+        }
 
   	// DIGIS
   	iEvent.getByToken(ebDigiCollectionToken_,pEBDigis);
@@ -641,8 +751,8 @@ void DisPho::InitializeObjects(const edm::Event & iEvent)
   recHitsEB = recHitsEBH.product();
   recHitsEE = recHitsEEH.product();
   if( kuRechitValid ){
-  	kuRecHitsEB = kuRecHitsEBH.product();
-  	kuRecHitsEE = kuRecHitsEEH.product();
+  	kuKsRecHitsEB = kuKsRecHitsEBH.product();
+  	kuKsRecHitsEE = kuKsRecHitsEEH.product();
   }
 
   // OUTPUT RECHIT MAP
@@ -779,7 +889,7 @@ void DisPho::PrepObjects(const edm::Event & iEvent)
   //oot::PrepJets(jetsH,jets,jetpTmin,jetEtamax,jetIDmin);
 
   oot::PrepRecHits(recHitsEB,recHitsEE,recHitMap,rhEmin);
-  if( kuRechitValid ){ oot::PrepRecHits(kuRecHitsEB,kuRecHitsEE,kuRecHitMap,rhEmin); } 
+  if( kuRechitValid ){ oot::PrepRecHits(kuKsRecHitsEB,kuKsRecHitsEE,kuRecHitMap,rhEmin); } 
   if( rawCollectionsValid ){
   	oot::PrepURecHits(uncalibratedRecHitsEB,uncalibratedRecHitsEE,uncalibratedRecHitMap);
   	oot::PrepDigis(EBdigiCollection,EEdigiCollection,digiMap);
@@ -1947,10 +2057,10 @@ void DisPho::SetRecHitBranches()
 
   if( kuRechitValid ){	 
 	//std::cout << ">>> KU Rec Hits" << std::endl; 
-	//for (const auto recHit : *kuRecHitsEB){//std::cout << "   Leading Pt KURecHit Time: " << recHit.time() << std::endl; break; }
+	//for (const auto recHit : *kuKsRecHitsEB){//std::cout << "   Leading Pt KURecHit Time: " << recHit.time() << std::endl; break; }
   	nkurechits = kuRecHitMap.size();
-  	DisPho::SetKuRecHitBranches(kuRecHitsEB,barrelGeometry,adcToGeVEB);
-  	DisPho::SetKuRecHitBranches(kuRecHitsEE,endcapGeometry,adcToGeVEE);
+  	DisPho::SetKuRecHitBranches(kuKsRecHitsEB,barrelGeometry,adcToGeVEB);
+  	DisPho::SetKuRecHitBranches(kuKsRecHitsEE,endcapGeometry,adcToGeVEE);
 
   }
 

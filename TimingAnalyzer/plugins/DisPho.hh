@@ -416,17 +416,77 @@ private:
   edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > recHitsEEH;
   const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * recHitsEE;
 
-  // KU RecHits EB
-  const edm::InputTag kuRecHitsEBTag;
-  edm::EDGetTokenT<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuRecHitsEBToken;
-  edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuRecHitsEBH;
-  const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * kuRecHitsEB;
+  // KU Ks RecHits EB
+  const edm::InputTag kuKsRecHitsEBTag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuKsRecHitsEBToken;
+  edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuKsRecHitsEBH;
+  const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * kuKsRecHitsEB;
 
-  // KU RuecHits EE
-  const edm::InputTag kuRecHitsEETag;
-  edm::EDGetTokenT<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuRecHitsEEToken;
-  edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuRecHitsEEH;
-  const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * kuRecHitsEE;
+  // KU Ks RuecHits EE
+  const edm::InputTag kuKsRecHitsEETag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuKsRecHitsEEToken;
+  edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuKsRecHitsEEH;
+  const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * kuKsRecHitsEE;
+
+  // KU KsStc RecHits EB
+  const edm::InputTag kuKsStcRecHitsEBTag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuKsStcRecHitsEBToken;
+  edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuKsStcRecHitsEBH;
+  const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * kuKsStcRecHitsEB;
+
+  // KU KsStc RuecHits EE
+  const edm::InputTag kuKsStcRecHitsEETag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuKsStcRecHitsEEToken;
+  edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuKsStcRecHitsEEH;
+  const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * kuKsStcRecHitsEE;
+
+  // KU Wei RecHits EB
+  const edm::InputTag kuWeiRecHitsEBTag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiRecHitsEBToken;
+  edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiRecHitsEBH;
+  const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * kuWeiRecHitsEB;
+
+  // KU Wei RuecHits EE
+  const edm::InputTag kuWeiRecHitsEETag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiRecHitsEEToken;
+  edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiRecHitsEEH;
+  const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * kuWeiRecHitsEE;
+
+  // KU WeiStc RecHits EB
+  const edm::InputTag kuWeiStcRecHitsEBTag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiStcRecHitsEBToken;
+  edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiStcRecHitsEBH;
+  const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * kuWeiStcRecHitsEB;
+
+  // KU WeiStc RuecHits EE
+  const edm::InputTag kuWeiStcRecHitsEETag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiStcRecHitsEEToken;
+  edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiStcRecHitsEEH;
+  const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * kuWeiStcRecHitsEE;
+
+  // KU WeiNot RecHits EB
+  const edm::InputTag kuWeiNotRecHitsEBTag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiNotRecHitsEBToken;
+  edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiNotRecHitsEBH;
+  const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * kuWeiNotRecHitsEB;
+
+  // KU WeiNot RuecHits EE
+  const edm::InputTag kuWeiNotRecHitsEETag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiNotRecHitsEEToken;
+  edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiNotRecHitsEEH;
+  const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * kuWeiNotRecHitsEE;
+
+  // KU WeiNotStc RecHits EB
+  const edm::InputTag kuWeiNotStcRecHitsEBTag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiNotStcRecHitsEBToken;
+  edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiNotStcRecHitsEBH;
+  const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * kuWeiNotStcRecHitsEB;
+
+  // KU WeiNotStc RuecHits EE
+  const edm::InputTag kuWeiNotStcRecHitsEETag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiNotStcRecHitsEEToken;
+  edm::Handle<edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > > kuWeiNotStcRecHitsEEH;
+  const edm::SortedCollection<EcalRecHit,edm::StrictWeakOrdering<EcalRecHit> > * kuWeiNotStcRecHitsEE;
 
   // EB Uncalibrated RecHits
   const edm::InputTag uncalibratedRecHitsEBTag;
@@ -439,6 +499,42 @@ private:
   edm::EDGetTokenT<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEEToken;
   edm::Handle<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > uncalibratedRecHitsEEH;
   const edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > * uncalibratedRecHitsEE;
+
+  // EB Uncalibrated kuKs RecHits
+  const edm::InputTag kuKs_uncalibratedRecHitsEBTag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > kuKs_uncalibratedRecHitsEBToken;
+  edm::Handle<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > kuKs_uncalibratedRecHitsEBH;
+  const edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > * kuKs_uncalibratedRecHitsEB;
+
+  // EE Uncalibrated kuKs RecHits
+  const edm::InputTag kuKs_uncalibratedRecHitsEETag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > kuKs_uncalibratedRecHitsEEToken;
+  edm::Handle<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > kuKs_uncalibratedRecHitsEEH;
+  const edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > * kuKs_uncalibratedRecHitsEE;
+
+  // EB Uncalibrated kuWei RecHits
+  const edm::InputTag kuWei_uncalibratedRecHitsEBTag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > kuWei_uncalibratedRecHitsEBToken;
+  edm::Handle<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > kuWei_uncalibratedRecHitsEBH;
+  const edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > * kuWei_uncalibratedRecHitsEB;
+
+  // EE Uncalibrated kuWei RecHits
+  const edm::InputTag kuWei_uncalibratedRecHitsEETag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > kuWei_uncalibratedRecHitsEEToken;
+  edm::Handle<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > kuWei_uncalibratedRecHitsEEH;
+  const edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > * kuWei_uncalibratedRecHitsEE;
+
+  // EB Uncalibrated kuWeiNot RecHits
+  const edm::InputTag kuWeiNot_uncalibratedRecHitsEBTag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > kuWeiNot_uncalibratedRecHitsEBToken;
+  edm::Handle<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > kuWeiNot_uncalibratedRecHitsEBH;
+  const edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > * kuWeiNot_uncalibratedRecHitsEB;
+
+  // EE Uncalibrated kuWeiNot RecHits
+  const edm::InputTag kuWeiNot_uncalibratedRecHitsEETag;
+  edm::EDGetTokenT<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > kuWeiNot_uncalibratedRecHitsEEToken;
+  edm::Handle<edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > > kuWeiNot_uncalibratedRecHitsEEH;
+  const edm::SortedCollection<EcalUncalibratedRecHit,edm::StrictWeakOrdering<EcalUncalibratedRecHit> > * kuWeiNot_uncalibratedRecHitsEE;
 
   // EB Digis test
   const edm::InputTag ecalDigisEBTag;
@@ -654,7 +750,7 @@ private:
   std::vector<float> rhped12, rhped6, rhped1;
   std::vector<float> rhpedrms12, rhpedrms6, rhpedrms1;
 
-  // kuRecHits
+  // kuKsRecHits
   int nkurechits;
   std::vector<float> kurhX, kurhY, kurhZ, kurhE, kurhtime, kurhtimeErr, kurhTOF;
   std::vector<unsigned int> kurhID;
@@ -663,12 +759,79 @@ private:
   std::vector<float> kurhped12, kurhped6, kurhped1;
   std::vector<float> kurhpedrms12, kurhpedrms6, kurhpedrms1;
 
+  // kuKsStcRecHits
+  int nkuKsStcrechits;
+  std::vector<float> kuKsStcrhX, kuKsStcrhY, kuKsStcrhZ, kuKsStcrhE, kuKsStcrhtime, kuKsStcrhtimeErr, kuKsStcrhTOF;
+  std::vector<unsigned int> kuKsStcrhID;
+  std::vector<bool> kuKsStcrhisOOT, kuKsStcrhisGS6, kuKsStcrhisGS1;
+  std::vector<float> kuKsStcrhadcToGeV;
+  std::vector<float> kuKsStcrhped12, kuKsStcrhped6, kuKsStcrhped1;
+  std::vector<float> kuKsStcrhpedrms12, kuKsStcrhpedrms6, kuKsStcrhpedrms1;
+
+  // kuWeiRecHits
+  int nkuWeirechits;
+  std::vector<float> kuWeirhX, kuWeirhY, kuWeirhZ, kuWeirhE, kuWeirhtime, kuWeirhtimeErr, kuWeirhTOF;
+  std::vector<unsigned int> kuWeirhID;
+  std::vector<bool> kuWeirhisOOT, kuWeirhisGS6, kuWeirhisGS1;
+  std::vector<float> kuWeirhadcToGeV;
+  std::vector<float> kuWeirhped12, kuWeirhped6, kuWeirhped1;
+  std::vector<float> kuWeirhpedrms12, kuWeirhpedrms6, kuWeirhpedrms1;
+
+  // kuWeiStcRecHits
+  int nkuWeiStcrechits;
+  std::vector<float> kuWeiStcrhX, kuWeiStcrhY, kuWeiStcrhZ, kuWeiStcrhE, kuWeiStcrhtime, kuWeiStcrhtimeErr, kuWeiStcrhTOF;
+  std::vector<unsigned int> kuWeiStcrhID;
+  std::vector<bool> kuWeiStcrhisOOT, kuWeiStcrhisGS6, kuWeiStcrhisGS1;
+  std::vector<float> kuWeiStcrhadcToGeV;
+  std::vector<float> kuWeiStcrhped12, kuWeiStcrhped6, kuWeiStcrhped1;
+  std::vector<float> kuWeiStcrhpedrms12, kuWeiStcrhpedrms6, kuWeiStcrhpedrms1;
+
+  // kuWeiNotRecHits
+  int nkuWeiNotrechits;
+  std::vector<float> kuWeiNotrhX, kuWeiNotrhY, kuWeiNotrhZ, kuWeiNotrhE, kuWeiNotrhtime, kuWeiNotrhtimeErr, kuWeiNotrhTOF;
+  std::vector<unsigned int> kuWeiNotrhID;
+  std::vector<bool> kuWeiNotrhisOOT, kuWeiNotrhisGS6, kuWeiNotrhisGS1;
+  std::vector<float> kuWeiNotrhadcToGeV;
+  std::vector<float> kuWeiNotrhped12, kuWeiNotrhped6, kuWeiNotrhped1;
+  std::vector<float> kuWeiNotrhpedrms12, kuWeiNotrhpedrms6, kuWeiNotrhpedrms1;
+
+  // kuWeiNotStcRecHits
+  int nkuWeiNotStcrechits;
+  std::vector<float> kuWeiNotStcrhX, kuWeiNotStcrhY, kuWeiNotStcrhZ, kuWeiNotStcrhE, kuWeiNotStcrhtime, kuWeiNotStcrhtimeErr, kuWeiNotStcrhTOF;
+  std::vector<unsigned int> kuWeiNotStcrhID;
+  std::vector<bool> kuWeiNotStcrhisOOT, kuWeiNotStcrhisGS6, kuWeiNotStcrhisGS1;
+  std::vector<float> kuWeiNotStcrhadcToGeV;
+  std::vector<float> kuWeiNotStcrhped12, kuWeiNotStcrhped6, kuWeiNotStcrhped1;
+  std::vector<float> kuWeiNotStcrhpedrms12, kuWeiNotStcrhpedrms6, kuWeiNotStcrhpedrms1;
+
   // Uncalibrated RecHits
   int nurechits;
   std::vector<unsigned int> uRhId;
   std::vector<float> amplitude, amplitudeError, pedestal, jitter, chi2, jitterError;
   //std::vector<std::vector<float> > outOfTimeAmplitude;
   std::vector<float> ootA0, ootA1, ootA2, ootA3, ootA4, ootA5, ootA6, ootA7, ootA8, ootA9;
+
+  // Uncalibrated kuKs RecHits
+  int nkuKsUrechits;
+  std::vector<unsigned int> kuKs_uRhId;
+  std::vector<float> kuKs_amplitude, kuKs_amplitudeError, kuKs_pedestal, kuKs_jitter, kuKs_chi2, kuKs_jitterError;
+  //std::vector<std::vector<float> > outOfTimeAmplitude;
+  std::vector<float> kuKs_ootA0, kuKs_ootA1, kuKs_ootA2, kuKs_ootA3, kuKs_ootA4, kuKs_ootA5, kuKs_ootA6, kuKs_ootA7, kuKs_ootA8, kuKs_ootA9;
+
+  // Uncalibrated KuWei RecHits
+  int nKuWeiUrechits;
+  std::vector<unsigned int> kuWei_uRhId;
+  std::vector<float> kuWei_amplitude, kuWei_amplitudeError, kuWei_pedestal, kuWei_jitter, kuWei_chi2, kuWei_jitterError;
+  //std::vector<std::vector<float> > outOfTimeAmplitude;
+  std::vector<float> kuWei_ootA0, kuWei_ootA1, kuWei_ootA2, kuWei_ootA3, kuWei_ootA4, kuWei_ootA5, kuWei_ootA6, kuWei_ootA7, kuWei_ootA8, kuWei_ootA9;
+
+  // Uncalibrated kuWieNot RecHits
+  int nkuWeiNotUrechits;
+  std::vector<unsigned int> kuWeiNot_uRhId;
+  std::vector<float> kuWeiNot_amplitude, kuWeiNot_amplitudeError, kuWeiNot_pedestal, kuWeiNot_jitter, kuWeiNot_chi2, kuWeiNot_jitterError;
+  //std::vector<std::vector<float> > outOfTimeAmplitude;
+  std::vector<float> kuWeiNot_ootA0, kuWeiNot_ootA1, kuWeiNot_ootA2, kuWeiNot_ootA3, kuWeiNot_ootA4;
+  std::vector<float> kuWeiNot_ootA5, kuWeiNot_ootA6, kuWeiNot_ootA7, kuWeiNot_ootA8, kuWeiNot_ootA9;
 
   std::vector<bool> isSaturated, isJitterValid, isJitterErrorValid;
 

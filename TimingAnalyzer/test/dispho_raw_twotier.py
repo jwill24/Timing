@@ -93,7 +93,7 @@ options.register('demoMode',False,VarParsing.multiplicity.singleton,VarParsing.v
 options.register('processName','TREE',VarParsing.multiplicity.singleton,VarParsing.varType.string,'process name to be considered');
 
 ## outputFile Name
-options.register('outputFileName','ku_twotier_run18D_320712_dispho.root',VarParsing.multiplicity.singleton,VarParsing.varType.string,'output file name created by cmsRun');
+options.register('outputFileName','ku_multitest_twotier_run18D_323414_dispho.root',VarParsing.multiplicity.singleton,VarParsing.varType.string,'output file name created by cmsRun');
 
 ## etra bits
 options.register('nThreads',8,VarParsing.multiplicity.singleton,VarParsing.varType.int,'number of threads per job');
@@ -237,30 +237,30 @@ process.source = cms.Source("PoolSource",
         #'file:30F3675D-F89D-E811-8D66-FA163E884269.root'#run2018D raw
         #'file:EF735B7A-54AA-3749-84B6-ADBBCE9B4329.root'#run2018D mini
         #'/store/data/Run2018A/EGamma/RAW/v1/000/315/973/00000/2E81C787-2D53-E811-BAFC-FA163E2CD5B1.root'
-	'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/320/712/00000/4A95EB13-2698-E811-BBC4-FA163EC6DE18.root',
-	#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/323/414/00000/AF2238B6-5EE6-064E-8192-0DFC2DF3933B.root'
+	#'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/320/712/00000/4A95EB13-2698-E811-BBC4-FA163EC6DE18.root',
+	'/store/data/Run2018D/EGamma/MINIAOD/PromptReco-v2/000/323/414/00000/AF2238B6-5EE6-064E-8192-0DFC2DF3933B.root'
         ),
     secondaryFileNames = cms.untracked.vstring(
         #'/store/data/Run2018B/EGamma/RAW/v1/000/317/080/00000/2E4C1CAA-B862-E811-9E69-FA163E555720.root'
 	#320712
-	'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/E6AC3679-0096-E811-8627-FA163EBC06F8.root',
-	'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/EE079695-FE95-E811-BD8F-FA163EC2BC89.root',
-	'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/92114094-0296-E811-9275-FA163E4D2241.root',
-	'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/C83EAA50-0096-E811-A956-02163E01A074.root',
-	'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/48CA1194-FE95-E811-9481-02163E019F62.root',
-	'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/8055A1FE-FF95-E811-B658-FA163E6788A6.root',
-	'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/30B84492-D396-E811-A5C1-FA163ED918AD.root',
-	'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/3C235E7F-D396-E811-8F79-FA163E300262.root',
-	'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/0C090600-0096-E811-9224-FA163E010862.root'
+	#'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/E6AC3679-0096-E811-8627-FA163EBC06F8.root',
+	#'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/EE079695-FE95-E811-BD8F-FA163EC2BC89.root',
+	#'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/92114094-0296-E811-9275-FA163E4D2241.root',
+	#'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/C83EAA50-0096-E811-A956-02163E01A074.root',
+	#'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/48CA1194-FE95-E811-9481-02163E019F62.root',
+	#'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/8055A1FE-FF95-E811-B658-FA163E6788A6.root',
+	#'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/30B84492-D396-E811-A5C1-FA163ED918AD.root',
+	#'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/3C235E7F-D396-E811-8F79-FA163E300262.root',
+	#'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/0C090600-0096-E811-9224-FA163E010862.root'
 	#323414
-	#'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/042D6023-E0A2-8649-8D86-445F752A8F6B.root',
-	#'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/78266801-FA3A-0A4E-86E6-1147C0A1FD27.root',
-	#'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/C9875CA5-D499-2043-BDE2-F766389D2D26.root',
-	#'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/DF56FF9E-1DE4-DA4C-B02F-0CEA64882D80.root',
-	#'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/E9A6A66F-0E63-AD45-8137-66B9631818AC.root',
-	#'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/F1430E66-D4F8-3D46-BAFE-F2EA8B065FE5.root',
-	#'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/60148CAA-381A-D045-9851-3D84D968BB05.root',
-	#'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/618E1C14-A17B-3B4D-8337-94A987B372D5.root'
+	'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/042D6023-E0A2-8649-8D86-445F752A8F6B.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/78266801-FA3A-0A4E-86E6-1147C0A1FD27.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/C9875CA5-D499-2043-BDE2-F766389D2D26.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/DF56FF9E-1DE4-DA4C-B02F-0CEA64882D80.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/E9A6A66F-0E63-AD45-8137-66B9631818AC.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/F1430E66-D4F8-3D46-BAFE-F2EA8B065FE5.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/60148CAA-381A-D045-9851-3D84D968BB05.root',
+	'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/618E1C14-A17B-3B4D-8337-94A987B372D5.root'
 	),
     #eventsToProcess = cms.untracked.VEventRange(eventList)
 )
@@ -269,9 +269,9 @@ process.source = cms.Source("PoolSource",
 ## How many events to process
 #if   options.demoMode : process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
 #else                  : process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents))
-#process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1))
 #process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
+#process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 
 # Set the global tag depending on the sample type
 from Configuration.AlCa.GlobalTag import GlobalTag
@@ -374,12 +374,39 @@ process.tree = cms.EDAnalyzer("DisPho",
    ## ecal recHits
    recHitsEB = cms.InputTag("reducedEgamma", "reducedEBRecHits"),
    recHitsEE = cms.InputTag("reducedEgamma", "reducedEERecHits"),
+
    ## ecal kuRecHits
-   kuRecHitsEB = cms.InputTag("kuEcalRecHit", "kuEcalRecHitsEB"),
-   kuRecHitsEE = cms.InputTag("kuEcalRecHit", "kuEcalRecHitsEE"),
+   kuKsRecHitsEB = cms.InputTag("kuKsEcalRecHit", "kuKsEcalRecHitsEB"),
+   kuKsRecHitsEE = cms.InputTag("kuKsEcalRecHit", "kuKsEcalRecHitsEE"),
+
+   kuKsStcRecHitsEB = cms.InputTag("kuKsStcEcalRecHit", "kuKsStcEcalRecHitsEB"),
+   kuKsStcRecHitsEE = cms.InputTag("kuKsStcEcalRecHit", "kuKsStcEcalRecHitsEE"),
+
+   kuWeiRecHitsEB = cms.InputTag("kuWeiEcalRecHit", "kuWeiEcalRecHitsEB"),
+   kuWeiRecHitsEE = cms.InputTag("kuWeiEcalRecHit", "kuWeiEcalRecHitsEE"),
+
+   kuWeiStcRecHitsEB = cms.InputTag("kuWeiStcEcalRecHit", "kuWeiStcEcalRecHitsEB"),
+   kuWeiStcRecHitsEE = cms.InputTag("kuWeiStcEcalRecHit", "kuWeiStcEcalRecHitsEE"),
+
+   kuWeiNotRecHitsEB = cms.InputTag("kuWeiNotEcalRecHit", "kuWeiNotEcalRecHitsEB"),
+   kuWeiNotRecHitsEE = cms.InputTag("kuWeiNotEcalRecHit", "kuWeiNotEcalRecHitsEE"),
+
+   kuWeiNotStcRecHitsEB = cms.InputTag("kuWeiNotStcEcalRecHit", "kuWeiNotStcEcalRecHitsEB"),
+   kuWeiNotStcRecHitsEE = cms.InputTag("kuWeiNotStcEcalRecHit", "kuWeiNotStcEcalRecHitsEE"),
+
    ## ecal uncalib recHits
    uncalibratedRecHitsEB = cms.InputTag("ecalMultiFitUncalibRecHit","EcalUncalibRecHitsEB"),
    uncalibratedRecHitsEE = cms.InputTag("ecalMultiFitUncalibRecHit","EcalUncalibRecHitsEE"),
+
+   kuKs_uncalibratedRecHitsEB = cms.InputTag("kuKsEcalMultiFitUncalibRecHit","kuKsEcalUncalibRecHitsEB"),
+   kuKs_uncalibratedRecHitsEE = cms.InputTag("kuKsEcalMultiFitUncalibRecHit","kuKsEcalUncalibRecHitsEE"),
+
+   kuWei_uncalibratedRecHitsEB = cms.InputTag("kuWeiEcalMultiFitUncalibRecHit","kuWeiEcalUncalibRecHitsEB"),
+   kuWei_uncalibratedRecHitsEE = cms.InputTag("kuWeiEcalMultiFitUncalibRecHit","kuWeiEcalUncalibRecHitsEE"),
+
+   kuWeiNot_uncalibratedRecHitsEB = cms.InputTag("kuWeiNotEcalMultiFitUncalibRecHit","kuWeiNotEcalUncalibRecHitsEB"),
+   kuWeiNot_uncalibratedRecHitsEE = cms.InputTag("kuWeiNotEcalMultiFitUncalibRecHit","kuWeiNotEcalUncalibRecHitsEE"),
+
    ## digis
    EBdigiCollection = cms.InputTag("ecalDigis","ebDigis"),
    EEdigiCollection = cms.InputTag("ecalDigis","eeDigis"),
