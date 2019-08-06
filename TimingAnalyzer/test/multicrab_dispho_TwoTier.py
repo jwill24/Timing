@@ -86,10 +86,10 @@ def docrab():
         #config.Data.useParent      = False
         config.Data.lumiMask       = inputJSON
         config.Data.splitting      = 'EventAwareLumiBased'
-        config.Data.unitsPerJob    = 250000
+        config.Data.unitsPerJob    = 25000
         #config.Data.splitting     = 'Automatic'
         #config.Data.unitsPerJob   = 200000
-        config.Data.runRange       = '321732-321760'
+        config.Data.runRange       = '320673-321730'
 
         config.Data.publication    = False
         config.Site.storageSite    = 'T2_US_Nebraska'
@@ -126,8 +126,18 @@ def docrab():
             #trial          = "valtest13_twotier"  # useParent=True; rawCollectionsValid=False
             #trial          = "valtest14_twotier"  # useParent=False; rawCollectionsValid=False
             #trial          = "valtest15_twotier"  # raw reco: useParent=True; rawCollectionsValid=True
-            trial          = "valtest16_twotier"  # raw reco w/kurechits: useParent=True; rawCollectionsValid=True
-	    runs	   = "321732-321760"
+            #trial          = "valtest16_twotier"  # raw reco w/kurechits: useParent=True; rawCollectionsValid=True
+            #trial          = "valtest17_twotier"  # raw reco w/kurechits: useParent=True; rawCollectionsValid=True, justin partial unpack
+            #trial          = "valtest18_twotier"  # raw reco w/kurechits: useParent=True; rawCollectionsValid=True, jwk partial unpack
+            #trial          = "valtest19_twotier"  # raw reco w/kurechits: useParent=True; rawCollectionsValid=True, jwk partial unpack v2
+            #trial          = "valtest20_twotier"  # same as 19, test fix for kurechit fill issue, unitsPerJob=200000 
+            #trial          = "valtest21_twotier"  # same as 20, 321732-321760 added L1Reco and bunchspace producer( jwkpupv3 ), unitsPerJob=50000
+            #trial          = "valtest22_twotier"  # same as 21 with runrange: 323414-323488
+            #trial          = "valtest23_twotier"  # same as 22, with LHCInfoValid=False
+            trial          = "valtest24_twotier"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, 320673-321730 2018D
+	    #runs	   = "321732-321760"
+            #runs           = "323414-323488"
+            runs           = "320673-321730"
 	    #runs	   = "Full"
 
             #config.General.requestName   = primaryDataset+"_"+runEra+"_v7"
@@ -141,8 +151,8 @@ def docrab():
 
 	    # for 2018  prompt v11
             config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Prompt_v11',#'nThreads='+str(config.JobType.numCores),
-                                            'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags,
-                                            'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=True', 'rawCollectionsValid=True']
+                                            'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags, 'onlyGED=True', 
+					    'outputFileName=output.root', 'kuRechitValid=True','lhcInfoValid=False', 'rawCollectionsValid=True']
 
 	    # for 2018 ABC rereco
             #config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Sep2018Rereco_v1','nThreads='+str(config.JobType.numCores),

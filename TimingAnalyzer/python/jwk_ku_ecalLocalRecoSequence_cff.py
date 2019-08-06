@@ -53,6 +53,8 @@ kuEcalMultiFitUncalibRecHit = ecalMultiFitUncalibRecHit.clone(
           
               # decide which algorithm to be use to calculate the jitter
               timealgo = cms.string("Kansas"),
+              #timealgo = cms.string("Weight?"),
+	      #timealgo = cms.string("RatioMethod"),
           
               # for ratio method
               EBtimeFitParameters = cms.vdouble(-2.015452e+00, 3.130702e+00, -1.234730e+01, 4.188921e+01, -8.283944e+01, 9.101147e+01, -5.035761e+01, 1.105621e+01),
@@ -99,6 +101,9 @@ ku_ecalUncalibRecHitSequence = cms.Sequence(ecalMultiFitUncalibRecHit*
 					kuEcalMultiFitUncalibRecHit*
         	                        ecalDetIdToBeRecovered)
 
+ku_only_ecalUncalibRecHitSequence = cms.Sequence(kuEcalMultiFitUncalibRecHit*
+						ecalDetIdToBeRecovered)
+
 kuEcalRecHit = ecalRecHit.clone(
 	EErechitCollection = cms.string('kuEcalRecHitsEE'),
 	EEuncalibRecHitCollection = cms.InputTag("kuEcalMultiFitUncalibRecHit","kuEcalUncalibRecHitsEE"),
@@ -114,9 +119,15 @@ ku_ecalRecHitSequence        = cms.Sequence(ecalRecHit*
                                          ecalTPSkim+
                                          ecalPreshowerRecHit)
 
-ku_ecalLocalRecoSequence     = cms.Sequence(ku_ecalUncalibRecHitSequence*ku_ecalRecHitSequence)
+ku_min_ecalRecHitSequence        = cms.Sequence(ecalRecHit*kuEcalRecHit)
+ku_only_ecalRecHitSequence        = cms.Sequence(kuEcalRecHit)
 
-ku_supEcalLocalRecoSequence  = cms.Sequence(kuEcalMultiFitUncalibRecHit*kuEcalRecHit)
+# full sequences
+ku_ecalLocalRecoSequence     	= cms.Sequence(ku_ecalUncalibRecHitSequence*ku_ecalRecHitSequence)
+
+ku_min_ecalLocalRecoSequence    = cms.Sequence(ku_ecalUncalibRecHitSequence*ku_only_ecalRecHitSequence)
+
+ku_only_ecalLocalRecoSequence  	= cms.Sequence(ku_only_ecalUncalibRecHitSequence*ku_only_ecalRecHitSequence)
 
 from RecoLocalCalo.EcalRecProducers.ecalDetailedTimeRecHit_cfi import *
 _phase2_timing_ecalRecHitSequence = cms.Sequence( ku_ecalRecHitSequence.copy() + ecalDetailedTimeRecHit )

@@ -15,7 +15,9 @@ options = VarParsing('python')
 print('Loading Options')
 ## LHC Info
 options.register('lhcInfoValid',True,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to get lhc info');
-options.register('rlelist','events2018.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'Events to Process');
+options.register('rawCollectionsValid',True,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to get digi/uncalRechit');
+options.register('kuRechitValid',True,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to get kuRechit');
+#options.register('rlelist','events2018.txt',VarParsing.multiplicity.singleton,VarParsing.varType.string,'Events to Process');
 ## blinding
 options.register('blindSF',1000,VarParsing.multiplicity.singleton,VarParsing.varType.int,'pick every nth SF event');
 options.register('applyBlindSF',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to apply event SF blinding');
@@ -218,8 +220,8 @@ process.load("Geometry.CaloEventSetup.CaloTowerConstituents_cfi")
 
 process.maxEvents = cms.untracked.PSet(
 #    input = cms.untracked.int32(5)
-    input = cms.untracked.int32(20)
-#    input = cms.untracked.int32(-1)
+#    input = cms.untracked.int32(100)
+    input = cms.untracked.int32(-1)
 )
 
 # Input source
@@ -408,6 +410,9 @@ process.ecalBadCalibReducedMINIAODFilter = cms.EDFilter("EcalBadCalibFilter",
 print('Setting up DisPho')
 # Make the tree 
 process.dispho = cms.EDAnalyzer("DisPho",
+   ## additional collections
+   kuRechitValid = cms.bool(options.kuRechitValid),
+   rawCollectionsValid = cms.bool(options.rawCollectionsValid),
    ## LHC Info
    lhcInfoValid = cms.bool(options.lhcInfoValid),
    ## blinding 
@@ -518,9 +523,9 @@ process.dispho = cms.EDAnalyzer("DisPho",
    genJets      = cms.InputTag("slimmedGenJets"),
 )
 
-process.seq = cms.Sequence(
-   process.egammaPostRecoSeq
-)
+#process.seq = cms.Sequence(
+#   process.egammaPostRecoSeq
+#)
 
 print('Set up Path and EndPath Definitions')
 # DisPho Path and EndPath definitions
@@ -537,7 +542,9 @@ process.tree_step = cms.EndPath(
         process.dispho
 )
 
+
 process.jwk_calolocalreco = cms.Sequence(
+				#process.ku_min_ecalLocalRecoSequence
 				process.ku_ecalLocalRecoSequence+
 				process.hcalLocalRecoSequence
 				)
@@ -567,7 +574,7 @@ process.jwk_highlevelreco = cms.Sequence(
                              )
 
 process.jwk_reconstruction = cms.Sequence(
-#				process.localreco*
+				#process.localreco*
                                 process.jwk_localreco*
 				process.globalreco*
 				process.jwk_highlevelreco*
@@ -626,6 +633,7 @@ process.schedule = cms.Schedule(
 		#process.content_step,
 		process.raw2digi_step,
 		process.L1Reco_step,
+                #process.ecalraw2digi_step,
 		process.reconstruction_step,
 		#process.ecalBadCalibReducedMINIAODFilter_step,
 		process.endjob_step,

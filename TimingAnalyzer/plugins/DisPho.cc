@@ -237,7 +237,6 @@ DisPho::~DisPho() {}
 void DisPho::analyze(const edm::Event & iEvent, const edm::EventSetup & iSetup)
 {
 
-
   /////////////////
   // Get Objects //
   /////////////////
@@ -272,14 +271,14 @@ void DisPho::analyze(const edm::Event & iEvent, const edm::EventSetup & iSetup)
   // Apply Blinding //
   ////////////////////
   //std::cout << ">>> Apply Blinding" << std::endl;
-  if (applyBlindSF && DisPho::ApplyBlindSF()) return;
-  DisPho::FillBlindSF();
+  //if (applyBlindSF && DisPho::ApplyBlindSF()) return;
+  //DisPho::FillBlindSF();
 
   // Get MET corrected in time for apply blinding MET --> early object prep
   oot::PrepPhotonsCorrectMET(gedPhotonsH,ootPhotonsH,photons,t1pfMET,rho,dRmin,phpTmin,phIDmin);
 
-  if (applyBlindMET && DisPho::ApplyBlindMET()) return;
-  DisPho::FillBlindMET();
+  //if (applyBlindMET && DisPho::ApplyBlindMET()) return;
+  //DisPho::FillBlindMET();
 
   //////////////////
   // Prep Objects //
@@ -291,13 +290,13 @@ void DisPho::analyze(const edm::Event & iEvent, const edm::EventSetup & iSetup)
   // Apply pre-selection //
   /////////////////////////
   //std::cout << ">>> Apply pre-selection" << std::endl;
-  if (applyTrigger && DisPho::ApplyPreSelectionTrigger()) return;
-  DisPho::FillPreSelectionTrigger();
+  //if (applyTrigger && DisPho::ApplyPreSelectionTrigger()) return;
+  //DisPho::FillPreSelectionTrigger();
 
   if (applyHT && DisPho::ApplyPreSelectionHT()) return;
   DisPho::FillPreSelectionHT();
 
-  if (applyPhGood && DisPho::ApplyPreSelectionGoodPhoton()) return;
+  //if (applyPhGood && DisPho::ApplyPreSelectionGoodPhoton()) return;
 
   DisPho::FillPreSelectionGoodPhoton();
 
@@ -306,6 +305,8 @@ void DisPho::analyze(const edm::Event & iEvent, const edm::EventSetup & iSetup)
   ////////////////////////////
   //std::cout << ">>> Fill Tree From Objects" << std::endl;
   DisPho::FillTreeFromObjects(iEvent);
+
+  //std::cout << ">>>>>>  Event Processed" << std::endl;
 
 }
 
@@ -332,10 +333,10 @@ bool DisPho::GetObjects(const edm::Event & iEvent, const edm::EventSetup & iSetu
   // MC Objects //
   ////////////////
 
-  if (isMC)
-  {
-    if (!DisPho::GetMCObjects(iEvent)) return false;
-  }
+  //if (isMC)
+  //{
+  //  if (!DisPho::GetMCObjects(iEvent)) return false;
+  //}
 
   // if no bad handles, return true
   return true;
@@ -368,7 +369,7 @@ bool DisPho::GetLHCInfo(const edm::Event & iEvent, const edm::EventSetup & iSetu
   // Verify LHC Info
   if(!lhcInfoValid) {
     //throw cms::Exception("ProductNotValid") << "LHCInfo product not valid";
-    //std::cout << "LHCInfo not found?\n" << std::endl;
+    //std::cout << "LHCInfoValid False\n" << std::endl;
     return false;
   }
   else{
@@ -922,7 +923,7 @@ void DisPho::FillTreeFromObjects(const edm::Event & iEvent)
   // MC Info //
   /////////////
 
-  if (isMC) DisPho::SetMCInfo();
+  //if (isMC) DisPho::SetMCInfo();
 
   ///////////////////////////
   // Event, lumi, run info //
@@ -957,11 +958,11 @@ void DisPho::FillTreeFromObjects(const edm::Event & iEvent)
   DisPho::InitializeMETBranches();
   DisPho::SetMETBranches();
 
-  if (isMC) 
-  {
-    DisPho::InitializeMETBranchesMC();
-    DisPho::SetMETBranchesMC();
-  }
+  //if (isMC) 
+  //{
+  //  DisPho::InitializeMETBranchesMC();
+  //  DisPho::SetMETBranchesMC();
+  //}
 
   /////////////////////////
   // Jets (AK4 standard) //
@@ -970,11 +971,11 @@ void DisPho::FillTreeFromObjects(const edm::Event & iEvent)
   //DisPho::InitializeJetBranches();
   //DisPho::SetJetBranches();
 
-  if (isMC)
-  {
-    DisPho::InitializeJetBranchesMC();
-    DisPho::SetJetBranchesMC();
-  }
+  //if (isMC)
+  //{
+  //  DisPho::InitializeJetBranchesMC();
+  //  DisPho::SetJetBranchesMC();
+  //}
 
   ///////////////
   // Electrons //
@@ -1005,14 +1006,14 @@ void DisPho::FillTreeFromObjects(const edm::Event & iEvent)
   //////////////////
   // Reco Photons //
   //////////////////
-  //std::cout << ">>> Reco Photons" << std::endl;
+ // //std::cout << ">>> Reco Photons" << std::endl;
   DisPho::InitializePhoBranches();
   DisPho::SetPhoBranches();
-  if (isMC) 
-  {
-    DisPho::InitializePhoBranchesMC();
-    DisPho::SetPhoBranchesMC();
-  }
+  //if (isMC) 
+  //{
+  //  DisPho::InitializePhoBranchesMC();
+  //  DisPho::SetPhoBranchesMC();
+  //}
 
   ///////////////
   // Fill Tree //
@@ -1944,8 +1945,9 @@ void DisPho::SetRecHitBranches()
   DisPho::SetRecHitBranches(recHitsEB,barrelGeometry,adcToGeVEB);
   DisPho::SetRecHitBranches(recHitsEE,endcapGeometry,adcToGeVEE);
 
-  if( kuRechitValid ){	  
-//	for (const auto recHit : *kuRecHitsEB){std::cout << "Leading Pt KURecHit Time: " << recHit.time() << std::endl; break; }
+  if( kuRechitValid ){	 
+	//std::cout << ">>> KU Rec Hits" << std::endl; 
+	//for (const auto recHit : *kuRecHitsEB){//std::cout << "   Leading Pt KURecHit Time: " << recHit.time() << std::endl; break; }
   	nkurechits = kuRecHitMap.size();
   	DisPho::SetKuRecHitBranches(kuRecHitsEB,barrelGeometry,adcToGeVEB);
   	DisPho::SetKuRecHitBranches(kuRecHitsEE,endcapGeometry,adcToGeVEE);
@@ -2024,13 +2026,14 @@ void DisPho::SetRecHitBranches(const EcalRecHitCollection * recHits, const CaloS
 
 void DisPho::SetKuRecHitBranches(const EcalRecHitCollection * recHits, const CaloSubdetectorGeometry * geometry, const float adcToGeV)
 {
+  //std::cout << ">>>>>>>> Setting KU Rechits" << std::endl;
   for (const auto recHit : *recHits)
   {
     const auto recHitId(recHit.detid());
     const auto rawId = recHitId.rawId();
-    if (recHitMap.count(rawId))
+    if (kuRecHitMap.count(rawId))
     {
-      const auto pos = recHitMap.at(rawId);
+      const auto pos = kuRecHitMap.at(rawId);
       const auto recHitPos = geometry->getGeometry(recHitId)->getPosition();
 
       // save position, energy, and time of each rechit to a vector
