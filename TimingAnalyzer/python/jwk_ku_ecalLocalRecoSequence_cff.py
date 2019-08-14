@@ -22,79 +22,61 @@ from RecoLocalCalo.EcalRecProducers.ecalDetailedTimeRecHit_cfi import *
 from Timing.TimingAnalyzer.jwk_ku_ecalMultiFitUncalRecHit_cff import *
 
 ku_ecalUncalibRecHitSequence = cms.Sequence(ecalMultiFitUncalibRecHit*
-					kuKsEcalMultiFitUncalibRecHit*
+					kuEcalMultiFitUncalibRecHit*
         	                        ecalDetIdToBeRecovered)
 
 ku_multi_ecalUncalibRecHitSequence = cms.Sequence(ecalMultiFitUncalibRecHit*
-                                        kuKsEcalMultiFitUncalibRecHit*
-                                        kuWeiEcalMultiFitUncalibRecHit*
-                                        kuWeiNotEcalMultiFitUncalibRecHit*
+                                        kuEcalMultiFitUncalibRecHit*
+                                        kuNotEcalMultiFitUncalibRecHit*
                                         ecalDetIdToBeRecovered)
 
-ku_only_ecalUncalibRecHitSequence = cms.Sequence(kuKsEcalMultiFitUncalibRecHit*
+ku_only_ecalUncalibRecHitSequence = cms.Sequence(kuEcalMultiFitUncalibRecHit*
 						ecalDetIdToBeRecovered)
 
-kuKsEcalRecHit = ecalRecHit.clone(
-	EErechitCollection = cms.string('kuKsEcalRecHitsEE'),
-	EEuncalibRecHitCollection = cms.InputTag("kuKsEcalMultiFitUncalibRecHit","kuKsEcalUncalibRecHitsEE"),
-	EBuncalibRecHitCollection = cms.InputTag("kuKsEcalMultiFitUncalibRecHit","kuKsEcalUncalibRecHitsEB"),
-	EBrechitCollection = cms.string('kuKsEcalRecHitsEB'),
+kuEcalRecHit = ecalRecHit.clone(
+	EErechitCollection = cms.string('kuEcalRecHitsEE'),
+	EEuncalibRecHitCollection = cms.InputTag("kuEcalMultiFitUncalibRecHit","kuEcalUncalibRecHitsEE"),
+	EBuncalibRecHitCollection = cms.InputTag("kuEcalMultiFitUncalibRecHit","kuEcalUncalibRecHitsEB"),
+	EBrechitCollection = cms.string('kuEcalRecHitsEB'),
 	)
 
-kuKsStcEcalRecHit = ecalRecHit.clone(
-        EErechitCollection = cms.string('kuKsStcEcalRecHitsEE'),
-        EEuncalibRecHitCollectioe = cms.InputTag("kuKsEcalMultiFitUncalibRecHit","kuKsEcalUncalibRecHitsEE"),
-        EBuncalibRecHitCollection = cms.InputTag("kuKsEcalMultiFitUncalibRecHit","kuKsEcalUncalibRecHitsEB"),
-        EBrechitCollection = cms.string('kuKsStcEcalRecHitsEB'),
+kuStcEcalRecHit = ecalRecHit.clone(
+        EErechitCollection = cms.string('kuStcEcalRecHitsEE'),
+        EEuncalibRecHitCollection = cms.InputTag("kuEcalMultiFitUncalibRecHit","kuEcalUncalibRecHitsEE"),
+        EBuncalibRecHitCollection = cms.InputTag("kuEcalMultiFitUncalibRecHit","kuEcalUncalibRecHitsEB"),
+        EBrechitCollection = cms.string('kuStcEcalRecHitsEB'),
 	skipTimeCalib = cms.bool(True),
         )
 
-kuWeiEcalRecHit = ecalRecHit.clone(
-        EErechitCollection = cms.string('kuWeiEcalRecHitsEE'),
-        EEuncalibRecHitCollection = cms.InputTag("kuWeiEcalMultiFitUncalibRecHit","kuWeiEcalUncalibRecHitsEE"),
-        EBuncalibRecHitCollection = cms.InputTag("kuWeiEcalMultiFitUncalibRecHit","kuWeiEcalUncalibRecHitsEB"),
-        EBrechitCollection = cms.string('kuWeiEcalRecHitsEB'),
+kuNotEcalRecHit = ecalRecHit.clone(
+        EErechitCollection = cms.string('kuNotEcalRecHitsEE'),
+        EEuncalibRecHitCollection = cms.InputTag("kuNotEcalMultiFitUncalibRecHit","kuNotEcalUncalibRecHitsEE"),
+        EBuncalibRecHitCollection = cms.InputTag("kuNotEcalMultiFitUncalibRecHit","kuNotEcalUncalibRecHitsEB"),
+        EBrechitCollection = cms.string('kuNotEcalRecHitsEB'),
         )
 
-kuWeiStcEcalRecHit = ecalRecHit.clone(
-        EErechitCollection = cms.string('kuWeiStcEcalRecHitsEE'),
-        EEuncalibRecHitCollectioe = cms.InputTag("kuWeiEcalMultiFitUncalibRecHit","kuWeiEcalUncalibRecHitsEE"),
-        EBuncalibRecHitCollection = cms.InputTag("kuWeiEcalMultiFitUncalibRecHit","kuWeiEcalUncalibRecHitsEB"),
-        EBrechitCollection = cms.string('kuWeiStcEcalRecHitsEB'),
-        skipTimeCalib = cms.bool(True),
-        )
-
-kuWeiNotEcalRecHit = ecalRecHit.clone(
-        EErechitCollection = cms.string('kuWeiNotEcalRecHitsEE'),
-        EEuncalibRecHitCollection = cms.InputTag("kuWeiNotEcalMultiFitUncalibRecHit","kuWeiNotEcalUncalibRecHitsEE"),
-        EBuncalibRecHitCollection = cms.InputTag("kuWeiNotEcalMultiFitUncalibRecHit","kuWeiNotEcalUncalibRecHitsEB"),
-        EBrechitCollection = cms.string('kuWeiNotEcalRecHitsEB'),
-        )
-
-kuWeiNotStcEcalRecHit = ecalRecHit.clone(
-        EErechitCollection = cms.string('kuWeiNotStcEcalRecHitsEE'),
-        EEuncalibRecHitCollectioe = cms.InputTag("kuWeiNotEcalMultiFitUncalibRecHit","kuWeiNotEcalUncalibRecHitsEE"),
-        EBuncalibRecHitCollection = cms.InputTag("kuWeiNotEcalMultiFitUncalibRecHit","kuWeiNotEcalUncalibRecHitsEB"),
-        EBrechitCollection = cms.string('kuWeiNotStcEcalRecHitsEB'),
+kuNotStcEcalRecHit = ecalRecHit.clone(
+        EErechitCollection = cms.string('kuNotStcEcalRecHitsEE'),
+        EEuncalibRecHitCollection = cms.InputTag("kuNotEcalMultiFitUncalibRecHit","kuNotEcalUncalibRecHitsEE"),
+        EBuncalibRecHitCollection = cms.InputTag("kuNotEcalMultiFitUncalibRecHit","kuNotEcalUncalibRecHitsEB"),
+        EBrechitCollection = cms.string('kuNotStcEcalRecHitsEB'),
         skipTimeCalib = cms.bool(True),
         )
 
 ku_ecalRecHitSequence        = cms.Sequence(ecalRecHit*
-					 kuKsEcalRecHit*
+					 kuEcalRecHit*
                                          ecalCompactTrigPrim*
                                          ecalTPSkim+
                                          ecalPreshowerRecHit)
 
-ku_min_ecalRecHitSequence        = cms.Sequence(ecalRecHit*kuKsEcalRecHit)
+ku_min_ecalRecHitSequence        = cms.Sequence(ecalRecHit*kuEcalRecHit)
 
-ku_only_ecalRecHitSequence        = cms.Sequence(kuKsEcalRecHit)
+ku_only_ecalRecHitSequence        = cms.Sequence(kuEcalRecHit)
 
-ku_multi_ecalRecHitSequence        = cms.Sequence(kuKsEcalRecHit*
-						kuKsStcEcalRecHit*
-						kuWeiEcalRecHit*
-						kuWeiStcEcalRecHit*
-						kuWeiNotEcalRecHit*
-						kuWeiNotStcEcalRecHit)
+ku_multi_ecalRecHitSequence        = cms.Sequence(kuEcalRecHit*
+						kuStcEcalRecHit*
+						kuNotEcalRecHit*
+						kuNotStcEcalRecHit)
 
 # full sequences
 ku_ecalLocalRecoSequence     	= cms.Sequence(ku_ecalUncalibRecHitSequence*ku_ecalRecHitSequence)

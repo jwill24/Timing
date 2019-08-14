@@ -1,5 +1,5 @@
-#ifndef __DisPho__
-#define __DisPho__
+#ifndef __DisPhoNoTrack__
+#define __DisPhoNoTrack__
 
 // FWCore
 #include "FWCore/Framework/interface/Frameworkfwd.h"
@@ -27,6 +27,7 @@
 #include "DataFormats/TrackReco/interface/Track.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "DataFormats/PatCandidates/interface/Photon.h"
+#include "DataFormats/EgammaCandidates/interface/Photon.h"
 #include "DataFormats/PatCandidates/interface/MET.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/PatCandidates/interface/Electron.h"
@@ -107,7 +108,7 @@
 #include "Math/PositionVector3D.h"
 
 // Common Utilities
-#include "Timing/TimingAnalyzer/plugins/CommonUtils.hh"
+#include "Timing/TimingAnalyzer/plugins/CommonUtilsNoTrack.hh"
 
 // Unique structs
 #include "Timing/TimingAnalyzer/plugins/DisPhoTypes.hh"
@@ -128,7 +129,7 @@ typedef ROOT::Math::PositionVector3D<ROOT::Math::Cartesian3D<float>,ROOT::Math::
 // Class Definition //
 //////////////////////
 
-class DisPho : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one::WatchRuns> 
+class DisPhoNoTrack : public edm::one::EDAnalyzer<edm::one::SharedResources,edm::one::WatchRuns> 
 {
 public:
 
@@ -136,9 +137,9 @@ public:
   // Internal Functions //
   ////////////////////////
 
-  explicit DisPho(const edm::ParameterSet & iConfig);
+  explicit DisPhoNoTrack(const edm::ParameterSet & iConfig);
   void ConsumeTokens();
-  ~DisPho();
+  ~DisPhoNoTrack();
   static void fillDescriptions(edm::ConfigurationDescriptions & descriptions);  
 
   /////////////////////////////
@@ -533,16 +534,21 @@ private:
 
   // gedPhotons
   const edm::InputTag gedPhotonsTag;
-  edm::EDGetTokenT<std::vector<pat::Photon> > gedPhotonsToken;
-  edm::Handle<std::vector<pat::Photon> > gedPhotonsH;
+  //edm::EDGetTokenT<std::vector<pat::Photon> > gedPhotonsToken;
+  edm::EDGetTokenT<std::vector<reco::Photon> > gedPhotonsToken;
+  //edm::Handle<std::vector<pat::Photon> > gedPhotonsH;
+  edm::Handle<std::vector<reco::Photon> > gedPhotonsH;
 
   // ootPhotons
   const edm::InputTag ootPhotonsTag;
-  edm::EDGetTokenT<std::vector<pat::Photon> > ootPhotonsToken;
-  edm::Handle<std::vector<pat::Photon> > ootPhotonsH;
+  //edm::EDGetTokenT<std::vector<pat::Photon> > ootPhotonsToken;
+  edm::EDGetTokenT<std::vector<reco::Photon> > ootPhotonsToken;
+  //edm::Handle<std::vector<pat::Photon> > ootPhotonsH;
+  edm::Handle<std::vector<reco::Photon> > ootPhotonsH;
 
   // output photons
-  std::vector<pat::Photon> photons;
+  //std::vector<pat::Photon> photons;
+  std::vector<reco::Photon> photons;
 
   // geometry
   edm::ESHandle<CaloGeometry> caloGeoH;

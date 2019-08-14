@@ -376,36 +376,27 @@ process.tree = cms.EDAnalyzer("DisPho",
    recHitsEE = cms.InputTag("reducedEgamma", "reducedEERecHits"),
 
    ## ecal kuRecHits
-   kuKsRecHitsEB = cms.InputTag("kuKsEcalRecHit", "kuKsEcalRecHitsEB"),
-   kuKsRecHitsEE = cms.InputTag("kuKsEcalRecHit", "kuKsEcalRecHitsEE"),
+   kuRecHitsEB = cms.InputTag("kuEcalRecHit", "kuEcalRecHitsEB"),
+   kuRecHitsEE = cms.InputTag("kuEcalRecHit", "kuEcalRecHitsEE"),
 
-   kuKsStcRecHitsEB = cms.InputTag("kuKsStcEcalRecHit", "kuKsStcEcalRecHitsEB"),
-   kuKsStcRecHitsEE = cms.InputTag("kuKsStcEcalRecHit", "kuKsStcEcalRecHitsEE"),
+   kuStcRecHitsEB = cms.InputTag("kuStcEcalRecHit", "kuStcEcalRecHitsEB"),
+   kuStcRecHitsEE = cms.InputTag("kuStcEcalRecHit", "kuStcEcalRecHitsEE"),
 
-   kuWeiRecHitsEB = cms.InputTag("kuWeiEcalRecHit", "kuWeiEcalRecHitsEB"),
-   kuWeiRecHitsEE = cms.InputTag("kuWeiEcalRecHit", "kuWeiEcalRecHitsEE"),
+   kuNotRecHitsEB = cms.InputTag("kuNotEcalRecHit", "kuNotEcalRecHitsEB"),
+   kuNotRecHitsEE = cms.InputTag("kuNotEcalRecHit", "kuNotEcalRecHitsEE"),
 
-   kuWeiStcRecHitsEB = cms.InputTag("kuWeiStcEcalRecHit", "kuWeiStcEcalRecHitsEB"),
-   kuWeiStcRecHitsEE = cms.InputTag("kuWeiStcEcalRecHit", "kuWeiStcEcalRecHitsEE"),
-
-   kuWeiNotRecHitsEB = cms.InputTag("kuWeiNotEcalRecHit", "kuWeiNotEcalRecHitsEB"),
-   kuWeiNotRecHitsEE = cms.InputTag("kuWeiNotEcalRecHit", "kuWeiNotEcalRecHitsEE"),
-
-   kuWeiNotStcRecHitsEB = cms.InputTag("kuWeiNotStcEcalRecHit", "kuWeiNotStcEcalRecHitsEB"),
-   kuWeiNotStcRecHitsEE = cms.InputTag("kuWeiNotStcEcalRecHit", "kuWeiNotStcEcalRecHitsEE"),
+   kuNotStcRecHitsEB = cms.InputTag("kuNotStcEcalRecHit", "kuNotStcEcalRecHitsEB"),
+   kuNotStcRecHitsEE = cms.InputTag("kuNotStcEcalRecHit", "kuNotStcEcalRecHitsEE"),
 
    ## ecal uncalib recHits
    uncalibratedRecHitsEB = cms.InputTag("ecalMultiFitUncalibRecHit","EcalUncalibRecHitsEB"),
    uncalibratedRecHitsEE = cms.InputTag("ecalMultiFitUncalibRecHit","EcalUncalibRecHitsEE"),
 
-   kuKs_uncalibratedRecHitsEB = cms.InputTag("kuKsEcalMultiFitUncalibRecHit","kuKsEcalUncalibRecHitsEB"),
-   kuKs_uncalibratedRecHitsEE = cms.InputTag("kuKsEcalMultiFitUncalibRecHit","kuKsEcalUncalibRecHitsEE"),
+   ku_uncalibratedRecHitsEB = cms.InputTag("kuEcalMultiFitUncalibRecHit","kuEcalUncalibRecHitsEB"),
+   ku_uncalibratedRecHitsEE = cms.InputTag("kuEcalMultiFitUncalibRecHit","kuEcalUncalibRecHitsEE"),
 
-   kuWei_uncalibratedRecHitsEB = cms.InputTag("kuWeiEcalMultiFitUncalibRecHit","kuWeiEcalUncalibRecHitsEB"),
-   kuWei_uncalibratedRecHitsEE = cms.InputTag("kuWeiEcalMultiFitUncalibRecHit","kuWeiEcalUncalibRecHitsEE"),
-
-   kuWeiNot_uncalibratedRecHitsEB = cms.InputTag("kuWeiNotEcalMultiFitUncalibRecHit","kuWeiNotEcalUncalibRecHitsEB"),
-   kuWeiNot_uncalibratedRecHitsEE = cms.InputTag("kuWeiNotEcalMultiFitUncalibRecHit","kuWeiNotEcalUncalibRecHitsEE"),
+   kuNot_uncalibratedRecHitsEB = cms.InputTag("kuNotEcalMultiFitUncalibRecHit","kuNotEcalUncalibRecHitsEB"),
+   kuNot_uncalibratedRecHitsEE = cms.InputTag("kuNotEcalMultiFitUncalibRecHit","kuNotEcalUncalibRecHitsEE"),
 
    ## digis
    EBdigiCollection = cms.InputTag("ecalDigis","ebDigis"),
@@ -453,7 +444,8 @@ process.jwk_digisunpacker = cms.Sequence(
         			)
 
 process.jwk_calolocalreco = cms.Sequence(
-				process.ku_min_ecalLocalRecoSequence
+				#process.ku_min_ecalLocalRecoSequence
+                                process.ku_multi_ecalLocalRecoSequence
                                 #process.ku_ecalLocalRecoSequence
                                 #process.ecalLocalRecoSequence
 				#process.hcalLocalRecoSequence
@@ -491,6 +483,8 @@ process.jwk_reconstruction = cms.Sequence(
 				process.logErrorHarvester
 )
 
+process.content = cms.EDAnalyzer("EventContentAnalyzer")
+process.content_step = cms.Path(process.content)
 
 #process.raw2digi_step = cms.Path(process.RawToDigi)
 process.ecalraw2digi_step = cms.Path(process.jwk_digisunpacker)
@@ -503,6 +497,7 @@ process.schedule = cms.Schedule(
 		process.ecalraw2digi_step,
                 process.L1Reco_step,
 		process.reconstruction_step,
+		#process.content_step,
 		process.endjob_step,
 		process.tree_step
 )
