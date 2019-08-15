@@ -1801,23 +1801,23 @@ void DisPho::SetMuonBranches()
   {
     if (muon.pt() < muhighpTmin)
     {
-      if (muon.passed(reco::Muon::CutBasedIdLoose &reco::Muon::PFIsoLoose)) nmuLowL++;
-      if (muon.passed(reco::Muon::CutBasedIdMedium&reco::Muon::PFIsoLoose)) nmuLowM++;
-      if (muon.passed(reco::Muon::CutBasedIdTight &reco::Muon::PFIsoLoose)) nmuLowT++;
+      if (muon.passed(pat::Muon::CutBasedIdLoose &pat::Muon::PFIsoLoose)) nmuLowL++;
+      if (muon.passed(pat::Muon::CutBasedIdMedium&pat::Muon::PFIsoLoose)) nmuLowM++;
+      if (muon.passed(pat::Muon::CutBasedIdTight &pat::Muon::PFIsoLoose)) nmuLowT++;
     }
     else
     {
-      if (muon.passed(reco::Muon::CutBasedIdLoose &reco::Muon::PFIsoLoose))
+      if (muon.passed(pat::Muon::CutBasedIdLoose &pat::Muon::PFIsoLoose))
       {
 	nmuLowL++;
 	nmuHighL++;
       }
-      if (muon.passed(reco::Muon::CutBasedIdMedium&reco::Muon::PFIsoLoose))
+      if (muon.passed(pat::Muon::CutBasedIdMedium&pat::Muon::PFIsoLoose))
       { 
 	nmuLowM++;
 	nmuHighM++;
       }
-      if (muon.passed(reco::Muon::CutBasedIdTight &reco::Muon::PFIsoLoose))
+      if (muon.passed(pat::Muon::CutBasedIdTight &pat::Muon::PFIsoLoose))
       { 
 	nmuLowT++;
 	nmuHighT++;
