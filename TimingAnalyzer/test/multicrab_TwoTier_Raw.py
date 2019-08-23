@@ -80,7 +80,8 @@ def subcrab( runs, events, reqmem ):
 
         config.JobType.pluginName  = 'Analysis'
         #config.JobType.psetName    = 'jwk_raw_dispho.py'
-        config.JobType.psetName    = 'dispho_rawlist_twotier.py'
+        #config.JobType.psetName    = 'dispho_rawlist_twotier.py'
+        config.JobType.psetName    = 'dispho_raw_twotier.py'
         #config.JobType.numCores    = 8
         #config.JobType.maxMemoryMB = reqmem
         #config.JobType.maxJobRuntimeMin = 1600
@@ -124,7 +125,8 @@ def subcrab( runs, events, reqmem ):
 	    #infilename	   = inDO[0].split('/')[11]
 	    #trial	   = "valtest5"
             #trial          = "valtest24_twotier"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, 320673-321730 2018D
-            trial          = "valtest25_twotierlist"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, lists run
+            #trial          = "valtest25_twotierlist"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, lists run
+            trial          = "valtest29_twotier"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, 320673-321730 2018D
 
             config.General.requestName   = trial+"_"+primaryDataset+"_"+runEra+"_"+runs+"_"+dataset+"_dispho"
             config.Data.outputDatasetTag = trial+"_"+primaryDataset+"_"+dataset+"_"+runEra+"_"+runs+"_dispho"
@@ -133,7 +135,7 @@ def subcrab( runs, events, reqmem ):
 	    # for 2018 EGamma 2tier
             config.JobType.pyCfgParams   = ['globalTag=101X_dataRun2_Prompt_v11',#'nThreads='+str(config.JobType.numCores), 
                                             'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags, 
-                                            'onlyGED=True', 'outputFileName=output.root', 'rlelist='+events,
+                                            'onlyGED=True', 'outputFileName=output.root', #'rlelist='+events,
 					    'kuRechitValid=True','lhcInfoValid=False', 'rawCollectionsValid=True' ]
 
             config.Data.inputDataset     = inDO[0]
@@ -214,15 +216,15 @@ def submit_run2018C():
         subcrab( "320039-320065", event_list_path + "sel_320039v320065_EG2018C.txt", 3000 )
 
 def submit_run2018D():
+        subcrab( "320673-321730","",2500)
+
         #subcrab( "320673-320673", event_list_path + "sel_320673v320673_EG2018D.txt", 3000 )
         #subcrab( "320674-320804", event_list_path + "sel_320674v320804_EG2018D.txt", 3000 )
         #subcrab( "320807-320824", event_list_path + "sel_320807v320824_EG2018D.txt", 3000 )
         #subcrab( "320838-320858", event_list_path + "sel_320838v320858_EG2018D.txt", 3000 )
         #subcrab( "320859-320933", event_list_path + "sel_320859v320933_EG2018D.txt", 3000 )
         #subcrab( "320934-321007", event_list_path + "sel_320934v321007_EG2018D.txt", 3000 )
-
-        subcrab( "321009-321055", event_list_path + "sel_321009v321055_EG2018D.txt", 3000 )
-
+        #subcrab( "321009-321055", event_list_path + "sel_321009v321055_EG2018D.txt", 3000 )
         #subcrab( "321067-321124", event_list_path + "sel_321067v321124_EG2018D.txt", 3000 )
         #subcrab( "321126-321149", event_list_path + "sel_321126v321149_EG2018D.txt", 3000 )
         #subcrab( "321165-321219", event_list_path + "sel_321165v321219_EG2018D.txt", 3000 )
