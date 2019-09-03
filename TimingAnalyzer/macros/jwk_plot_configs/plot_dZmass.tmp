@@ -1,0 +1,4 @@
+plot_title=Z mass ( pho_0 + pho_1 ) [GeV]
+x_title=Zmass(pho_0+pho_1) [GeV]
+x_var=gZmass
+x_bins=CONSTANT 110 55 165

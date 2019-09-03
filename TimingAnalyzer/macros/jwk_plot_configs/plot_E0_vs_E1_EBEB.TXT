@@ -1,0 +1,10 @@
+plot_title=A_{0} vs. A_{1}  (EBEB)
+x_title=phoseedE_{0} (EBEB)
+x_var=phoseedE_0
+x_bins=CONSTANT 256 0 2560
+y_title=phoseedE_{1}
+y_var=phoseedE_1
+y_bins=CONSTANT 256 0 2560
+y_var_data=
+y_var_bkgd=
+y_var_sign=

@@ -10,7 +10,7 @@ miscconfig=${3:-"${miscconfigdir}/misc_blind.${inTextExt}"}
 timefitconfig=${4:-"time.${inTextExt}"}
 era=${5:-"full"}
 outfiletext=${6:-"plots"}
-dir=${7:-"test"}
+dir=${7:-"timeres"}
 
 declare -a outputs=("mu" "sigma") ## can add back chi2prob, chi2ndf
 
@@ -33,12 +33,13 @@ do
 		continue ## do not produce logy plots for mu
 	    fi
 
-	    cp ${output}_${outfiletext}_${canvscale}.${ext} ${fulldir}
-	    cp ${output}_${outfiletext}_${canvscale}_logx.${ext} ${fulldir}
+	    mv ${output}_${outfiletext}_${canvscale}.${ext} ${fulldir}
+	    mv ${output}_${outfiletext}_${canvscale}_logx.${ext} ${fulldir}
 	done
     done
 done
-cp ${outfiletext}.root ${outfiletext}"_fitinfo".${outTextExt} ${fulldir}
+mv ${outfiletext}.root ${outfiletext}"_fitinfo".${outTextExt} ${fulldir}
+##rm ${infilename}.root
 
 ## Final message
 echo "Finished TimeFitting for plot:" ${plotconfig}

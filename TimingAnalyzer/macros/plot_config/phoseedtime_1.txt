@@ -9,4 +9,3 @@ y_title=Events/ns
 y_scale=LOG
 
 blinding=(3,+Inf)
-

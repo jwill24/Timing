@@ -86,7 +86,6 @@ protected:
 
   // other plotting config
   Bool_t fBlindData;
-  Bool_t fSkipBkgdMC;
 
   // Style
   TStyle * fTDRStyle;

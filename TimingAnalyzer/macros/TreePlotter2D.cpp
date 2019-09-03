@@ -32,7 +32,6 @@ TreePlotter2D::TreePlotter2D(const TString & infilename, const TString & insigna
   TreePlotter2D::SetupCommon();
   TreePlotter2D::SetupPlotConfig(fPlotConfig);
   TreePlotter2D::SetupMiscConfig(fMiscConfig);
-  if (fSkipBkgdMC) Common::RemoveGroup(SampleGroup::isBkgd);
   TreePlotter2D::SetupHists();
 
   // output root file
@@ -47,17 +46,14 @@ void TreePlotter2D::MakeTreePlot2D()
   // Make Data Output
   TreePlotter2D::MakeDataOutput();
 
-  if (!fSkipBkgdMC)
-  {
-    // Make Bkgd Output
-    TreePlotter2D::MakeBkgdOutput();
-    
-    // Make Ratio Output
-    TreePlotter2D::MakeRatioOutput();
-  }
+  // Make Bkgd Output
+//  TreePlotter2D::MakeBkgdOutput();
+
+  // Make Ratio Output
+//  TreePlotter2D::MakeRatioOutput();
 
   // Write Out Config
-  TreePlotter2D::MakeConfigPave();
+//  TreePlotter2D::MakeConfigPave();
 
   // Delete Memory
   TreePlotter2D::DeleteMemory(true);
@@ -68,19 +64,24 @@ void TreePlotter2D::MakeHistFromTrees(TFile *& inFile, TFile *& inSignalFile)
   std::cout << "Making hists from input trees..." << std::endl;
 
   // loop over sample groups for each tree
-  for (const auto & TreeNamePair : Common::TreeNameMap)
+  for ( int fake = 0; fake < 1; fake++ )
+	//(const auto & TreeNamePair : Common::TreeNameMap)
   {
     // Init
-    const auto & sample   = TreeNamePair.first;
-    const auto & treename = TreeNamePair.second;
+    const TString jwk_sample("Data");
+    const TString jwk_treename("Data_Tree");
+    const auto & sample   = jwk_sample; //TreeNamePair.first;
+    const auto & treename = jwk_treename; //TreeNamePair.second;
     std::cout << "Working on tree: " << treename.Data() << std::endl;
 	
     // Get infile
-    auto & infile = ((Common::GroupMap[sample] != SampleGroup::isSignal) ? inFile : inSignalFile);
+    //auto & infile = ((Common::GroupMap[sample] != SampleGroup::isSignal) ? inFile : inSignalFile);
+    auto & infile = inFile;
     infile->cd();
 
     // Get TTree
-    auto intree = (TTree*)infile->Get(Form("%s",treename.Data()));
+    //auto intree = (TTree*)infile->Get(Form("%s",treename.Data()));
+    auto intree = (TTree*)infile->Get("disphotree");
     const auto isnull = Common::IsNullTree(intree);
 
     if (!isnull)
@@ -106,7 +107,7 @@ void TreePlotter2D::MakeHistFromTrees(TFile *& inFile, TFile *& inSignalFile)
   // rescale bins by widths if variable size
   if (fXVarBins || fYVarBins)
   {
-    const auto isUp = false;
+    const Bool_t isUp = false;
     for (auto & HistPair : HistMap)
     {
       auto & hist = HistPair.second;
@@ -128,6 +129,7 @@ void TreePlotter2D::MakeDataOutput()
   std::cout << "Making Data Output..." << std::endl;
 
   // Make new data hist in case we are blinded
+  std::cout << Common::HistNameMap["Data"].Data() << std::endl;
   DataHist = TreePlotter2D::SetupHist(Form("%s_Plotted",Common::HistNameMap["Data"].Data()));
   DataHist->Add(HistMap["Data"]);
 
@@ -253,14 +255,11 @@ void TreePlotter2D::MakeConfigPave()
 
 void TreePlotter2D::DeleteMemory(const Bool_t deleteInternal)
 {
-  delete fConfigPave;
-  if (!fSkipBkgdMC)
-  {
-    delete RatioMCErrs;
-    delete RatioHist;
-    delete EWKHist;
-    delete BkgdHist;
-  }
+//  delete fConfigPave;
+//  delete RatioMCErrs;
+//  delete RatioHist;
+//  delete EWKHist;
+//  delete BkgdHist;
   delete DataHist; 
 
   Common::DeleteMap(HistMap);
@@ -280,7 +279,6 @@ void TreePlotter2D::SetupDefaults()
   fXVarBins = false;
   fYVarBins = false;
   fBlindData = false;
-  fSkipBkgdMC = false;
 }
 
 void TreePlotter2D::SetupCommon()
@@ -433,11 +431,6 @@ void TreePlotter2D::SetupMiscConfig(const TString & miscconfig)
     {
       std::cout << "signals_only not currently implemented in 2D plotter, skipping..." << std::endl;
     }
-    else if (str.find("skip_bkgd_mc=") != std::string::npos)
-    {
-      str = Common::RemoveDelim(str,"skip_bkgd_mc=");
-      Common::SetupBool(str,fSkipBkgdMC);
-    }  
     else 
     {
       std::cerr << "Aye... your miscellaneous plot config is messed up, try again!" << std::endl;
@@ -452,9 +445,12 @@ void TreePlotter2D::SetupHists()
   std::cout << "Setting up output histograms..." << std::endl;
 
   // instantiate each histogram
-  for (const auto & HistNamePair : Common::HistNameMap)
+  for ( int fake = 0; fake < 1; fake++ ) //(const auto & HistNamePair : Common::HistNameMap)
   {
-    HistMap[HistNamePair.first] = TreePlotter2D::SetupHist(HistNamePair.second);
+   const TString jwk_sample("Data");
+   const TString jwk_histname("Data_Hist");  
+//    HistMap[HistNamePair.first] = TreePlotter2D::SetupHist(HistNamePair.second);
+    HistMap[jwk_sample] = TreePlotter2D::SetupHist(jwk_histname);
   }
 }
 

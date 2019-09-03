@@ -1,6 +1,7 @@
 #include "Common.hh"
 #include "TLatex.h"
 #include "TColor.h"
+#include <math.h>
 
 namespace Common
 {
@@ -72,6 +73,71 @@ namespace Common
     return ((diff_i1 == 1 && diff_i2 == 0) || (diff_i1 == 0 && diff_i2 == 1));
   }
 
+  float get_phi( int x, int y ){
+
+	int phi = 0;
+  	if( x  == 50 ){
+                if( y  < 50 ) phi = 270;
+                else phi = 90;
+        } else {
+                phi = std::atan(std::abs((y - 50)/(x - 50)))*(Common::RadToDeg);
+                if( x < 50 ){ if ( y < 50 ) phi = phi + 180; else phi = phi + 90;
+		} else if ( y < 50 ) phi = phi + 270; 
+        }
+	return phi;
+  }
+
+  Int_t Xtal_Seperation(const UInt_t detid1, const UInt_t detid2)
+  {
+    Int_t sep = 0;
+    const auto & idinfo1 = Common::DetIDMap[detid1];
+    const auto & idinfo2 = Common::DetIDMap[detid2];
+
+    const auto diff_i1 = std::abs(idinfo1.i1-idinfo2.i1);
+    const auto diff_i2 = std::abs(idinfo1.i2-idinfo2.i2);
+//    std::cout << "i1: (" << idinfo1.i1 << "," << idinfo1.i2 << ") i2: ( " << idinfo2.i1 << "," << idinfo2.i2 << ") " << std::endl;
+
+    if( (idinfo1.ecal == ECAL::EB) && (idinfo2.ecal == ECAL::EB) ){
+	const auto wdiff_i1 = ((diff_i1 > 180) ? (diff_i1 - 180) : diff_i1); 
+//	std::cout << " EB EB with " << wdiff_i1 << " : " << diff_i2 << std::endl;
+        sep = int(std::sqrt( wdiff_i1*wdiff_i1 + diff_i2*diff_i2 ));
+    }
+    else if( ((idinfo1.ecal == ECAL::EB) && (idinfo2.ecal == ECAL::EP)) || ((idinfo1.ecal == ECAL::EB) && (idinfo2.ecal == ECAL::EM)) ){
+        //auto phi = Common::get_phi( idinfo2.i1, idinfo2.i1 );
+        //auto rad = std::abs(50 - std::sqrt( (idinfo2.i1 - 50 )*(idinfo2.i1 - 50 ) + (idinfo2.i2 - 50 )*(idinfo2.i2 - 50 ) ));
+        //auto dphi = std::abs( phi - idinfo1.i1 );
+	//auto mz = std::abs( idinfo1.i2 - ((idinfo2.ecal == ECAL::EP) ? 85 : -85 )) + rad;
+        //auto wphi = ((dphi > 180) ? (360 - dphi) : dphi);
+ //       std::cout << " Phi/Rad of " << phi << " : " << rad << std::endl;
+ //       std::cout << " EB EP/M with " << wphi << " : " << mz << std::endl;
+        //sep = int(std::sqrt( wphi*wphi + mz*mz )) + 1000;
+	sep = 1000;
+    }
+    else if( ((idinfo1.ecal == ECAL::EP) && (idinfo2.ecal == ECAL::EB)) || ((idinfo1.ecal == ECAL::EM) && (idinfo2.ecal == ECAL::EB)) ){
+        //float phi = Common::get_phi( idinfo1.i1, idinfo1.i2 );
+        //auto rad = std::abs(50 - std::sqrt( (idinfo1.i1 - 50 )*(idinfo1.i1 - 50 ) + (idinfo1.i2 - 50 )*(idinfo1.i2 - 50 ) ));
+	//auto dphi = std::abs( phi - idinfo2.i1 );
+        //auto mz = std::abs( idinfo2.i2 - ((idinfo1.ecal == ECAL::EP) ? 85 : -85 )) + rad;
+        //auto wphi = ((dphi > 180) ? (360 - dphi) : dphi);
+//	std::cout << " Phi/Rad of " << phi << " : " << rad << std::endl;
+//        std::cout << " EB EP/M with " << wphi << " : " << mz << std::endl;
+        //sep = std::sqrt( wphi*wphi + mz*mz) + 1000;
+	sep = 1000;
+    }
+    else if( ((idinfo1.ecal == ECAL::EM) && (idinfo2.ecal == ECAL::EM)) || ((idinfo1.ecal == ECAL::EP) && (idinfo2.ecal == ECAL::EP)) ){
+//        std::cout << " EP EP or EM EM with " << diff_i1 << " : " << diff_i2 << std::endl;
+        sep = int(std::sqrt( diff_i1*diff_i1 + diff_i2*diff_i2 ) + 0);
+    }
+    else { //( ((idinfo1.ecal == ECAL::EP) && (idinfo2.ecal == ECAL::EM)) || ((idinfo1.ecal == ECAL::EM) && (idinfo2.ecal == ECAL::EP)) )
+//        std::cout << " EP EM or EM EP with " << diff_i1 << " : " << diff_i2 << std::endl;
+        //sep = int(std::sqrt( diff_i1*diff_i1 + diff_i2*diff_i2 + 170*170 )) + 5000;
+	sep = 5000;
+    }
+
+    return sep; 
+
+  }
+
   Bool_t IsWithinRadius(const UInt_t detid1, const UInt_t detid2, const Int_t radius)
   {
     const auto & idinfo1 = Common::DetIDMap[detid1];
@@ -81,7 +147,7 @@ namespace Common
     const auto diff_i1 = ((idinfo1.ecal == ECAL::EB) ? Common::WrapIPhi(tmp_diff_i1) : tmp_diff_i1);
     const auto diff_i2 = std::abs(idinfo1.i2-idinfo2.i2);
 
-    auto withinRadius = false;
+    Bool_t withinRadius = false;
 
     for (auto i = 0; i <= radius; i++)
     {
@@ -133,9 +199,10 @@ namespace Common
     Common::EraMap["2017C"] = {299337,302029,9.633f}; // 9.633
     Common::EraMap["2017D"] = {302030,303434,4.228f}; // 4.228
     Common::EraMap["2017E"] = {303435,304826,9.315f}; // 9.315
-    Common::EraMap["2017F"] = {304911,306462,13.54f}; // 13.540
-
-    Common::EraMap["Full"] = {Common::EraMap["2017B"].startRun,Common::EraMap["2017F"].endRun,41.53f}; // for some idiotic reason, sum of above is 41.51
+//    Common::EraMap["2017F"] = {304911,306462,13.54f}; // 13.540
+    Common::EraMap["2017F"] = {304911,326462,13.54f}; // 13.540
+    Common::EraMap["Full"] = {0,1000000,1.00f}; // just run over the whole input file
+//    Common::EraMap["Full"] = {Common::EraMap["2017B"].startRun,Common::EraMap["2017F"].endRun,41.53f}; // for some idiotic reason, sum of above is 41.51
   }
 
   void SetupSamples()
@@ -202,7 +269,7 @@ namespace Common
     Common::SampleMap["MC/ZX/ZZ"] = "ZX";
     Common::SampleMap["MC/ZX/ZGGJets"] = "ZX";
     Common::SampleMap["MC/ZX/ZZZ"] = "ZX";
-    
+  
     // Data
     Common::SampleMap[Form("Data/%s/B/v1",Common::PrimaryDataset.Data())] = "Data";
     Common::SampleMap[Form("Data/%s/C/v1",Common::PrimaryDataset.Data())] = "Data";
@@ -222,9 +289,9 @@ namespace Common
     {
       for (const auto & ctau : gctaus)
       {
-	auto sctau = ctau;
+	TString sctau = ctau;
 	if (ctau.EqualTo("0p1") && !(lambda.EqualTo("500") || lambda.EqualTo("600"))) sctau = "0_1";
-	Common::SampleMap["MC/GMSB/L-"+lambda+"TeV_Ctau-"+sctau+"cm"] = "GMSB_L"+lambda+"_CTau"+ctau;
+//	Common::SampleMap["MC/GMSB/L-"+lambda+"TeV_Ctau-"+sctau+"cm"] = "GMSB_L"+lambda+"_CTau"+ctau;
       }
     }
 
@@ -435,7 +502,7 @@ namespace Common
       const auto & group   = SignalSubGroupPair.first;
       const auto & samples = SignalSubGroupPair.second;
     
-      auto counter = 0;
+      Int_t counter = 0;
       for (const auto & sample : samples)
       {
 	Common::ColorMap[sample] = Common::SignalSubGroupColorMap[group].color+counter;
@@ -490,7 +557,7 @@ namespace Common
     // HVDS Labels when we get some samples...
   }
 
-  void RemoveGroup(const SampleGroup isGroup)
+  void RemoveData()
   {
     // erase by key first
     for (const auto & GroupPair : Common::GroupMap)
@@ -498,7 +565,7 @@ namespace Common
       const auto & sample = GroupPair.first;
       const auto & group  = GroupPair.second;
 
-      if (group != isGroup) continue;
+      if (group != SampleGroup::isData) continue;
 
       Common::TreeNameMap.erase(sample);
       Common::HistNameMap.erase(sample);
@@ -509,7 +576,7 @@ namespace Common
     // erase groups now
     for (auto iter = Common::GroupMap.cbegin(); iter != Common::GroupMap.cend();)
     {
-      if (iter->second == isGroup) 
+      if (iter->second == SampleGroup::isData) 
       {
 	Common::GroupMap.erase(iter++);
       }
@@ -767,7 +834,8 @@ namespace Common
     
       if (Common::GroupMap[sample] != SampleGroup::isData)
       {
-	cutwgt += " * (evtwgt * puwgt)";
+//	cutwgt += " * (evtwgt * puwgt)";
+        cutwgt += " * (evtwgt * 1)";
       }
     }  
 
@@ -889,7 +957,7 @@ namespace Common
     std::cout << "Reading plot config for var_bins bool..." << std::endl;
 
     // Bool used to see if we actually ever found the label!
-    auto islabel = false;
+    Bool_t islabel = false;
     
     std::vector<Double_t> tmp_bins; // tmp unused variable
     std::ifstream infile(Form("%s",plotconfig.Data()),std::ios::in);
@@ -983,8 +1051,8 @@ namespace Common
     const auto inNbinsX = inhist->GetNbinsX();
     for (auto ibin = 1; ibin <= inNbinsX; ibin++) binlabels[inhist->GetXaxis()->GetBinLabel(ibin)] = ibin;
     
-    auto inNbinsX_new = inNbinsX;
-    for (const auto & CutFlowPair : Common::CutFlowPairVec) binlabels[CutFlowPair.first] = ++inNbinsX_new;
+    Int_t inNbinsX_new = inNbinsX;
+    for (const auto & SignalCutFlowPair : Common::CutFlowPairVec) binlabels[SignalCutFlowPair.first] = ++inNbinsX_new;
   
     // make new cut flow
     auto outhist = new TH1F(outname.Data(),inhist->GetTitle(),binlabels.size(),0,binlabels.size());
@@ -994,7 +1062,7 @@ namespace Common
     {
       const auto & cut = binlabel.first;
       const auto ibin = binlabel.second;
-
+      
       outhist->GetXaxis()->SetBinLabel(ibin,cut.Data());
       
       if (ibin > inNbinsX) continue;
@@ -1002,7 +1070,7 @@ namespace Common
       outhist->SetBinContent(ibin,inhist->GetBinContent(ibin));
       outhist->SetBinError(ibin,inhist->GetBinError(ibin));
     }
-
+    
     outhist->GetYaxis()->SetTitle(inhist->GetYaxis()->GetTitle());
     
     return outhist;
@@ -1084,7 +1152,7 @@ namespace Common
       
       for (auto xbin = 1; xbin <= hist->GetXaxis()->GetNbins(); xbin++)
       {
-	const auto content = hist->GetBinContent(xbin);
+	const Float_t content = hist->GetBinContent(xbin);
 	if (content < 0.f) 
 	{
 	  hist->SetBinContent(xbin,0.f);
@@ -1106,7 +1174,7 @@ namespace Common
       {
 	for (auto ybin = 1; ybin <= hist->GetYaxis()->GetNbins(); ybin++)
         {
-	  const auto content = hist->GetBinContent(xbin,ybin);
+	  const Float_t content = hist->GetBinContent(xbin,ybin);
 	  if (content < 0.f) 
 	  {
 	    hist->SetBinContent(xbin,ybin,0.f);

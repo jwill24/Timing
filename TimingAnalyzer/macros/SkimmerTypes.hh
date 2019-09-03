@@ -13,12 +13,13 @@ enum ECorr {Nominal, Down, Up};
 struct MassStruct
 {
   MassStruct() {}
-  MassStruct(const Int_t ipho1, const Int_t ipho2, const Float_t mass)
-    : ipho1(ipho1), ipho2(ipho2), mass(mass) {}
+  MassStruct(const Int_t ipho1, const Int_t ipho2, const Float_t mass, Float_t dR12)
+    : ipho1(ipho1), ipho2(ipho2), mass(mass), dR12(dR12) {}
 
   Int_t ipho1;
   Int_t ipho2;
   Float_t mass;
+  Float_t dR12;
 };
 
 // simple struct for pairs of detids
@@ -48,7 +49,6 @@ struct Configuration
   std::string * phIDmin;
   std::string phIDmin_s;
   Float_t seedTimemin;
-  Int_t   nPhosmax;
   Bool_t  splitPho;
   Bool_t  onlyGED;
   Bool_t  onlyOOT;
@@ -103,7 +103,6 @@ struct Configuration
   std::string s_phpTmin = "phpTmin";
   std::string s_phIDmin = "phIDmin";
   std::string s_seedTimemin = "seedTimemin";
-  std::string s_nPhosmax = "nPhosmax";
   std::string s_splitPho = "splitPho";
   std::string s_onlyGED = "onlyGED";
   std::string s_onlyOOT = "onlyOOT";
@@ -195,20 +194,19 @@ struct Event
   Int_t     nmuHighM;
   Int_t     nmuHighT;
   Int_t     nrechits;
+  Int_t     nkurechits;
   Int_t     nphotons;
 
   Float_t   evtwgt;
 
   // MC Types
   Float_t   genwgt;
-  Float_t   gent0;
   Float_t   genx0;
   Float_t   geny0;
   Float_t   genz0;
+  Float_t   gent0;
   Int_t     genpuobs;
   Int_t     genputrue;
-  Float_t   genMETpt;
-  Float_t   genMETphi;
   Float_t   puwgt;
   // GMSB
   Int_t     nNeutoPhGr;
@@ -265,17 +263,16 @@ struct Event
   std::string s_nmuHighM = "nmuHighM";
   std::string s_nmuHighT = "nmuHighT";
   std::string s_nrechits = "nrechits";
+  std::string s_nkurechits = "nkurechits";
   std::string s_nphotons = "nphotons";
   std::string s_evtwgt = "evtwgt";
   std::string s_genwgt = "genwgt";  
-  std::string s_gent0 = "gent0";
   std::string s_genx0 = "genx0";
   std::string s_geny0 = "geny0";
   std::string s_genz0 = "genz0";
+  std::string s_gent0 = "gent0";
   std::string s_genpuobs = "genpuobs";
   std::string s_genputrue = "genputrue";
-  std::string s_genMETpt = "genMETpt";
-  std::string s_genMETphi = "genMETphi";
   std::string s_puwgt = "puwgt";
   std::string s_nNeutoPhGr = "nNeutoPhGr";
   std::string s_nvPions = "nvPions";
@@ -329,6 +326,7 @@ struct Event
   TBranch * b_nmuHighM;
   TBranch * b_nmuHighT;
   TBranch * b_nrechits;
+  TBranch * b_nkurechits;
   TBranch * b_nphotons;
   TBranch * b_evtwgt;
   TBranch * b_genwgt;
@@ -338,8 +336,6 @@ struct Event
   TBranch * b_gent0;
   TBranch * b_genpuobs;
   TBranch * b_genputrue;
-  TBranch * b_genMETpt;
-  TBranch * b_genMETphi;
   TBranch * b_puwgt;
   TBranch * b_nNeutoPhGr;
   TBranch * b_nvPions;
@@ -500,6 +496,7 @@ struct Pho
   Float_t scphi;
   Float_t HoE;
   Float_t r9;
+  Float_t tdz;
   Float_t ChgHadIso;
   Float_t NeuHadIso;
   Float_t PhoIso;
@@ -523,6 +520,7 @@ struct Pho
   Float_t alpha;
   Int_t   seed;
   std::vector<Int_t> * recHits;
+  std::vector<Int_t> * kurecHits;
   Float_t suisseX;
   Bool_t  isOOT;
   Bool_t  isEB;
@@ -550,6 +548,97 @@ struct Pho
   Float_t seedpedrms12;
   Float_t seedpedrms6;
   Float_t seedpedrms1;
+  //  ucal RecHit Info
+  Float_t seedootA0;
+  Float_t seedootA1;
+  Float_t seedootA2;
+  Float_t seedootA3;
+  Float_t seedootA4;
+  Float_t seedootA5;
+  Float_t seedootA6;
+  Float_t seedootA7;
+  Float_t seedootA8;
+  Float_t seedootA9;
+  Float_t seedootMax;
+  Float_t seedootVsum;
+  Float_t seedootMbefore;
+  Float_t seedootMafter;
+  Int_t   seedootSign;;
+
+  // KU RecHit info
+
+  //Float_t seedkuX;
+  //Float_t seedkuY;
+  //Float_t seedkuZ;
+  Float_t seedkuE;
+  Float_t seedkutime;
+  Float_t seedkutimeErr;
+  Float_t seedkuTOF;
+  UInt_t  seedkuID;
+  //Int_t   seedkuisGS6;
+  //Int_t   seedkuisGS1;
+  //Float_t seedkuadcToGeV;
+  //Float_t seedkuped12;
+  //Float_t seedkuped6;
+  //Float_t seedkuped1;
+  //Float_t seedkupedrms12;
+  //Float_t seedkupedrms6;
+  //Float_t seedkupedrms1;
+
+  //Float_t seedkuStcX;
+  //Float_t seedkuStcY;
+  //Float_t seedkuStcZ;
+  Float_t seedkuStcE;
+  Float_t seedkuStctime;
+  Float_t seedkuStctimeErr;
+  Float_t seedkuStcTOF;
+  UInt_t  seedkuStcID;
+  //Int_t   seedkuStcisGS6;
+  //Int_t   seedkuStcisGS1;
+  //Float_t seedkuStcadcToGeV;
+  //Float_t seedkuStcped12;
+  //Float_t seedkuStcped6;
+  //Float_t seedkuStcped1;
+  //Float_t seedkuStcpedrms12;
+  //Float_t seedkuStcpedrms6;
+  //Float_t seedkuStcpedrms1;
+
+  //Float_t seedkuNotX;
+  //Float_t seedkuNotY;
+  //Float_t seedkuNotZ;
+  Float_t seedkuNotE;
+  Float_t seedkuNottime;
+  Float_t seedkuNottimeErr;
+  Float_t seedkuNotTOF;
+  UInt_t  seedkuNotID;
+  //Int_t   seedkuNotisGS6;
+  //Int_t   seedkuNotisGS1;
+  //Float_t seedkuNotadcToGeV;
+  //Float_t seedkuNotped12;
+  //Float_t seedkuNotped6;
+  //Float_t seedkuNotped1;
+  //Float_t seedkuNotpedrms12;
+  //Float_t seedkuNotpedrms6;
+  //Float_t seedkuNotpedrms1;
+
+  //Float_t seedkuNotStcX;
+  //Float_t seedkuNotStcY;
+  //Float_t seedkuNotStcZ;
+  Float_t seedkuNotStcE;
+  Float_t seedkuNotStctime;
+  Float_t seedkuNotStctimeErr;
+  Float_t seedkuNotStcTOF;
+  UInt_t  seedkuNotStcID;
+  //Int_t   seedkuNotStcisGS6;
+  //Int_t   seedkuNotStcisGS1;
+  //Float_t seedkuNotStcadcToGeV;
+  //Float_t seedkuNotStcped12;
+  //Float_t seedkuNotStcped6;
+  //Float_t seedkuNotStcped1;
+  //Float_t seedkuNotStcpedrms12;
+  //Float_t seedkuNotStcpedrms6;
+  //Float_t seedkuNotStcpedrms1;
+
   // MC types
   Bool_t  isGen;
   Int_t   isSignal;
@@ -565,7 +654,7 @@ struct Pho
   Float_t weightedtimeLT120;
   Float_t weightedtimeTOF;
   Float_t weightedtimeLT120TOF;
-  
+
   // branch names
   std::string s_E = "phoE";
   std::string s_pt = "phopt";
@@ -576,6 +665,7 @@ struct Pho
   std::string s_scphi = "phoscphi";
   std::string s_HoE = "phoHoE";
   std::string s_r9 = "phor9";
+  std::string s_tdz = "photdz";
   std::string s_ChgHadIso = "phoChgHadIso";
   std::string s_NeuHadIso = "phoNeuHadIso";
   std::string s_PhoIso = "phoPhoIso";
@@ -597,8 +687,11 @@ struct Pho
   std::string s_smaj = "phosmaj";
   std::string s_smin = "phosmin";
   std::string s_alpha = "phoalpha";
+  
   std::string s_seed = "phoseed";
   std::string s_recHits = "phorecHits";
+  std::string s_kurecHits = "phokurecHits";
+
   std::string s_suisseX = "phosuisseX";
   std::string s_isOOT = "phoisOOT";
   std::string s_isEB = "phoisEB";
@@ -625,6 +718,23 @@ struct Pho
   std::string s_seedpedrms12 = "phoseedpedrms12";
   std::string s_seedpedrms6 = "phoseedpedrms6";
   std::string s_seedpedrms1 = "phoseedpedrms1";
+
+  std::string s_seedootA0 = "phoseedootA0";
+  std::string s_seedootA1 = "phoseedootA1";
+  std::string s_seedootA2 = "phoseedootA2";
+  std::string s_seedootA3 = "phoseedootA3";
+  std::string s_seedootA4 = "phoseedootA4";
+  std::string s_seedootA5 = "phoseedootA5";
+  std::string s_seedootA6 = "phoseedootA6";
+  std::string s_seedootA7 = "phoseedootA7";
+  std::string s_seedootA8 = "phoseedootA8"; 
+  std::string s_seedootA9 = "phoseedootA9";
+  std::string s_seedootMax = "phoseedootMax";
+  std::string s_seedootMbefore = "phoseedootMbefore";
+  std::string s_seedootMafter = "phoseedootMafter";
+  std::string s_seedootSign = "phoseedootSign";
+  std::string s_seedootVsum = "phoseedootVsum";
+
   std::string s_isGen = "phoisGen";
   std::string s_isSignal = "phoisSignal";
   std::string s_scaleAbs = "phoscaleAbs";
@@ -639,6 +749,79 @@ struct Pho
   std::string s_weightedtimeTOF = "phoweightedtimeTOF";
   std::string s_weightedtimeLT120TOF = "phoweightedtimeLT120TOF";
 
+  //std::string s_seedkuX = "phoseedkuX";
+  //std::string s_seedkuY = "phoseedkuY";
+  //std::string s_seedkuZ = "phoseedkuZ";
+  std::string s_seedkuE = "phoseedkuE";
+  std::string s_seedkutime = "phoseedkutime";
+  std::string s_seedkutimeErr = "phoseedkutimeErr";
+  std::string s_seedkuTOF = "phoseedkuTOF";
+  std::string s_seedkuID = "phoseedkuID";
+  //std::string s_seedkuisGS6 = "phoseedkuisGS6";
+  //std::string s_seedkuisGS1 = "phoseedkuisGS1";
+  //std::string s_seedkuadcToGeV = "phoseedkuadcToGeV";
+  //std::string s_seedkuped12 = "phoseedkuped12";
+  //std::string s_seedkuped6 = "phoseedkuped6";
+  //std::string s_seedkuped1 = "phoseedkuped1";
+  //std::string s_seedkupedrms12 = "phoseedkupedrms12";
+  //std::string s_seedkupedrms6 = "phoseedkupedrms6";
+  //std::string s_seedkupedrms1 = "phoseedkupedrms1";
+
+  //std::string s_seedkuStcX = "phoseedkuStcX";
+  //std::string s_seedkuStcY = "phoseedkuStcY";
+  //std::string s_seedkuStcZ = "phoseedkuStcZ";
+  std::string s_seedkuStcE = "phoseedkuStcE";
+  std::string s_seedkuStctime = "phoseedkuStctime";
+  std::string s_seedkuStctimeErr = "phoseedkuStctimeErr";
+  std::string s_seedkuStcTOF = "phoseedkuStcTOF";
+  std::string s_seedkuStcID = "phoseedkuStcID";
+  //std::string s_seedkuStcisGS6 = "phoseedkuStcisGS6";
+  //std::string s_seedkuStcisGS1 = "phoseedkuStcisGS1";
+  //std::string s_seedkuStcadcToGeV = "phoseedkuStcadcToGeV";
+  //std::string s_seedkuStcped12 = "phoseedkuStcped12";
+  //std::string s_seedkuStcped6 = "phoseedkuStcped6";
+  //std::string s_seedkuStcped1 = "phoseedkuStcped1";
+  //std::string s_seedkuStcpedrms12 = "phoseedkuStcpedrms12";
+  //std::string s_seedkuStcpedrms6 = "phoseedkuStcpedrms6";
+  //std::string s_seedkuStcpedrms1 = "phoseedkuStcpedrms1";
+
+  //std::string s_seedkuNotX = "phoseedkuNotX";
+  //std::string s_seedkuNotY = "phoseedkuNotY";
+  //std::string s_seedkuNotZ = "phoseedkuNotZ";
+  std::string s_seedkuNotE = "phoseedkuNotE";
+  std::string s_seedkuNottime = "phoseedkuNottime";
+  std::string s_seedkuNottimeErr = "phoseedkuNottimeErr";
+  std::string s_seedkuNotTOF = "phoseedkuNotTOF";
+  std::string s_seedkuNotID = "phoseedkuNotID";
+  //std::string s_seedkuNotisGS6 = "phoseedkuNotisGS6";
+  //std::string s_seedkuNotisGS1 = "phoseedkuNotisGS1";
+  //std::string s_seedkuNotadcToGeV = "phoseedkuNotadcToGeV";
+  //std::string s_seedkuNotped12 = "phoseedkuNotped12";
+  //std::string s_seedkuNotped6 = "phoseedkuNotped6";
+  //std::string s_seedkuNotped1 = "phoseedkuNotped1";
+  //std::string s_seedkuNotpedrms12 = "phoseedkuNotpedrms12";
+  //std::string s_seedkuNotpedrms6 = "phoseedkuNotpedrms6";
+  //std::string s_seedkuNotpedrms1 = "phoseedkuNotpedrms1";
+
+  //std::string s_seedkuNotStcX = "phoseedkuNotStcX";
+  //std::string s_seedkuNotStcY = "phoseedkuNotStcY";
+  //std::string s_seedkuNotStcZ = "phoseedkuNotStcZ";
+  std::string s_seedkuNotStcE = "phoseedkuNotStcE";
+  std::string s_seedkuNotStctime = "phoseedkuNotStctime";
+  std::string s_seedkuNotStctimeErr = "phoseedkuNotStctimeErr";
+  std::string s_seedkuNotStcTOF = "phoseedkuNotStcTOF";
+  std::string s_seedkuNotStcID = "phoseedkuNotStcID";
+  //std::string s_seedkuNotStcisGS6 = "phoseedkuNotStcisGS6";
+  //std::string s_seedkuNotStcisGS1 = "phoseedkuNotStcisGS1";
+  //std::string s_seedkuNotStcadcToGeV = "phoseedkuNotStcadcToGeV";
+  //std::string s_seedkuNotStcped12 = "phoseedkuNotStcped12";
+  //std::string s_seedkuNotStcped6 = "phoseedkuNotStcped6";
+  //std::string s_seedkuNotStcped1 = "phoseedkuNotStcped1";
+  //std::string s_seedkuNotStcpedrms12 = "phoseedkuNotStcpedrms12";
+  //std::string s_seedkuNotStcpedrms6 = "phoseedkuNotStcpedrms6";
+  //std::string s_seedkuNotStcpedrms1 = "phoseedkuNotStcpedrms1";
+
+
   // tbranches
   TBranch * b_E;
   TBranch * b_pt;
@@ -649,6 +832,7 @@ struct Pho
   TBranch * b_scphi;
   TBranch * b_HoE;
   TBranch * b_r9;
+  TBranch * b_tdz;
   TBranch * b_ChgHadIso;
   TBranch * b_NeuHadIso;
   TBranch * b_PhoIso;
@@ -672,6 +856,7 @@ struct Pho
   TBranch * b_alpha;
   TBranch * b_seed;
   TBranch * b_recHits;
+  TBranch * b_kurecHits;
   TBranch * b_suisseX;
   TBranch * b_isOOT;
   TBranch * b_isEB;
@@ -681,6 +866,7 @@ struct Pho
   TBranch * b_hasPixSeed;
   TBranch * b_gedID;
   TBranch * b_ootID;
+
   TBranch * b_seedX;
   TBranch * b_seedY;
   TBranch * b_seedZ;
@@ -698,12 +884,30 @@ struct Pho
   TBranch * b_seedpedrms12;
   TBranch * b_seedpedrms6;
   TBranch * b_seedpedrms1;
+
+  TBranch * b_seedootA0;
+  TBranch * b_seedootA1;
+  TBranch * b_seedootA2;
+  TBranch * b_seedootA3;
+  TBranch * b_seedootA4;
+  TBranch * b_seedootA5;
+  TBranch * b_seedootA6;
+  TBranch * b_seedootA7;
+  TBranch * b_seedootA8;
+  TBranch * b_seedootA9;
+  TBranch * b_seedootMax;
+  TBranch * b_seedootMbefore;
+  TBranch * b_seedootMafter;
+  TBranch * b_seedootSign;
+  TBranch * b_seedootVsum;
+
   TBranch * b_isGen;
   TBranch * b_isSignal;
   TBranch * b_scaleAbs;
   TBranch * b_smearAbs;
   TBranch * b_seedTT;
   TBranch * b_nrechits;
+  TBranch * b_nkurechits;
   TBranch * b_nrechitsLT120;
   TBranch * b_meantime;
   TBranch * b_meantimeLT120;
@@ -711,6 +915,79 @@ struct Pho
   TBranch * b_weightedtimeLT120;
   TBranch * b_weightedtimeTOF;
   TBranch * b_weightedtimeLT120TOF;
+
+  //TBranch * b_seedkuX;
+  //TBranch * b_seedkuY;
+  //TBranch * b_seedkuZ;
+  TBranch * b_seedkuE;
+  TBranch * b_seedkutime;
+  TBranch * b_seedkutimeErr;
+  TBranch * b_seedkuTOF;
+  TBranch * b_seedkuID;
+  //TBranch * b_seedkuisGS6;
+  //TBranch * b_seedkuisGS1;
+  //TBranch * b_seedkuadcToGeV;
+  //TBranch * b_seedkuped12;
+  //TBranch * b_seedkuped6;
+  //TBranch * b_seedkuped1;
+  //TBranch * b_seedkupedrms12;
+  //TBranch * b_seedkupedrms6;
+  //TBranch * b_seedkupedrms1;
+
+  //TBranch * b_seedkuStcX;
+  //TBranch * b_seedkuStcY;
+  //TBranch * b_seedkuStcZ;
+  TBranch * b_seedkuStcE;
+  TBranch * b_seedkuStctime;
+  TBranch * b_seedkuStctimeErr;
+  TBranch * b_seedkuStcTOF;
+  TBranch * b_seedkuStcID;
+  //TBranch * b_seedkuStcisGS6;
+  //TBranch * b_seedkuStcisGS1;
+  //TBranch * b_seedkuStcadcToGeV;
+  //TBranch * b_seedkuStcped12;
+  //TBranch * b_seedkuStcped6;
+  //TBranch * b_seedkuStcped1;
+  //TBranch * b_seedkuStcpedrms12;
+  //TBranch * b_seedkuStcpedrms6;
+  //TBranch * b_seedkuStcpedrms1;
+
+  //TBranch * b_seedkuNotX;
+  //TBranch * b_seedkuNotY;
+  //TBranch * b_seedkuNotZ;
+  TBranch * b_seedkuNotE;
+  TBranch * b_seedkuNottime;
+  TBranch * b_seedkuNottimeErr;
+  TBranch * b_seedkuNotTOF;
+  TBranch * b_seedkuNotID;
+  //TBranch * b_seedkuNotisGS6;
+  //TBranch * b_seedkuNotisGS1;
+  //TBranch * b_seedkuNotadcToGeV;
+  //TBranch * b_seedkuNotped12;
+  //TBranch * b_seedkuNotped6;
+  //TBranch * b_seedkuNotped1;
+  //TBranch * b_seedkuNotpedrms12;
+  //TBranch * b_seedkuNotpedrms6;
+  //TBranch * b_seedkuNotpedrms1;
+
+  //TBranch * b_seedkuNotStcX;
+  //TBranch * b_seedkuNotStcY;
+  //TBranch * b_seedkuNotStcZ;
+  TBranch * b_seedkuNotStcE;
+  TBranch * b_seedkuNotStctime;
+  TBranch * b_seedkuNotStctimeErr;
+  TBranch * b_seedkuNotStcTOF;
+  TBranch * b_seedkuNotStcID;
+  //TBranch * b_seedkuNotStcisGS6;
+  //TBranch * b_seedkuNotStcisGS1;
+  //TBranch * b_seedkuNotStcadcToGeV;
+  //TBranch * b_seedkuNotStcped12;
+  //TBranch * b_seedkuNotStcped6;
+  //TBranch * b_seedkuNotStcped1;
+  //TBranch * b_seedkuNotStcpedrms12;
+  //TBranch * b_seedkuNotStcpedrms6;
+  //TBranch * b_seedkuNotStcpedrms1;
+
 };
 typedef std::vector<Pho> PhoVec;
 
@@ -851,6 +1128,7 @@ struct Hvds
   TBranch * b_genHVph1phi;
   TBranch * b_genHVph1eta;
   TBranch * b_genHVph1match;
+
 };
 typedef std::vector<Hvds> HvdsVec;
 

@@ -121,7 +121,9 @@ namespace Common
   void SetupDetIDsEB();
   void SetupDetIDsEE();
   Int_t WrapIPhi(const Int_t iphi);
+  float get_phi( int x, int y );
   Bool_t IsCrossNeighbor(const UInt_t detid1, const UInt_t detid2);
+  Int_t Xtal_Seperation(const UInt_t detid1, const UInt_t detid2);
   Bool_t IsWithinRadius(const UInt_t detid1, const UInt_t detid2, const Int_t radius);
   Int_t GetTriggerTower(const UInt_t detid);
 
@@ -141,11 +143,11 @@ namespace Common
   // input
   constexpr    Float_t invfbToinvpb   = 1000.f; // conversion for the world's dumbest unit
   static const TString extraText      = "Preliminary";
-  static const TString eosPreFix      = "root://eoscms.cern.ch";
   static const TString eosDir         = "/eos/cms/store/group/phys_exotica/displacedPhotons/nTuples/2017/analysis";
   static const TString baseDir        = "skims";
   static const TString tupleFileName  = "tree.root";
   static const TString rootdir        = "tree";
+  //static const TString rootdir        = "dispho";
   static const TString configtreename = "configtree";
   static const TString disphotreename = "disphotree";
   static const TString h_cutflowname  = "h_cutflow";
@@ -220,7 +222,7 @@ namespace Common
   void SetupVarWgts(const TString & varwgtconfig);
   void SetupWeights();
   void SetupEraWeights(const TString & era);
-  void RemoveGroup(const SampleGroup isGroup);
+  void RemoveData();
   void KeepOnlySamples(const std::vector<TString> & samplevec);
   void KeepOnlySignals();
 

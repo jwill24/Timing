@@ -1,0 +1,10 @@
+plot_title=#Delta()  vs. _{eff}/#sigma_{n} (EBEB)
+x_title=_{eff}/#sigma_{n} (EBEB)
+x_var=(((phoseedE_0/phoseedadcToGeV_0)/phoseedpedrms12_0*(phoseedE_1/phoseedadcToGeV_1)/phoseedpedrms12_1)/sqrt(pow((phoseedE_0/phoseedadcToGeV_0)/phoseedpedrms12_0,2)+pow((phoseedE_1/phoseedadcToGeV_1)/phoseedpedrms12_1,2)))
+x_bins=
+y_title=#Delta()  (EBEB)
+y_var=_0-_1
+y_bins=
+y_var_data=+(_0-_1)
+y_var_bkgd=+(_0-_1)
+y_var_sign=+(_0-_1)

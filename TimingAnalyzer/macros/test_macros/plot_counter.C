@@ -39,7 +39,7 @@ void plot_counter(const TString & modifier)
     // delphi //
     ////////////
     
-    auto h_std = new TH1F("h_std",";#Delta(#phi_{MET}^{GEN}-#phi_{MET}^{RECO});Fraction of Events",32,-3.2f,3.2f); 
+    auto h_std = new TH1F("h_std",";#Delta(#phi_{MET}^{GEN}-#phi^_{MET}{RECO});Fraction of Events",32,-3.2f,3.2f); 
     h_std->SetLineColor(kRed+1); h_std->SetMarkerColor(kRed+1); h_std->Sumw2(); 
     tree->Draw("TVector2::Phi_mpi_pi(genMETphi-t1pfMETphi)>>h_std",Form("nOOT_%s>0",cut.Data()),"goff"); h_std->Scale(1.f/nEvs);
     
@@ -200,6 +200,6 @@ void plot_counter(const TString & modifier)
   leg->Draw("same");
 
   canv->SetLogy(1);
-  canv->SaveAs(basedir+modifier+"/nPhotons.pdf");
+  canv->SaveAs(basedir+modifier+"/nphotons.pdf");
   delete leg; delete h_ged_N; delete h_ged_L; delete h_ged_T; delete h_oot_N; delete h_oot_L; delete h_oot_T;
 }

@@ -131,10 +131,6 @@ protected:
   TPaveText * fConfigPave;
   Float_t fMinY;
   Float_t fMaxY;
-
-  // kFactor
-  Float_t fkFactor;
-  Float_t fkFactorErr;
 };
 
 #endif

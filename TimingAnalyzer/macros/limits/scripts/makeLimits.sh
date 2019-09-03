@@ -3,7 +3,6 @@
 ##################
 ## Source First ##
 ##################
-
 source scripts/common_variables.sh
 
 ###################
@@ -26,12 +25,6 @@ limit="limits2D"
 outlimit1D="limit1D"
 outlimit2D="limit2D"
 outlimitplotdir="limits"
-
-######################
-## Make Directories ##
-######################
-
-mkdir -p "${outlimitdir}"
 
 ###############################################
 ## Extract Limits From Fitter : Run Combine! ##

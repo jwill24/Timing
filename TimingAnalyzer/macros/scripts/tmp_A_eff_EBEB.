@@ -1,0 +1,5 @@
+plot_title=_{eff}/#sigma_{n} (EBEB)
+x_title=_{eff}/#sigma_{n} (EBEB)
+x_var=(((phoseedE_0/phoseedadcToGeV_0)/phoseedpedrms12_0*(phoseedE_1/phoseedadcToGeV_1)/phoseedpedrms12_1)/sqrt(pow((phoseedE_0/phoseedadcToGeV_0)/phoseedpedrms12_0,2)+pow((phoseedE_1/phoseedadcToGeV_1)/phoseedpedrms12_1,2)))
+x_bins=
+y_title=
