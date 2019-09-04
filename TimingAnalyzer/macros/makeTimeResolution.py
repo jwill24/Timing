@@ -18,6 +18,7 @@ outfile_kuStc_2D='kuStc_deltaT_vs_'+kuoutfile
 outfile_kuNot_2D='kuNot_deltaT_vs_'+kuoutfile
 outfile_kuNotStc_2D='kuNotStc_deltaT_vs_'+kuoutfile
 timefile='_timefit'
+
 plot_2D='ku_config/tmp_ratio_deltaT_vs_A_eff_EBEB.txt'
 plot_ku_2D='ku_config/tmp_ku_deltaT_vs_A_eff_EBEB.txt'
 plot_kuStc_2D='ku_config/tmp_kuStc_deltaT_vs_A_eff_EBEB.txt'
@@ -34,7 +35,9 @@ skim_cf='skim_config/DiXtal_kurecs_Skim.txt'
 misc_fit_cf='ku_config/tmp_misc_fit.txt'
 
 #indir="/home/t3-ku/jaking/trees/ecal"
-indir="/home/t3-ku/jaking/ecaltiming/ku_cmssw_ecaltiming/CMSSW_10_2_5/src/Timing/TimingAnalyzer/test"
+#indir="/home/t3-ku/jaking/ecaltiming/ku_cmssw_ecaltiming/CMSSW_10_2_5/src/Timing/TimingAnalyzer/test"
+indir="../test/"
+#indir=""
 outdir="skimmed/"
 thisdir=""
 

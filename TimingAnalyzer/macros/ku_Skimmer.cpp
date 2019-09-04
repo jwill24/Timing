@@ -229,7 +229,7 @@ void Skimmer::EventLoop()
   {
     // dump status check
     if (entry%Common::nEvCheck == 0 || entry == 0) std::cout << "Processing Entry: " << entry << " out of " << nEntries << std::endl;
-    if( entry > 100 ) break;
+//    if( entry > 100 ) break;
     // get event weight: no scaling by BR, xsec, lumi, etc.
     if (fIsMC) fInEvent.b_genwgt->GetEntry(entry);
     const auto wgt    = (fIsMC ? fInEvent.genwgt : 1.f);
