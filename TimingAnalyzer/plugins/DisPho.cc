@@ -401,7 +401,7 @@ bool DisPho::GetLHCInfo(const edm::Event & iEvent, const edm::EventSetup & iSetu
 
   // Get LHCInfo handle
   edm::ESHandle<LHCInfo> lhcInfo;
-  iSetup.get<LHCInfoRcd>().get(lhcInfo);
+  //iSetup.get<LHCInfoRcd>().get(lhcInfo);
 
   // Verify LHC Info
   if(!lhcInfoValid) {

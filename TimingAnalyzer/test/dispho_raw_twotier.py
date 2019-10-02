@@ -212,20 +212,20 @@ process.MessageLogger.destinations = ['cout', 'cerr']
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 # LHC Info
-process.LHCInfoReader = cms.ESSource("PoolDBESSource",
-				     DBParameters = cms.PSet(
-		messageLevel = cms.untracked.int32(0),
-		authenticationPath = cms.untracked.string('')),
-				     toGet = cms.VPSet( 
-		cms.PSet(
-			record = cms.string("LHCInfoRcd"),
-			tag = cms.string("LHCInfoStartFillTest_v2")
-			)
-		),
-				     connect = cms.string('frontier://FrontierPrep/CMS_CONDITIONS')
-				     )
-
-process.lhcinfo_prefer = cms.ESPrefer("PoolDBESSource","LHCInfoReader")
+#process.LHCInfoReader = cms.ESSource("PoolDBESSource",
+#				     DBParameters = cms.PSet(
+#		messageLevel = cms.untracked.int32(0),
+#		authenticationPath = cms.untracked.string('')),
+#				     toGet = cms.VPSet( 
+#		cms.PSet(
+#			record = cms.string("LHCInfoRcd"),
+#			tag = cms.string("LHCInfoStartFillTest_v2")
+#			)
+#		),
+#				     connect = cms.string('frontier://FrontierPrep/CMS_CONDITIONS')
+#				     )
+#
+#process.lhcinfo_prefer = cms.ESPrefer("PoolDBESSource","LHCInfoReader")
 
 
 ## Define the input source
@@ -253,10 +253,11 @@ process.source = cms.Source("PoolSource",
 	#'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/3C235E7F-D396-E811-8F79-FA163E300262.root',
 	#'/store/data/Run2018D/EGamma/RAW/v1/000/320/712/00000/0C090600-0096-E811-9224-FA163E010862.root'
 	#323414
-	'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/042D6023-E0A2-8649-8D86-445F752A8F6B.root',
-	'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/78266801-FA3A-0A4E-86E6-1147C0A1FD27.root',
-	'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/C9875CA5-D499-2043-BDE2-F766389D2D26.root',
-	'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/DF56FF9E-1DE4-DA4C-B02F-0CEA64882D80.root',
+	#E9A6A66F-0E63-AD45-8137-66B9631818AC
+	#'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/042D6023-E0A2-8649-8D86-445F752A8F6B.root',
+	#'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/78266801-FA3A-0A4E-86E6-1147C0A1FD27.root',
+	#'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/C9875CA5-D499-2043-BDE2-F766389D2D26.root',
+	#'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/DF56FF9E-1DE4-DA4C-B02F-0CEA64882D80.root',
 	'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/E9A6A66F-0E63-AD45-8137-66B9631818AC.root',
 	'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/F1430E66-D4F8-3D46-BAFE-F2EA8B065FE5.root',
 	'/store/data/Run2018D/EGamma/RAW/v1/000/323/414/00000/60148CAA-381A-D045-9851-3D84D968BB05.root',
@@ -269,8 +270,9 @@ process.source = cms.Source("PoolSource",
 ## How many events to process
 #if   options.demoMode : process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
 #else                  : process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(options.maxEvents))
-#process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10))#process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
-process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(10))
+#process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(100))
+#process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(1000))
 #process.maxEvents = cms.untracked.PSet(input = cms.untracked.int32(-1))
 
 # Set the global tag depending on the sample type
