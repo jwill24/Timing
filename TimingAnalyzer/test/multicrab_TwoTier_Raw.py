@@ -83,7 +83,7 @@ def subcrab( runs, events, reqmem ):
         #config.JobType.psetName    = 'dispho_rawlist_twotier.py'
         config.JobType.psetName    = 'dispho_raw_twotier.py'
         #config.JobType.numCores    = 8
-        #config.JobType.maxMemoryMB = reqmem
+        config.JobType.maxMemoryMB = reqmem
         #config.JobType.maxJobRuntimeMin = 1600
         config.JobType.pyCfgParams = None
         config.JobType.inputFiles  = [ inputDir+inputPaths , inputDir+inputFilters , inputDir+inputFlags ]
@@ -110,8 +110,8 @@ def subcrab( runs, events, reqmem ):
 
             #['/EGamma/Run2018A-17Sep2018-v2/MINIAOD'],
             #['/EGamma/Run2018B-26Sep2018-v1/MINIAOD'],
-            #['/EGamma/Run2018C-17Sep2018-v1/MINIAOD'],
-            ['/EGamma/Run2018D-PromptReco-v2/MINIAOD'],
+            ['/EGamma/Run2018C-17Sep2018-v1/MINIAOD'],
+            #['/EGamma/Run2018D-PromptReco-v2/MINIAOD'],
             #['/EGamma/Run2018E-PromptReco-v1/MINIAOD'],
 
 	    ]
@@ -129,7 +129,9 @@ def subcrab( runs, events, reqmem ):
             #trial          = "valtest29_twotier"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, 320673-321730 2018D
             #trial          = "valtest30_twotier"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, 321732-321973 2018D
             #trial          = "valtest31_twotier"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, 321732-321973 2018D
-            trial          = "valtest32_twotier"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, 321732-321973 2018D
+            #trial          = "valtest36_twotier"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, 317080-319077 2018B
+            #trial          = "valtest37_twotier"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, 317080-319077 2018B, reduced size
+	    trial          = "twotier"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, reduced size
 
             config.General.requestName   = trial+"_"+primaryDataset+"_"+runEra+"_"+runs+"_"+dataset+"_dispho"
             config.Data.outputDatasetTag = trial+"_"+primaryDataset+"_"+dataset+"_"+runEra+"_"+runs+"_dispho"
@@ -197,32 +199,36 @@ def submit_run2018A():
         subcrab( "316876-316995", event_list_path + "sel_316876v316995_EG2018A.txt", 3250 )
 
 def submit_run2018B():
-        subcrab( "317080-317182", event_list_path + "sel_317080v317182_EG2018B.txt", 3000 )
-        subcrab( "317212-317297", event_list_path + "sel_317212v317297_EG2018B.txt", 3000 )
-        subcrab( "317319-317340", event_list_path + "sel_317319v317340_EG2018B.txt", 3000 )
-        subcrab( "317382-317435", event_list_path + "sel_317382v317435_EG2018B.txt", 3000 )
-        subcrab( "317438-317527", event_list_path + "sel_317438v317527_EG2018B.txt", 3000 )
-        subcrab( "317591-317640", event_list_path + "sel_317591v317640_EG2018B.txt", 3000 )
-        subcrab( "317641-317650", event_list_path + "sel_317641v317650_EG2018B.txt", 3000 )
-        subcrab( "317661-317696", event_list_path + "sel_317661v317696_EG2018B.txt", 3000 )
-        subcrab( "318828-319077", event_list_path + "sel_318828v319077_EG2018B.txt", 3000 )
+	subcrab( "317080-319077","",2500)
+#        subcrab( "317080-317182", event_list_path + "sel_317080v317182_EG2018B.txt", 3000 )
+#        subcrab( "317212-317297", event_list_path + "sel_317212v317297_EG2018B.txt", 3000 )
+#        subcrab( "317319-317340", event_list_path + "sel_317319v317340_EG2018B.txt", 3000 )
+#        subcrab( "317382-317435", event_list_path + "sel_317382v317435_EG2018B.txt", 3000 )
+#        subcrab( "317438-317527", event_list_path + "sel_317438v317527_EG2018B.txt", 3000 )
+#        subcrab( "317591-317640", event_list_path + "sel_317591v317640_EG2018B.txt", 3000 )
+#        subcrab( "317641-317650", event_list_path + "sel_317641v317650_EG2018B.txt", 3000 )
+#        subcrab( "317661-317696", event_list_path + "sel_317661v317696_EG2018B.txt", 3000 )
+#        subcrab( "318828-319077", event_list_path + "sel_318828v319077_EG2018B.txt", 3000 )
 
 def submit_run2018C():
-        subcrab( "319337-319337", event_list_path + "sel_319337v319337_EG2018C.txt", 3000 )
-        subcrab( "319347-319486", event_list_path + "sel_319347v319486_EG2018C.txt", 3000 )
-        subcrab( "319503-319579", event_list_path + "sel_319503v319579_EG2018C.txt", 3000 )
-        subcrab( "319625-319678", event_list_path + "sel_319625v319678_EG2018C.txt", 3000 )
-        subcrab( "319687-319756", event_list_path + "sel_319687v319756_EG2018C.txt", 3000 )
-        subcrab( "319840-319910", event_list_path + "sel_319840v319910_EG2018C.txt", 3000 )
-        subcrab( "319912-319993", event_list_path + "sel_319912v319993_EG2018C.txt", 3000 )
-        subcrab( "320002-320038", event_list_path + "sel_320002v320038_EG2018C.txt", 3000 )
-        subcrab( "320039-320065", event_list_path + "sel_320039v320065_EG2018C.txt", 3000 )
+        subcrab( "319337-319756","",2500)
+        subcrab( "319840-320065","",2500)
+
+        #subcrab( "319337-319337", event_list_path + "sel_319337v319337_EG2018C.txt", 3000 )
+	#subcrab( "319347-319486", event_list_path + "sel_319347v319486_EG2018C.txt", 3000 )
+        #subcrab( "319503-319579", event_list_path + "sel_319503v319579_EG2018C.txt", 3000 )
+        #subcrab( "319625-319678", event_list_path + "sel_319625v319678_EG2018C.txt", 3000 )
+        #subcrab( "319687-319756", event_list_path + "sel_319687v319756_EG2018C.txt", 3000 )
+        #subcrab( "319840-319910", event_list_path + "sel_319840v319910_EG2018C.txt", 3000 )
+        #subcrab( "319912-319993", event_list_path + "sel_319912v319993_EG2018C.txt", 3000 )
+        #subcrab( "320002-320038", event_list_path + "sel_320002v320038_EG2018C.txt", 3000 )
+        #subcrab( "320039-320065", event_list_path + "sel_320039v320065_EG2018C.txt", 3000 )
 
 def submit_run2018D():
-	subcrab( "320673-320933","",2500)
-        #subcrab( "320934-321219","",2500)
-        #subcrab( "321221-321730","",2500)
-        #subcrab( "321732-321973","",2500)
+	#subcrab( "320673-320933","",2500)
+        subcrab( "320934-321219","",2500)
+        subcrab( "321221-321730","",2500)
+        subcrab( "321732-321973","",2500)
         #subcrab( "321975-322332","",2500)
         #subcrab( "322348-323693","",2500)
         #subcrab( "323696-324245","",2500)
@@ -281,6 +287,6 @@ def submit_run2018D():
 
 #submit_run2018A()
 #submit_run2018B()
-#submit_run2018C()
-submit_run2018D()
+submit_run2018C()
+#submit_run2018D()
 

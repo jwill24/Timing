@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "TBranch.h"
+#include "Common.hh"
 
 enum SkimType {Standard, Zee, DiXtal, AlwaysTrue, AlwaysFalse};
 enum ECorr {Nominal, Down, Up};
@@ -536,9 +537,14 @@ struct Pho
   Float_t seedZ;
   Float_t seedE;
   Float_t seedtime;
+  Float_t seedtimeCali;
   Float_t seedtimeErr;
   Float_t seedTOF;
   UInt_t  seedID;
+  Int_t   seedI1; // EB: iphi, EE: ix
+  Int_t   seedI2; // EB: ieta, EE: iy
+  Int_t    seedEcal; // EB, EM, EP 
+
   Int_t   seedisGS6;
   Int_t   seedisGS1;
   Float_t seedadcToGeV;
@@ -706,9 +712,14 @@ struct Pho
   std::string s_seedZ = "phoseedZ";
   std::string s_seedE = "phoseedE";
   std::string s_seedtime = "phoseedtime";
+  std::string s_seedtimeCali = "phoseedtimeCali";
   std::string s_seedtimeErr = "phoseedtimeErr";
   std::string s_seedTOF = "phoseedTOF";
   std::string s_seedID = "phoseedID";
+  std::string s_seedI1 = "phoseedI1"; // EB: iphi, EE: seedI2; // EB: ieta, EE: iy
+  std::string s_seedI2 = "phoseedI2"; // EB: ieta, EE: iy
+  std::string s_seedEcal = "phoseedEcal"; // EB, EM, EP
+
   std::string s_seedisGS6 = "phoseedisGS6";
   std::string s_seedisGS1 = "phoseedisGS1";
   std::string s_seedadcToGeV = "phoseedadcToGeV";
@@ -872,9 +883,13 @@ struct Pho
   TBranch * b_seedZ;
   TBranch * b_seedE;
   TBranch * b_seedtime;
+  TBranch * b_seedtimeCali;
   TBranch * b_seedtimeErr;
   TBranch * b_seedTOF;
   TBranch * b_seedID;
+  TBranch * b_seedI1;
+  TBranch * b_seedI2;
+  TBranch * b_seedEcal;
   TBranch * b_seedisGS6;
   TBranch * b_seedisGS1;
   TBranch * b_seedadcToGeV;

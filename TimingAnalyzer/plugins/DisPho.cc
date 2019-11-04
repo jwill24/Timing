@@ -8,7 +8,7 @@ DisPho::DisPho(const edm::ParameterSet & iConfig) :
   kuRechitValid (iConfig.existsAs<bool>("kuRechitValid")  ? iConfig.getParameter<bool>("kuRechitValid")  : false),
 
   // LHC Info 
-  lhcInfoValid (iConfig.existsAs<bool>("lhcInfoValid")  ? iConfig.getParameter<bool>("lhcInfoValid")  : false),
+//  lhcInfoValid (iConfig.existsAs<bool>("lhcInfoValid")  ? iConfig.getParameter<bool>("lhcInfoValid")  : false),
 
   // blinding cuts
   blindSF(iConfig.existsAs<int>("blindSF") ? iConfig.getParameter<int>("blindSF") : 1000),
@@ -290,7 +290,7 @@ void DisPho::analyze(const edm::Event & iEvent, const edm::EventSetup & iSetup)
   /// LHC Info ///
   /////////////////
   //std::cout << ">>> LHC Info" << std::endl;
-  DisPho::GetLHCInfo(iEvent,iSetup);
+  //DisPho::GetLHCInfo(iEvent,iSetup);
 
   /////////////////
   // Get Weights //
@@ -379,122 +379,122 @@ bool DisPho::GetObjects(const edm::Event & iEvent, const edm::EventSetup & iSetu
   return true;
 }
 
-bool DisPho::GetLHCInfo(const edm::Event & iEvent, const edm::EventSetup & iSetup)
-{
-
-  bool first_zero( true );
-  bool first_notzero( true );
-  unsigned int zero(0);
-  unsigned int notzero(0);
-  unsigned int longnotzero(0);
-  unsigned int count(0);
-  unsigned int longcount(0);
-
-  train_zero.clear();
-  train_notzero.clear();
-  long_train_notzero.clear();
-  subtrain_num.clear();
-  train_num.clear();
-
-  // Get event information
-  fBX = iEvent.bunchCrossing() - 1; // Force the LHC info to match with the CMS convention
-
-  // Get LHCInfo handle
-  edm::ESHandle<LHCInfo> lhcInfo;
-  //iSetup.get<LHCInfoRcd>().get(lhcInfo);
-
-  // Verify LHC Info
-  if(!lhcInfoValid) {
-    //throw cms::Exception("ProductNotValid") << "LHCInfo product not valid";
-    //std::cout << "LHCInfoValid False\n" << std::endl;
-    return false;
-  }
-  else{
-    
-    const LHCInfo* info = lhcInfo.product();
-    
-    fXangle = info->crossingAngle();
-
-    // Beam 1 VC
-    fBunchNum = 0;
-    std::vector<float> ( info->beam1VC() );
-    for (vector<float>::const_iterator i = info->beam1VC().begin(); i != info->beam1VC().end(); ++i) {
-      fBeam1VC[fBunchNum] = *i;
-      fBunchNum++;
-    }
-    
-    // Beam 2 VC
-    fBunchNum = 0;
-    std::vector<float> ( info->beam2VC() );
-    for (vector<float>::const_iterator i = info->beam2VC().begin(); i != info->beam2VC().end(); ++i) {
-      fBeam2VC[fBunchNum] = *i;
-      fBunchNum++;
-    }
-    
-    // Beam 1 RF
-    fBunchNum = 0;
-    std::vector<float> ( info->beam1RF() );
-    for (vector<float>::const_iterator i = info->beam1RF().begin(); i != info->beam1RF().end(); ++i) {
-      fBeam1RF[fBunchNum] = *i;
-      fBunchNum++;
-    }
-    
-    // Beam 2 RF
-    fBunchNum = 0;
-    std::vector<float> ( info->beam2RF() );
-    for (vector<float>::const_iterator i = info->beam2RF().begin(); i != info->beam2RF().end(); ++i) {
-      fBeam2RF[fBunchNum] = *i;
-      fBunchNum++;
-    }
-
-    // Get train position
-    for( unsigned int i = 0; i < info->beam1VC().size(); i++ ){
-      if( info->beam1VC()[i] == 0.0 ) {
-	if( first_zero == true ) {
-	  first_zero = false;
-	  first_notzero = true;
-	  zero = 0;
-	}
-	zero++;
-      }
-      else {
-	if( first_notzero == true ) {
-	  first_notzero = false;
-	  first_zero = true;
-	  notzero = 0;
-	  if( zero > 10 ){
-	    longnotzero = 0;
-	    longcount++;
-	  }
-	  count++;
-	}
-	notzero++;
-	longnotzero++;
-      }
-      train_zero.push_back(zero);
-      train_notzero.push_back(notzero);
-      long_train_notzero.push_back(longnotzero);
-      subtrain_num.push_back(count);
-      train_num.push_back(longcount);
-    }
-
-    // Store train positions for tree
-    subtrain_position = train_notzero[fBX];
-    
-    train_position = long_train_notzero[fBX];
-    subtrain_number = subtrain_num[fBX];
-    train_number = train_num[fBX];
-
-    // Store beam conditions for bx
-    beam1_RF = fBeam1RF[fBX];
-    beam2_RF = fBeam2RF[fBX];
-    beam1_VC = fBeam1VC[fBX];
-    beam2_VC = fBeam2VC[fBX];
-    
-  }
-
-  return true;
-}
+//bool DisPho::GetLHCInfo(const edm::Event & iEvent, const edm::EventSetup & iSetup)
+//{
+//
+//  bool first_zero( true );
+//  bool first_notzero( true );
+//  unsigned int zero(0);
+//  unsigned int notzero(0);
+//  unsigned int longnotzero(0);
+//  unsigned int count(0);
+//  unsigned int longcount(0);
+//
+//  train_zero.clear();
+//  train_notzero.clear();
+//  long_train_notzero.clear();
+//  subtrain_num.clear();
+//  train_num.clear();
+//
+//  // Get event information
+//  fBX = iEvent.bunchCrossing() - 1; // Force the LHC info to match with the CMS convention
+//
+//  // Get LHCInfo handle
+//  //edm::ESHandle<LHCInfo> lhcInfo;
+//  //iSetup.get<LHCInfoRcd>().get(lhcInfo);
+//
+//  // Verify LHC Info
+//  if(!lhcInfoValid) {
+//    //throw cms::Exception("ProductNotValid") << "LHCInfo product not valid";
+//    //std::cout << "LHCInfoValid False\n" << std::endl;
+//    return false;
+//  }
+//  else{
+//    
+//    //const LHCInfo* info = lhcInfo.product();
+//    
+//    fXangle = info->crossingAngle();
+//
+//    // Beam 1 VC
+//    fBunchNum = 0;
+//    std::vector<float> ( info->beam1VC() );
+//    for (vector<float>::const_iterator i = info->beam1VC().begin(); i != info->beam1VC().end(); ++i) {
+//      fBeam1VC[fBunchNum] = *i;
+//      fBunchNum++;
+//    }
+//    
+//    // Beam 2 VC
+//    fBunchNum = 0;
+//    std::vector<float> ( info->beam2VC() );
+//    for (vector<float>::const_iterator i = info->beam2VC().begin(); i != info->beam2VC().end(); ++i) {
+//      fBeam2VC[fBunchNum] = *i;
+//      fBunchNum++;
+//    }
+//    
+//    // Beam 1 RF
+//    fBunchNum = 0;
+//    std::vector<float> ( info->beam1RF() );
+//    for (vector<float>::const_iterator i = info->beam1RF().begin(); i != info->beam1RF().end(); ++i) {
+//      fBeam1RF[fBunchNum] = *i;
+//      fBunchNum++;
+//    }
+//    
+//    // Beam 2 RF
+//    fBunchNum = 0;
+//    std::vector<float> ( info->beam2RF() );
+//    for (vector<float>::const_iterator i = info->beam2RF().begin(); i != info->beam2RF().end(); ++i) {
+//      fBeam2RF[fBunchNum] = *i;
+//      fBunchNum++;
+//    }
+//
+//    // Get train position
+//    for( unsigned int i = 0; i < info->beam1VC().size(); i++ ){
+//      if( info->beam1VC()[i] == 0.0 ) {
+//	if( first_zero == true ) {
+//	  first_zero = false;
+//	  first_notzero = true;
+//	  zero = 0;
+//	}
+//	zero++;
+//      }
+//      else {
+//	if( first_notzero == true ) {
+//	  first_notzero = false;
+//	  first_zero = true;
+//	  notzero = 0;
+//	  if( zero > 10 ){
+//	    longnotzero = 0;
+//	    longcount++;
+//	  }
+//	  count++;
+//	}
+//	notzero++;
+//	longnotzero++;
+//      }
+//      train_zero.push_back(zero);
+//      train_notzero.push_back(notzero);
+//      long_train_notzero.push_back(longnotzero);
+//      subtrain_num.push_back(count);
+//      train_num.push_back(longcount);
+//    }
+//
+//    // Store train positions for tree
+//    subtrain_position = train_notzero[fBX];
+//    
+//    train_position = long_train_notzero[fBX];
+//    subtrain_number = subtrain_num[fBX];
+//    train_number = train_num[fBX];
+//
+//    // Store beam conditions for bx
+//    beam1_RF = fBeam1RF[fBX];
+//    beam2_RF = fBeam2RF[fBX];
+//    beam1_VC = fBeam1VC[fBX];
+//    beam2_VC = fBeam2VC[fBX];
+//    
+//  }
+//
+//  return true;
+//}
 
 bool DisPho::GetStandardObjects(const edm::Event & iEvent)
 {
@@ -3351,18 +3351,18 @@ void DisPho::MakeEventTree()
   disphotree->Branch("event", &event, "event/l");
   
   // LHC Info
-  if ( lhcInfoValid ) {
-    disphotree->Branch( "bunch_crossing", &fBX, "bunch_crossing/i" );
-    disphotree->Branch( "num_bunch", &fBunchNum, "num_bunch/i");
-    disphotree->Branch( "beam1_VC", &beam1_VC, "beam1_VC/F" ); 
-    disphotree->Branch( "beam2_VC", &beam2_VC, "beam2_VC/F" ); 
-    disphotree->Branch( "beam1_RF", &beam1_RF, "beam1_RF/F" ); 
-    disphotree->Branch( "beam2_RF", &beam2_RF, "beam2_RF/F" ); 
-    disphotree->Branch("subtrain_position", &subtrain_position, "subtrain_position/i" ); 
-    disphotree->Branch("train_position", &train_position, "train_position/i" ); 
-    disphotree->Branch("subtrain_number", &subtrain_number, "subtrain_number/i" ); 
-    disphotree->Branch("train_number", &train_number, "train_number/i" ); 
-  }
+//  if ( lhcInfoValid ) {
+//    disphotree->Branch( "bunch_crossing", &fBX, "bunch_crossing/i" );
+//    disphotree->Branch( "num_bunch", &fBunchNum, "num_bunch/i");
+//    disphotree->Branch( "beam1_VC", &beam1_VC, "beam1_VC/F" ); 
+//    disphotree->Branch( "beam2_VC", &beam2_VC, "beam2_VC/F" ); 
+//    disphotree->Branch( "beam1_RF", &beam1_RF, "beam1_RF/F" ); 
+//    disphotree->Branch( "beam2_RF", &beam2_RF, "beam2_RF/F" ); 
+//    disphotree->Branch("subtrain_position", &subtrain_position, "subtrain_position/i" ); 
+//    disphotree->Branch("train_position", &train_position, "train_position/i" ); 
+//    disphotree->Branch("subtrain_number", &subtrain_number, "subtrain_number/i" ); 
+//    disphotree->Branch("train_number", &train_number, "train_number/i" ); 
+//  }
 
   // Trigger Info
   disphotree->Branch("hltSignal", &hltSignal);

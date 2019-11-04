@@ -21,7 +21,7 @@ fulldir=${topdir}/${disphodir}/${dir}
 PrepOutDir ${fulldir}
 
 ## copy everything
-cp ${outfiletext}.root ${fulldir}
-
+#cp ${outfiletext}.root ${fulldir}
+mv ${outfiletext}.root ${fulldir}
 ## Final message
 echo "Finished TreePlotting2D for plot:" ${plotconfig}

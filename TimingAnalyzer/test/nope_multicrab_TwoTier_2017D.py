@@ -65,7 +65,7 @@ def docrab():
         inputJSON    = 'golden2017.json'
         #inputJSON    = 'Cert_314472-325175_13TeV_PromptReco_Collisions18_JSON.txt'
         inputRuns  =   '302033-302163'
-	secInputPaths = '/DoubleEG/Run2017D-v1/RAW'
+	#secInputPaths = '/DoubleEG/Run2017D-v1/RAW'
 
         #--------------------------------------------------------
         # This is the base config:
@@ -85,8 +85,8 @@ def docrab():
         config.JobType.inputFiles  = [ inputDir+inputPaths , inputDir+inputFilters , inputDir+inputFlags ]
 
         config.Data.inputDataset   = None
-        #config.Data.useParent      = True
-        config.Data.secondaryInputDataset	= secInputPaths
+        config.Data.useParent      = True
+        #config.Data.secondaryInputDataset	= secInputPaths
         config.Data.lumiMask       = inputJSON
         config.Data.splitting      = 'EventAwareLumiBased'
         config.Data.unitsPerJob    = 25000
@@ -101,24 +101,26 @@ def docrab():
 
         # Will submit one task for each of these input datasets.
         inputDataAndOpts = [
-            #['/SinglePhoton/Run2017B-31Mar2018-v1/MINIAOD'],
-            #['/SinglePhoton/Run2017C-31Mar2018-v1/MINIAOD'],
-            #['/SinglePhoton/Run2017D-31Mar2018-v1/MINIAOD'],
-            #['/SinglePhoton/Run2017E-31Mar2018-v1/MINIAOD'],
-            #['/SinglePhoton/Run2017F-31Mar2018-v1/MINIAOD'],
+            #['/SinglePhoton/Run2017B-09May2018-v1/MINIAOD'],
+            #['/SinglePhoton/Run2017C-09May2018-v1/MINIAOD'],
+            #['/SinglePhoton/Run2017D-09May2018-v1/MINIAOD'],
+            #['/SinglePhoton/Run2017E-09May2018-v1/MINIAOD'],
+            #['/SinglePhoton/Run2017F-09May2018-v1/MINIAOD'],
 
-            #['/DoubleEG/Run2017B-31Mar2018-v1/MINIAOD'],
-            #['/DoubleEG/Run2017C-31Mar2018-v1/MINIAOD'],
-            ['/DoubleEG/Run2017D-31Mar2018-v1/MINIAOD'],
-            #['/DoubleEG/Run2017D-17Nov2017-v1/AOD'],
-            #['/DoubleEG/Run2017E-31Mar2018-v1/MINIAOD'],
-            #['/DoubleEG/Run2017F-31Mar2018-v1/MINIAOD'],
+            #['/DoubleEG/Run2017B-09May2018-v1/MINIAOD'],
+            #['/DoubleEG/Run2017C-09May2018-v1/MINIAOD'],
+            #['/DoubleEG/Run2017D-09May2018-v1/MINIAOD'],
+            #['/DoubleEG/Run2017E-09May2018-v1/MINIAOD'],
+            #['/DoubleEG/Run2017F-09May2018-v1/MINIAOD'],
 
-            #['/EGamma/Run2018A-17Sep2018-v2/MINIAOD'],
-            #['/EGamma/Run2018B-26Sep2018-v1/MINIAOD'],
-            #['/EGamma/Run2018C-17Sep2018-v1/MINIAOD'],
-            #['/EGamma/Run2018D-PromptReco-v2/MINIAOD'],
-            #['/EGamma/Run2018E-PromptReco-v1/MINIAOD'],
+            #['/DoubleEG/Run2017D-09Aug2019_UL2017-v1/MINIAOD'],
+
+            #['/DoubleEG/Run2017B-17Nov2017-v1/MINIAOD'],
+            #['/DoubleEG/Run2017C-17Nov2017-v1/MINIAOD'],
+            ['/DoubleEG/Run2017D-17Nov2017-v1/MINIAOD'],
+            #['/DoubleEG/Run2017E-17Nov2017-v1/MINIAOD'],
+            #['/DoubleEG/Run2017F -17Nov2017-v1/MINIAOD'],
+
             ]
  
         for inDO in inputDataAndOpts:
@@ -141,7 +143,10 @@ def docrab():
             #trial          = "valtest24_twotier"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, 320673-321730 2018D
             #trial          = "valtest26v2_2t_2017"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, 302033-302163 2017D
             #trial          = "valtest27_2t_2017"  # aod+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, 302033-302163 2017D
-            trial          = "valtest28_2t_2017"  # miniaod+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, 302033-302163 2017D
+            #trial          = "valtest28_2t_2017"  # miniaod+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, 302033-302163 2017D
+            #trial          = "valtest33_2t_2017" # as 28 with /DoubleEG/Run2017D-09Aug2019_UL2017-v1/MINIAOD
+            #trial          = "valtest34_2t_2017" # as 28 with /DoubleEG/Run2017D-17Nov2017-v1/MINIAOD
+            trial          = "valtest35_2t_2017" # as 28 with /DoubleEG/Run2017D-17Nov2017-v1/MINIAOD w/ 10_4 gt
             runs           = inputRuns
 	    #runs	   = "Full"
 
@@ -149,22 +154,21 @@ def docrab():
             config.General.requestName   = trial+"_"+primaryDataset+"_"+runEra+"_"+runs+"_"+dataset+"_dispho"
             config.Data.outputDatasetTag = trial+"_"+primaryDataset+"_"+dataset+"_"+runEra+"_"+runs+"_dispho"
 
-            config.Data.secondaryInputDataset = secInputPaths
+            #config.Data.secondaryInputDataset = secInputPaths
 
-	    # for 2018 prompt v1
-            #config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Prompt_v1','nThreads='+str(config.JobType.numCores),
-            #                                'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags,
-            #                                'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=True']
+            #config.JobType.pyCfgParams   = ['globalTag=106X_dataRun2_v20',#'nThreads='+str(config.JobType.numCores),
+            #                                'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags, 'onlyGED=True', 
+	    #				    'outputFileName=output.root', 'kuRechitValid=True','lhcInfoValid=False', 'rawCollectionsValid=True']
 
-	    # for 2018  prompt v11
-            config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Prompt_v11',#'nThreads='+str(config.JobType.numCores),
-                                            'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags, 'onlyGED=True', 
-	    				    'outputFileName=output.root', 'kuRechitValid=True','lhcInfoValid=False', 'rawCollectionsValid=True']
+            config.JobType.pyCfgParams   = ['globalTag=101X_dataRun2_Prompt_v11',#'nThreads='+str(config.JobType.numCores), 
+                                            'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags,
+                                            'onlyGED=True', 'outputFileName=output.root', #'rlelist='+events,
+                                            'kuRechitValid=True','lhcInfoValid=False', 'rawCollectionsValid=True' ]
 
-	    # for 2018 ABC rereco
-            #config.JobType.pyCfgParams   = ['globalTag=102X_dataRun2_Sep2018Rereco_v1','nThreads='+str(config.JobType.numCores),
-            #                                'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags,
-            #                                'onlyGED=True', 'outputFileName=output.root', 'lhcInfoValid=False']
+            #config.JobType.pyCfgParams   = ['globalTag=94X_dataRun2_ReReco_EOY17_v2',#'nThreads='+str(config.JobType.numCores),
+            #                                'inputPaths='+inputPaths,'inputFilters='+inputFilters,'inputFlags='+inputFlags, 'onlyGED=True',
+            #                                'outputFileName=output.root', 'kuRechitValid=True','lhcInfoValid=False', 'rawCollectionsValid=True']
+
 
             config.Data.inputDataset     = inDO[0]
             #config.Data.outputDatasetTag = '%s_%s' % (config.General.workArea, config.General.requestName)

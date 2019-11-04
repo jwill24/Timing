@@ -84,7 +84,8 @@ options.register('filterEff',1.0,VarParsing.multiplicity.singleton,VarParsing.va
 options.register('BR',1.0,VarParsing.multiplicity.singleton,VarParsing.varType.float,'branching ratio of MC');
 
 ## GT to be used
-options.register('globalTag','101X_dataRun2_Prompt_v11',VarParsing.multiplicity.singleton,VarParsing.varType.string,'gloabl tag to be used');
+#options.register('globalTag','101X_dataRun2_Prompt_v11',VarParsing.multiplicity.singleton,VarParsing.varType.string,'gloabl tag to be used');
+options.register('globalTag','94X_dataRun2_ReReco_EOY17_v6',VarParsing.multiplicity.singleton,VarParsing.varType.string,'gloabl tag to be used');
 
 ## do a demo run over only 1k events
 options.register('demoMode',False,VarParsing.multiplicity.singleton,VarParsing.varType.bool,'flag to run over only 1k events');
@@ -93,7 +94,7 @@ options.register('demoMode',False,VarParsing.multiplicity.singleton,VarParsing.v
 options.register('processName','TREE',VarParsing.multiplicity.singleton,VarParsing.varType.string,'process name to be considered');
 
 ## outputFile Name
-options.register('outputFileName','ku_multitest_twotier_run18D_323414_dispho.root',VarParsing.multiplicity.singleton,VarParsing.varType.string,'output file name created by cmsRun');
+options.register('outputFileName','ku_multitest_twotier_run17D_test_dispho.root',VarParsing.multiplicity.singleton,VarParsing.varType.string,'output file name created by cmsRun');
 
 ## etra bits
 options.register('nThreads',8,VarParsing.multiplicity.singleton,VarParsing.varType.int,'number of threads per job');
@@ -185,7 +186,7 @@ print "     #####################"
 
 ## Define the CMSSW process
 from Configuration.StandardSequences.Eras import eras
-process = cms.Process(options.processName,eras.Run2_2018)
+process = cms.Process(options.processName,eras.Run2_2017)
 
 ## Load the standard set of configuration modules
 process.load('Configuration.StandardSequences.Services_cff')
@@ -217,20 +218,20 @@ process.MessageLogger.cerr.FwkReport.reportEvery = 1
 #process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 # LHC Info
-process.LHCInfoReader = cms.ESSource("PoolDBESSource",
-				     DBParameters = cms.PSet(
-		messageLevel = cms.untracked.int32(0),
-		authenticationPath = cms.untracked.string('')),
-				     toGet = cms.VPSet( 
-		cms.PSet(
-			record = cms.string("LHCInfoRcd"),
-			tag = cms.string("LHCInfoStartFillTest_v2")
-			)
-		),
-				     connect = cms.string('frontier://FrontierPrep/CMS_CONDITIONS')
-				     )
-
-process.lhcinfo_prefer = cms.ESPrefer("PoolDBESSource","LHCInfoReader")
+#process.LHCInfoReader = cms.ESSource("PoolDBESSource",
+#				     DBParameters = cms.PSet(
+#		messageLevel = cms.untracked.int32(0),
+#		authenticationPath = cms.untracked.string('')),
+#				     toGet = cms.VPSet( 
+#		cms.PSet(
+#			record = cms.string("LHCInfoRcd"),
+#			tag = cms.string("LHCInfoStartFillTest_v2")
+#			)
+#		),
+#				     connect = cms.string('frontier://FrontierPrep/CMS_CONDITIONS')
+#				     )
+#
+#process.lhcinfo_prefer = cms.ESPrefer("PoolDBESSource","LHCInfoReader")
 
 
 ## Define the input source
@@ -597,3 +598,5 @@ process=convertToUnscheduled(process)
 from Configuration.StandardSequences.earlyDeleteSettings_cff import customiseEarlyDelete
 if options.deleteEarly :
 	process = customiseEarlyDelete(process)
+
+

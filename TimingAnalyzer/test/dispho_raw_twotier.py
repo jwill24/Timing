@@ -390,6 +390,12 @@ process.tree = cms.EDAnalyzer("DisPho",
    kuNotStcRecHitsEB = cms.InputTag("kuNotStcEcalRecHit", "kuNotStcEcalRecHitsEB"),
    kuNotStcRecHitsEE = cms.InputTag("kuNotStcEcalRecHit", "kuNotStcEcalRecHitsEE"),
 
+   kuWootRecHitsEB = cms.InputTag("kuWootEcalRecHit", "kuWootEcalRecHitsEB"),
+   kuWootRecHitsEE = cms.InputTag("kuWootEcalRecHit", "kuWootEcalRecHitsEE"),
+
+   kuWootStcRecHitsEB = cms.InputTag("kuWootStcEcalRecHit", "kuWootStcEcalRecHitsEB"),
+   kuWootStcRecHitsEE = cms.InputTag("kuWootStcEcalRecHit", "kuWootStcEcalRecHitsEE"),
+
    ## ecal uncalib recHits
    uncalibratedRecHitsEB = cms.InputTag("ecalMultiFitUncalibRecHit","EcalUncalibRecHitsEB"),
    uncalibratedRecHitsEE = cms.InputTag("ecalMultiFitUncalibRecHit","EcalUncalibRecHitsEE"),
@@ -399,6 +405,9 @@ process.tree = cms.EDAnalyzer("DisPho",
 
    kuNot_uncalibratedRecHitsEB = cms.InputTag("kuNotEcalMultiFitUncalibRecHit","kuNotEcalUncalibRecHitsEB"),
    kuNot_uncalibratedRecHitsEE = cms.InputTag("kuNotEcalMultiFitUncalibRecHit","kuNotEcalUncalibRecHitsEE"),
+
+#   kuWoot_uncalibratedRecHitsEB = cms.InputTag("kuWootEcalMultiFitUncalibRecHit","kuWootEcalUncalibRecHitsEB"),
+#   kuWoot_uncalibratedRecHitsEE = cms.InputTag("kuWootEcalMultiFitUncalibRecHit","kuWootEcalUncalibRecHitsEE"),
 
    ## digis
    EBdigiCollection = cms.InputTag("ecalDigis","ebDigis"),

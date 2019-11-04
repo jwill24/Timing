@@ -25,9 +25,10 @@ ku_ecalUncalibRecHitSequence = cms.Sequence(ecalMultiFitUncalibRecHit*
 					kuEcalMultiFitUncalibRecHit*
         	                        ecalDetIdToBeRecovered)
 
-ku_multi_ecalUncalibRecHitSequence = cms.Sequence(ecalMultiFitUncalibRecHit*
+ku_multi_ecalUncalibRecHitSequence = cms.Sequence(#ecalMultiFitUncalibRecHit*
                                         kuEcalMultiFitUncalibRecHit*
                                         kuNotEcalMultiFitUncalibRecHit*
+					kuWootEcalMultiFitUncalibRecHit*
                                         ecalDetIdToBeRecovered)
 
 ku_only_ecalUncalibRecHitSequence = cms.Sequence(kuEcalMultiFitUncalibRecHit*
@@ -63,6 +64,21 @@ kuNotStcEcalRecHit = ecalRecHit.clone(
         skipTimeCalib = cms.bool(True),
         )
 
+kuWootEcalRecHit = ecalRecHit.clone(
+        EErechitCollection = cms.string('kuWootEcalRecHitsEE'),
+        EEuncalibRecHitCollection = cms.InputTag("kuWootEcalMultiFitUncalibRecHit","kuWootEcalUncalibRecHitsEE"),
+        EBuncalibRecHitCollection = cms.InputTag("kuWootEcalMultiFitUncalibRecHit","kuWootEcalUncalibRecHitsEB"),
+        EBrechitCollection = cms.string('kuWootEcalRecHitsEB'),
+        )
+
+kuWootStcEcalRecHit = ecalRecHit.clone(
+        EErechitCollection = cms.string('kuWootStcEcalRecHitsEE'),
+        EEuncalibRecHitCollection = cms.InputTag("kuWootEcalMultiFitUncalibRecHit","kuWootEcalUncalibRecHitsEE"),
+        EBuncalibRecHitCollection = cms.InputTag("kuWootEcalMultiFitUncalibRecHit","kuWootEcalUncalibRecHitsEB"),
+        EBrechitCollection = cms.string('kuWootStcEcalRecHitsEB'),
+        skipTimeCalib = cms.bool(True),
+        )
+
 ku_ecalRecHitSequence        = cms.Sequence(ecalRecHit*
 					 kuEcalRecHit*
                                          ecalCompactTrigPrim*
@@ -75,8 +91,11 @@ ku_only_ecalRecHitSequence        = cms.Sequence(kuEcalRecHit)
 
 ku_multi_ecalRecHitSequence        = cms.Sequence(kuEcalRecHit*
 						kuStcEcalRecHit*
-						kuNotEcalRecHit*
-						kuNotStcEcalRecHit)
+						#kuNotEcalRecHit*
+						kuNotStcEcalRecHit*
+                                                #kuWootEcalRecHit*
+                                                kuWootStcEcalRecHit
+						)
 
 # full sequences
 ku_ecalLocalRecoSequence     	= cms.Sequence(ku_ecalUncalibRecHitSequence*ku_ecalRecHitSequence)
