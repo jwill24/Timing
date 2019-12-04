@@ -15,11 +15,11 @@ Skimmer::Skimmer(const TString & indir, const TString & outdir, const TString & 
   ////////////////////////
   // Get all the inputs //
   ////////////////////////
-  std::cout << "Setting up inputs for skim" << std::endl;
+  //std::cout << "Setting up inputs for skim" << std::endl;
 
   // Set skim config options 
   Skimmer::SetupDefaults();
-  std::cout << "Running SkimConfig" << std::endl;
+  //std::cout << "Running SkimConfig" << std::endl;
   Skimmer::SetupSkimConfig();
 
   // get detids if skim needs it
@@ -97,6 +97,9 @@ Skimmer::Skimmer(const TString & indir, const TString & outdir, const TString & 
   Skimmer::InitOutTree();
   Skimmer::InitOutCutFlowHists();
 
+  tofHist = new TH1F("tofHist","Time of Flight [ns]",10000,-5,5);
+  tofHist->Sumw2(); 
+
   fOutAveXtalRecTimeHist = new TH1F("AveXtalRecTimeHist","AveXtalRecTime",400,-20,20);
   fOutAveXtalRecTimeHist->Sumw2();
   fOutAveXtalPhoRecTimeHist = new TH1F("AveXtalPhoRecTimeHist","AveXtalPhoRecTime",400,-20,20);
@@ -118,20 +121,17 @@ Skimmer::Skimmer(const TString & indir, const TString & outdir, const TString & 
   fOutDifXtalRtStcPhoRecTimeHist = new TH1F("DifXtalRtStcPhoRecTimeHist","DifXtalRtStcPhoRecTime",400,-20,20);
   fOutDifXtalRtStcPhoRecTimeHist->Sumw2();
 
-  
-//  fOutAveXtalRtOOTRecTimeHist = new TH1F("AveXtalRtOOTRecTimeHist","AveXtalRtOOTRecTime",400,-20,20);
-//  fOutAveXtalRtOOTRecTimeHist->Sumw2();
-//  fOutAveXtalRtOOTPhoRecTimeHist = new TH1F("AveXtalRtOOTPhoRecTimeHist","AveXtalRtOOTPhoRecTime",400,-20,20);
-//  fOutAveXtalRtOOTPhoRecTimeHist->Sumw2();
-//  fOutDifXtalRtOOTPhoRecTimeHist = new TH1F("DifXtalRtOOTPhoRecTimeHist","DifXtalRtOOTPhoRecTime",400,-20,20);
-//  fOutDifXtalRtOOTPhoRecTimeHist->Sumw2();
-//
-//  fOutAveXtalRtOOTStcRecTimeHist = new TH1F("AveXtalRtOOTStcRecTimeHist","AveXtalRtOOTStcRecTime",400,-20,20);
-//  fOutAveXtalRtOOTStcRecTimeHist->Sumw2();
-//  fOutAveXtalRtOOTStcPhoRecTimeHist = new TH1F("AveXtalRtOOTStcPhoRecTimeHist","AveXtalRtOOTStcPhoRecTime",400,-20,20);
-//  fOutAveXtalRtOOTStcPhoRecTimeHist->Sumw2();
-//  fOutDifXtalRtOOTStcPhoRecTimeHist = new TH1F("DifXtalRtOOTStcPhoRecTimeHist","DifXtalRtOOTStcPhoRecTime",400,-20,20);
-//  fOutDifXtalRtOOTStcPhoRecTimeHist->Sumw2();
+  fOutAveXtalRtOOTRecTimeHist = new TH1F("AveXtalRtOOTRecTimeHist","AveXtalRtOOTRecTime",400,-20,20);
+  fOutAveXtalRtOOTRecTimeHist->Sumw2();
+  fOutAveXtalRtOOTPhoRecTimeHist = new TH1F("AveXtalRtOOTPhoRecTimeHist","AveXtalRtOOTPhoRecTime",400,-20,20);
+  fOutAveXtalRtOOTPhoRecTimeHist->Sumw2();
+  fOutDifXtalRtOOTPhoRecTimeHist = new TH1F("DifXtalRtOOTPhoRecTimeHist","DifXtalRtOOTPhoRecTime",400,-20,20);
+  fOutDifXtalRtOOTPhoRecTimeHist->Sumw2();
+
+  fOutAveXtalRtOOTStcPhoRecTimeHist = new TH1F("AveXtalRtOOTStcPhoRecTimeHist","AveXtalRtOOTStcPhoRecTime",400,-20,20);
+  fOutAveXtalRtOOTStcPhoRecTimeHist->Sumw2();
+  fOutDifXtalRtOOTStcPhoRecTimeHist = new TH1F("DifXtalRtOOTStcPhoRecTimeHist","DifXtalRtOOTStcPhoRecTime",400,-20,20);
+  fOutDifXtalRtOOTStcPhoRecTimeHist->Sumw2();
 
   fOutAveXtalOccHist = new TH1F("AveXtalOccHist","AveXtalOcc",250,0,250);
   fOutAveXtalOccHist->Sumw2();
@@ -159,20 +159,97 @@ Skimmer::Skimmer(const TString & indir, const TString & outdir, const TString & 
   fOutAveXtalRtStcRecTimeHistEM = new TH1F("AveXtalRtStcRecTimeEMHist","AveXtalRtStcRecTime EM",400,-20,20);
   fOutAveXtalRtStcRecTimeHistEM->Sumw2();
 
-//  fOutAveXtalRtOOTRecTimeHistEB = new TH1F("AveXtalRtOOTRecTimeEBHist","AveXtalRtOOTRecTime EB",400,-20,20);
-//  fOutAveXtalRtOOTRecTimeHistEB->Sumw2();
-//  fOutAveXtalRtOOTRecTimeHistEP = new TH1F("AveXtalRtOOTRecTimeEPHist","AveXtalRtOOTRecTime EP",400,-20,20);
-//  fOutAveXtalRtOOTRecTimeHistEP->Sumw2();
-//  fOutAveXtalRtOOTRecTimeHistEM = new TH1F("AveXtalRtOOTRecTimeEMHist","AveXtalRtOOTRecTime EM",400,-20,20);
-//  fOutAveXtalRtOOTRecTimeHistEM->Sumw2();
-//
-//  fOutAveXtalRtOOTStcRecTimeHistEB = new TH1F("AveXtalRtOOTStcRecTimeEBHist","AveXtalRtOOTStcRecTime EB",400,-20,20);
-//  fOutAveXtalRtOOTStcRecTimeHistEB->Sumw2();
-//  fOutAveXtalRtOOTStcRecTimeHistEP = new TH1F("AveXtalRtOOTStcRecTimeEPHist","AveXtalRtOOTStcRecTime EP",400,-20,20);
-//  fOutAveXtalRtOOTStcRecTimeHistEP->Sumw2();
-//  fOutAveXtalRtOOTStcRecTimeHistEM = new TH1F("AveXtalRtOOTStcRecTimeEMHist","AveXtalRtOOTStcRecTime EM",400,-20,20);
-//  fOutAveXtalRtOOTStcRecTimeHistEM->Sumw2();
- 
+  fOutAveXtalRtOOTRecTimeHistEB = new TH1F("AveXtalRtOOTRecTimeEBHist","AveXtalRtOOTRecTime EB",400,-20,20);
+  fOutAveXtalRtOOTRecTimeHistEB->Sumw2();
+  fOutAveXtalRtOOTRecTimeHistEP = new TH1F("AveXtalRtOOTRecTimeEPHist","AveXtalRtOOTRecTime EP",400,-20,20);
+  fOutAveXtalRtOOTRecTimeHistEP->Sumw2();
+  fOutAveXtalRtOOTRecTimeHistEM = new TH1F("AveXtalRtOOTRecTimeEMHist","AveXtalRtOOTRecTime EM",400,-20,20);
+  fOutAveXtalRtOOTRecTimeHistEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTimeHistEB = new TH1F("AveXtalRtOOTStcRecTimeEBHist","AveXtalRtOOTStcRecTime EB",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeHistEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeHistEP = new TH1F("AveXtalRtOOTStcRecTimeEPHist","AveXtalRtOOTStcRecTime EP",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeHistEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeHistEM = new TH1F("AveXtalRtOOTStcRecTimeEMHist","AveXtalRtOOTStcRecTime EM",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeHistEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTimeE0HistEB = new TH1F("AveXtalRtOOTStcRecTimeE0EBHist","AveXtalRtOOTStcRecTimeE0 EB",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeE0HistEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE0HistEP = new TH1F("AveXtalRtOOTStcRecTimeE0EPHist","AveXtalRtOOTStcRecTimeE0 EP",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeE0HistEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE0HistEM = new TH1F("AveXtalRtOOTStcRecTimeE0EMHist","AveXtalRtOOTStcRecTimeE0 EM",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeE0HistEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTimeE1HistEB = new TH1F("AveXtalRtOOTStcRecTimeE1EBHist","AveXtalRtOOTStcRecTimeE1 EB",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeE1HistEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE1HistEP = new TH1F("AveXtalRtOOTStcRecTimeE1EPHist","AveXtalRtOOTStcRecTimeE1 EP",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeE1HistEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE1HistEM = new TH1F("AveXtalRtOOTStcRecTimeE1EMHist","AveXtalRtOOTStcRecTimeE1 EM",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeE1HistEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTime2E1HistEB = new TH1F("AveXtalRtOOTStcRecTime2E1EBHist","AveXtalRtOOTStcRecTime2E1 EB",400,-20,20);
+  fOutAveXtalRtOOTStcRecTime2E1HistEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTime2E1HistEP = new TH1F("AveXtalRtOOTStcRecTime2E1EPHist","AveXtalRtOOTStcRecTime2E1 EP",400,-20,20);
+  fOutAveXtalRtOOTStcRecTime2E1HistEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTime2E1HistEM = new TH1F("AveXtalRtOOTStcRecTime2E1EMHist","AveXtalRtOOTStcRecTime2E1 EM",400,-20,20);
+  fOutAveXtalRtOOTStcRecTime2E1HistEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTime4E1HistEB = new TH1F("AveXtalRtOOTStcRecTime4E1EBHist","AveXtalRtOOTStcRecTime4E1 EB",400,-20,20);
+  fOutAveXtalRtOOTStcRecTime4E1HistEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTime4E1HistEP = new TH1F("AveXtalRtOOTStcRecTime4E1EPHist","AveXtalRtOOTStcRecTime4E1 EP",400,-20,20);
+  fOutAveXtalRtOOTStcRecTime4E1HistEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTime4E1HistEM = new TH1F("AveXtalRtOOTStcRecTime4E1EMHist","AveXtalRtOOTStcRecTime4E1 EM",400,-20,20);
+  fOutAveXtalRtOOTStcRecTime4E1HistEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTimeE2HistEB = new TH1F("AveXtalRtOOTStcRecTimeE2EBHist","AveXtalRtOOTStcRecTimeE2 EB",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeE2HistEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE2HistEP = new TH1F("AveXtalRtOOTStcRecTimeE2EPHist","AveXtalRtOOTStcRecTimeE2 EP",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeE2HistEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE2HistEM = new TH1F("AveXtalRtOOTStcRecTimeE2EMHist","AveXtalRtOOTStcRecTimeE2 EM",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeE2HistEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTimeE5HistEB = new TH1F("AveXtalRtOOTStcRecTimeE5EBHist","AveXtalRtOOTStcRecTimeE5 EB",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeE5HistEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE5HistEP = new TH1F("AveXtalRtOOTStcRecTimeE5EPHist","AveXtalRtOOTStcRecTimeE5 EP",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeE5HistEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE5HistEM = new TH1F("AveXtalRtOOTStcRecTimeE5EMHist","AveXtalRtOOTStcRecTimeE5 EM",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeE5HistEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTime2E5HistEB = new TH1F("AveXtalRtOOTStcRecTime2E5EBHist","AveXtalRtOOTStcRecTime2E5 EB",400,-20,20);
+  fOutAveXtalRtOOTStcRecTime2E5HistEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTime2E5HistEP = new TH1F("AveXtalRtOOTStcRecTime2E5EPHist","AveXtalRtOOTStcRecTime2E5 EP",400,-20,20);
+  fOutAveXtalRtOOTStcRecTime2E5HistEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTime2E5HistEM = new TH1F("AveXtalRtOOTStcRecTime2E5EMHist","AveXtalRtOOTStcRecTime2E5 EM",400,-20,20);
+  fOutAveXtalRtOOTStcRecTime2E5HistEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTime4E5HistEB = new TH1F("AveXtalRtOOTStcRecTime4E5EBHist","AveXtalRtOOTStcRecTime4E5 EB",400,-20,20);
+  fOutAveXtalRtOOTStcRecTime4E5HistEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTime4E5HistEP = new TH1F("AveXtalRtOOTStcRecTime4E5EPHist","AveXtalRtOOTStcRecTime4E5 EP",400,-20,20);
+  fOutAveXtalRtOOTStcRecTime4E5HistEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTime4E5HistEM = new TH1F("AveXtalRtOOTStcRecTime4E5EMHist","AveXtalRtOOTStcRecTime4E5 EM",400,-20,20);
+  fOutAveXtalRtOOTStcRecTime4E5HistEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTimeE10HistEB = new TH1F("AveXtalRtOOTStcRecTimeE10EBHist","AveXtalRtOOTStcRecTimeE10 EB",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeE10HistEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE10HistEP = new TH1F("AveXtalRtOOTStcRecTimeE10EPHist","AveXtalRtOOTStcRecTimeE10 EP",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeE10HistEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE10HistEM = new TH1F("AveXtalRtOOTStcRecTimeE10EMHist","AveXtalRtOOTStcRecTimeE10 EM",400,-20,20);
+  fOutAveXtalRtOOTStcRecTimeE10HistEM->Sumw2();
+
+  fOutAveXtalRtOOTStcPhoClRecTimeHistEB = new TH1F("AveXtalRtOOTStcPhoClRecTimeEBHist","AveXtalRtOOTStcPhoClRecTime EB",400,-20,20);
+  fOutAveXtalRtOOTStcPhoClRecTimeHistEB->Sumw2();
+  fOutAveXtalRtOOTStcPhoClRecTimeHistEP = new TH1F("AveXtalRtOOTStcPhoClRecTimeEPHist","AveXtalRtOOTStcPhoClRecTime EP",400,-20,20);
+  fOutAveXtalRtOOTStcPhoClRecTimeHistEP->Sumw2();
+  fOutAveXtalRtOOTStcPhoClRecTimeHistEM = new TH1F("AveXtalRtOOTStcPhoClRecTimeEMHist","AveXtalRtOOTStcPhoClRecTime EM",400,-20,20);
+  fOutAveXtalRtOOTStcPhoClRecTimeHistEM->Sumw2();
+
+  fOutAveXtalRtOOTStcPhoIcRecTimeHistEB = new TH1F("AveXtalRtOOTStcPhoIcRecTimeEBHist","AveXtalRtOOTStcPhoIcRecTime EB",400,-20,20);
+  fOutAveXtalRtOOTStcPhoIcRecTimeHistEB->Sumw2();
+  fOutAveXtalRtOOTStcPhoIcRecTimeHistEP = new TH1F("AveXtalRtOOTStcPhoIcRecTimeEPHist","AveXtalRtOOTStcPhoIcRecTime EP",400,-20,20);
+  fOutAveXtalRtOOTStcPhoIcRecTimeHistEP->Sumw2();
+  fOutAveXtalRtOOTStcPhoIcRecTimeHistEM = new TH1F("AveXtalRtOOTStcPhoIcRecTimeEMHist","AveXtalRtOOTStcPhoIcRecTime EM",400,-20,20);
+  fOutAveXtalRtOOTStcPhoIcRecTimeHistEM->Sumw2();
+
   fOutAveXtalOccHistEB = new TH1F("AveXtalOccEBHist","AveXtalOcc EB",250,0,250);
   fOutAveXtalOccHistEB->Sumw2();
   fOutAveXtalOccHistEP = new TH1F("AveXtalOccEPHist","AveXtalOcc EP",250,0,250);
@@ -201,17 +278,19 @@ Skimmer::Skimmer(const TString & indir, const TString & outdir, const TString & 
   fOutAveXtalRtStcPhoRecTimeHistEM = new TH1F("AveXtalRtStcPhoRecTimeEMHist","AveXtalRtStcPhoRecTime EM",400,-20,20);
   fOutAveXtalRtStcPhoRecTimeHistEM->Sumw2();
   
-//  fOutAveXtalRtOOTPhoRecTimeHistEB = new TH1F("AveXtalRtOOTPhoRecTimeEBHist","AveXtalRtOOTPhoRecTime EB",400,-20,20);
-//  fOutAveXtalRtOOTPhoRecTimeHistEB->Sumw2();
-//  fOutAveXtalRtOOTPhoRecTimeHistEP = new TH1F("AveXtalRtOOTPhoRecTimeEPHist","AveXtalRtOOTPhoRecTime EP",400,-20,20);
-//  fOutAveXtalRtOOTPhoRecTimeHistEP->Sumw2();
-//  fOutAveXtalRtOOTPhoRecTimeHistEM = new TH1F("AveXtalRtOOTPhoRecTimeEMHist","AveXtalRtOOTPhoRecTime EM",400,-20,20);
-//  fOutAveXtalRtOOTPhoRecTimeHistEM->Sumw2();
-//
-//  fOutAveXtalRtOOTStcPhoRecTimeHistEP = new TH1F("AveXtalRtOOTStcPhoRecTimeEPHist","AveXtalRtOOTStcPhoRecTime EP",400,-20,20);
-//  fOutAveXtalRtOOTStcPhoRecTimeHistEP->Sumw2();
-//  fOutAveXtalRtOOTStcPhoRecTimeHistEM = new TH1F("AveXtalRtOOTStcPhoRecTimeEMHist","AveXtalRtOOTStcPhoRecTime EM",400,-20,20);
-//  fOutAveXtalRtOOTStcPhoRecTimeHistEM->Sumw2();
+  fOutAveXtalRtOOTPhoRecTimeHistEB = new TH1F("AveXtalRtOOTPhoRecTimeEBHist","AveXtalRtOOTPhoRecTime EB",400,-20,20);
+  fOutAveXtalRtOOTPhoRecTimeHistEB->Sumw2();
+  fOutAveXtalRtOOTPhoRecTimeHistEP = new TH1F("AveXtalRtOOTPhoRecTimeEPHist","AveXtalRtOOTPhoRecTime EP",400,-20,20);
+  fOutAveXtalRtOOTPhoRecTimeHistEP->Sumw2();
+  fOutAveXtalRtOOTPhoRecTimeHistEM = new TH1F("AveXtalRtOOTPhoRecTimeEMHist","AveXtalRtOOTPhoRecTime EM",400,-20,20);
+  fOutAveXtalRtOOTPhoRecTimeHistEM->Sumw2();
+
+  fOutAveXtalRtOOTStcPhoRecTimeHistEB = new TH1F("AveXtalRtOOTStcPhoRecTimeEBHist","AveXtalRtOOTStcPhoRecTime EB",400,-20,20);
+  fOutAveXtalRtOOTStcPhoRecTimeHistEB->Sumw2();
+  fOutAveXtalRtOOTStcPhoRecTimeHistEP = new TH1F("AveXtalRtOOTStcPhoRecTimeEPHist","AveXtalRtOOTStcPhoRecTime EP",400,-20,20);
+  fOutAveXtalRtOOTStcPhoRecTimeHistEP->Sumw2();
+  fOutAveXtalRtOOTStcPhoRecTimeHistEM = new TH1F("AveXtalRtOOTStcPhoRecTimeEMHist","AveXtalRtOOTStcPhoRecTime EM",400,-20,20);
+  fOutAveXtalRtOOTStcPhoRecTimeHistEM->Sumw2();
 
   fOutAveXtalPhoOccHistEB = new TH1F("AveXtalPhoOccEBHist","AveXtalPhoOcc EB",20,0,20);
   fOutAveXtalPhoOccHistEB->Sumw2();
@@ -241,19 +320,19 @@ Skimmer::Skimmer(const TString & indir, const TString & outdir, const TString & 
   fOutDifXtalRtStcPhoRecTimeHistEM = new TH1F("DifXtalRtStcPhoRecTimeEMHist","DifXtalRtStcPhoRecTime EM",400,-20,20);
   fOutDifXtalRtStcPhoRecTimeHistEM->Sumw2();
 
-//  fOutDifXtalRtOOTPhoRecTimeHistEB = new TH1F("DifXtalRtOOTPhoRecTimeEBHist","DifXtalRtOOTPhoRecTime EB",400,-20,20);
-//  fOutDifXtalRtOOTPhoRecTimeHistEB->Sumw2();
-//  fOutDifXtalRtOOTPhoRecTimeHistEP = new TH1F("DifXtalRtOOTPhoRecTimeEPHist","DifXtalRtOOTPhoRecTime EP",400,-20,20);
-//  fOutDifXtalRtOOTPhoRecTimeHistEP->Sumw2();
-//  fOutDifXtalRtOOTPhoRecTimeHistEM = new TH1F("DifXtalRtOOTPhoRecTimeEMHist","DifXtalRtOOTPhoRecTime EM",400,-20,20);
-//  fOutDifXtalRtOOTPhoRecTimeHistEM->Sumw2();
-//
-//  fOutDifXtalRtOOTStcPhoRecTimeHistEB = new TH1F("DifXtalRtOOTStcPhoRecTimeEBHist","DifXtalRtOOTStcPhoRecTime EB",400,-20,20);
-//  fOutDifXtalRtOOTStcPhoRecTimeHistEB->Sumw2();
-//  fOutDifXtalRtOOTStcPhoRecTimeHistEP = new TH1F("DifXtalRtOOTStcPhoRecTimeEPHist","DifXtalRtOOTStcPhoRecTime EP",400,-20,20);
-//  fOutDifXtalRtOOTStcPhoRecTimeHistEP->Sumw2();
-//  fOutDifXtalRtOOTStcPhoRecTimeHistEM = new TH1F("DifXtalRtOOTStcPhoRecTimeEMHist","DifXtalRtOOTStcPhoRecTime EM",400,-20,20);
-//  fOutDifXtalRtOOTStcPhoRecTimeHistEM->Sumw2();
+  fOutDifXtalRtOOTPhoRecTimeHistEB = new TH1F("DifXtalRtOOTPhoRecTimeEBHist","DifXtalRtOOTPhoRecTime EB",400,-20,20);
+  fOutDifXtalRtOOTPhoRecTimeHistEB->Sumw2();
+  fOutDifXtalRtOOTPhoRecTimeHistEP = new TH1F("DifXtalRtOOTPhoRecTimeEPHist","DifXtalRtOOTPhoRecTime EP",400,-20,20);
+  fOutDifXtalRtOOTPhoRecTimeHistEP->Sumw2();
+  fOutDifXtalRtOOTPhoRecTimeHistEM = new TH1F("DifXtalRtOOTPhoRecTimeEMHist","DifXtalRtOOTPhoRecTime EM",400,-20,20);
+  fOutDifXtalRtOOTPhoRecTimeHistEM->Sumw2();
+
+  fOutDifXtalRtOOTStcPhoRecTimeHistEB = new TH1F("DifXtalRtOOTStcPhoRecTimeEBHist","DifXtalRtOOTStcPhoRecTime EB",400,-20,20);
+  fOutDifXtalRtOOTStcPhoRecTimeHistEB->Sumw2();
+  fOutDifXtalRtOOTStcPhoRecTimeHistEP = new TH1F("DifXtalRtOOTStcPhoRecTimeEPHist","DifXtalRtOOTStcPhoRecTime EP",400,-20,20);
+  fOutDifXtalRtOOTStcPhoRecTimeHistEP->Sumw2();
+  fOutDifXtalRtOOTStcPhoRecTimeHistEM = new TH1F("DifXtalRtOOTStcPhoRecTimeEMHist","DifXtalRtOOTStcPhoRecTime EM",400,-20,20);
+  fOutDifXtalRtOOTStcPhoRecTimeHistEM->Sumw2();
 
   fOutAveXtalRecTimeMapEB = new TH2F("AveXtalRecTimeEBMap","AveXtalRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
   fOutAveXtalRecTimeMapEB->Sumw2();
@@ -276,19 +355,94 @@ Skimmer::Skimmer(const TString & indir, const TString & outdir, const TString & 
   fOutAveXtalRtStcRecTimeMapEM = new TH2F("AveXtalRtStcRecTimeEMMap","AveXtalRtStcRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
   fOutAveXtalRtStcRecTimeMapEM->Sumw2();
 
-//  fOutAveXtalRtOOTRecTimeMapEB = new TH2F("AveXtalRtOOTRecTimeEBMap","AveXtalRtOOTRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
-//  fOutAveXtalRtOOTRecTimeMapEB->Sumw2();
-//  fOutAveXtalRtOOTRecTimeMapEP = new TH2F("AveXtalRtOOTRecTimeEPMap","AveXtalRtOOTRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
-//  fOutAveXtalRtOOTRecTimeMapEP->Sumw2();
-//  fOutAveXtalRtOOTRecTimeMapEM = new TH2F("AveXtalRtOOTRecTimeEMMap","AveXtalRtOOTRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
-//  fOutAveXtalRtOOTRecTimeMapEM->Sumw2();
-//
-//  fOutAveXtalRtOOTStcRecTimeMapEB = new TH2F("AveXtalRtOOTStcRecTimeEBMap","AveXtalRtOOTStcRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
-//  fOutAveXtalRtOOTStcRecTimeMapEB->Sumw2();
-//  fOutAveXtalRtOOTStcRecTimeMapEP = new TH2F("AveXtalRtOOTStcRecTimeEPMap","AveXtalRtOOTStcRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
-//  fOutAveXtalRtOOTStcRecTimeMapEP->Sumw2();
-//  fOutAveXtalRtOOTStcRecTimeMapEM = new TH2F("AveXtalRtOOTStcRecTimeEMMap","AveXtalRtOOTStcRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
-//  fOutAveXtalRtOOTStcRecTimeMapEM->Sumw2();
+  fOutAveXtalRtOOTRecTimeMapEB = new TH2F("AveXtalRtOOTRecTimeEBMap","AveXtalRtOOTRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtOOTRecTimeMapEB->Sumw2();
+  fOutAveXtalRtOOTRecTimeMapEP = new TH2F("AveXtalRtOOTRecTimeEPMap","AveXtalRtOOTRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTRecTimeMapEP->Sumw2();
+  fOutAveXtalRtOOTRecTimeMapEM = new TH2F("AveXtalRtOOTRecTimeEMMap","AveXtalRtOOTRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTRecTimeMapEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTimeMapEB = new TH2F("AveXtalRtOOTStcRecTimeEBMap","AveXtalRtOOTStcRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtOOTStcRecTimeMapEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeMapEP = new TH2F("AveXtalRtOOTStcRecTimeEPMap","AveXtalRtOOTStcRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTimeMapEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeMapEM = new TH2F("AveXtalRtOOTStcRecTimeEMMap","AveXtalRtOOTStcRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTimeMapEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTimeE0MapEB = new TH2F("AveXtalRtOOTStcRecTimeE0EBMap","AveXtalRtOOTStcRecTimeE0 Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtOOTStcRecTimeE0MapEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE0MapEP = new TH2F("AveXtalRtOOTStcRecTimeE0EPMap","AveXtalRtOOTStcRecTimeE0 Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTimeE0MapEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE0MapEM = new TH2F("AveXtalRtOOTStcRecTimeE0EMMap","AveXtalRtOOTStcRecTimeE0 Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTimeE0MapEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTimeE1MapEB = new TH2F("AveXtalRtOOTStcRecTimeE1EBMap","AveXtalRtOOTStcRecTimeE1 Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtOOTStcRecTimeE1MapEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE1MapEP = new TH2F("AveXtalRtOOTStcRecTimeE1EPMap","AveXtalRtOOTStcRecTimeE1 Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTimeE1MapEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE1MapEM = new TH2F("AveXtalRtOOTStcRecTimeE1EMMap","AveXtalRtOOTStcRecTimeE1 Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTimeE1MapEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTime2E1MapEB = new TH2F("AveXtalRtOOTStcRecTime2E1EBMap","AveXtalRtOOTStcRecTime2E1 Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtOOTStcRecTime2E1MapEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTime2E1MapEP = new TH2F("AveXtalRtOOTStcRecTime2E1EPMap","AveXtalRtOOTStcRecTime2E1 Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTime2E1MapEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTime2E1MapEM = new TH2F("AveXtalRtOOTStcRecTime2E1EMMap","AveXtalRtOOTStcRecTime2E1 Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTime2E1MapEM->Sumw2();
+  fOutAveXtalRtOOTStcRecTime4E1MapEB = new TH2F("AveXtalRtOOTStcRecTime4E1EBMap","AveXtalRtOOTStcRecTime4E1 Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtOOTStcRecTime4E1MapEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTime4E1MapEP = new TH2F("AveXtalRtOOTStcRecTime4E1EPMap","AveXtalRtOOTStcRecTime4E1 Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTime4E1MapEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTime4E1MapEM = new TH2F("AveXtalRtOOTStcRecTime4E1EMMap","AveXtalRtOOTStcRecTime4E1 Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTime4E1MapEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTimeE2MapEB = new TH2F("AveXtalRtOOTStcRecTimeE2EBMap","AveXtalRtOOTStcRecTimeE2 Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtOOTStcRecTimeE2MapEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE2MapEP = new TH2F("AveXtalRtOOTStcRecTimeE2EPMap","AveXtalRtOOTStcRecTimeE2 Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTimeE2MapEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE2MapEM = new TH2F("AveXtalRtOOTStcRecTimeE2EMMap","AveXtalRtOOTStcRecTimeE2 Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTimeE2MapEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTimeE5MapEB = new TH2F("AveXtalRtOOTStcRecTimeE5EBMap","AveXtalRtOOTStcRecTimeE5 Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtOOTStcRecTimeE5MapEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE5MapEP = new TH2F("AveXtalRtOOTStcRecTimeE5EPMap","AveXtalRtOOTStcRecTimeE5 Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTimeE5MapEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE5MapEM = new TH2F("AveXtalRtOOTStcRecTimeE5EMMap","AveXtalRtOOTStcRecTimeE5 Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTimeE5MapEM->Sumw2();
+
+  fOutAveXtalRtStcRecTimeE5MapEB = new TH2F("AveXtalRtStcRecTimeE5EBMap","AveXtalRtStcRecTimeE5 Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtStcRecTimeE5MapEB->Sumw2();
+  fOutAveXtalRtStcRecTimeE5MapEP = new TH2F("AveXtalRtStcRecTimeE5EPMap","AveXtalRtStcRecTimeE5 Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtStcRecTimeE5MapEP->Sumw2();
+  fOutAveXtalRtStcRecTimeE5MapEM = new TH2F("AveXtalRtStcRecTimeE5EMMap","AveXtalRtStcRecTimeE5 Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtStcRecTimeE5MapEM->Sumw2();
+
+  fOutAveXtalWtOOTStcRecTimeE5MapEB = new TH2F("AveXtalWtOOTStcRecTimeE5EBMap","AveXtalWtOOTStcRecTimeE5 Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalWtOOTStcRecTimeE5MapEB->Sumw2();
+  fOutAveXtalWtOOTStcRecTimeE5MapEP = new TH2F("AveXtalWtOOTStcRecTimeE5EPMap","AveXtalWtOOTStcRecTimeE5 Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalWtOOTStcRecTimeE5MapEP->Sumw2();
+  fOutAveXtalWtOOTStcRecTimeE5MapEM = new TH2F("AveXtalWtOOTStcRecTimeE5EMMap","AveXtalWtOOTStcRecTimeE5 Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalWtOOTStcRecTimeE5MapEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTime2E5MapEB = new TH2F("AveXtalRtOOTStcRecTime2E5EBMap","AveXtalRtOOTStcRecTime2E5 Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtOOTStcRecTime2E5MapEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTime2E5MapEP = new TH2F("AveXtalRtOOTStcRecTime2E5EPMap","AveXtalRtOOTStcRecTime2E5 Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTime2E5MapEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTime2E5MapEM = new TH2F("AveXtalRtOOTStcRecTime2E5EMMap","AveXtalRtOOTStcRecTime2E5 Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTime2E5MapEM->Sumw2();
+  fOutAveXtalRtOOTStcRecTime4E5MapEB = new TH2F("AveXtalRtOOTStcRecTime4E5EBMap","AveXtalRtOOTStcRecTime4E5 Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtOOTStcRecTime4E5MapEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTime4E5MapEP = new TH2F("AveXtalRtOOTStcRecTime4E5EPMap","AveXtalRtOOTStcRecTime4E5 Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTime4E5MapEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTime4E5MapEM = new TH2F("AveXtalRtOOTStcRecTime4E5EMMap","AveXtalRtOOTStcRecTime4E5 Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTime4E5MapEM->Sumw2();
+
+  fOutAveXtalRtOOTStcRecTimeE10MapEB = new TH2F("AveXtalRtOOTStcRecTimeE10EBMap","AveXtalRtOOTStcRecTimeE10 Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtOOTStcRecTimeE10MapEB->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE10MapEP = new TH2F("AveXtalRtOOTStcRecTimeE10EPMap","AveXtalRtOOTStcRecTimeE10 Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTimeE10MapEP->Sumw2();
+  fOutAveXtalRtOOTStcRecTimeE10MapEM = new TH2F("AveXtalRtOOTStcRecTimeE10EMMap","AveXtalRtOOTStcRecTimeE10 Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcRecTimeE10MapEM->Sumw2();
 
   fOutAveXtalOccMapEB = new TH2F("AveXtalOccEBMap","AveXtalOcc Map EB",171,-85.5,85.5,360,0.5,360.5);
   fOutAveXtalOccMapEB->Sumw2();
@@ -325,19 +479,21 @@ Skimmer::Skimmer(const TString & indir, const TString & outdir, const TString & 
   fOutAveXtalRtDifStcPhoRecTimeMapEM = new TH2F("AveXtalRtDifStcPhoRecTimeEMMap","AveXtalRtDifStcPhoRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
   fOutAveXtalRtDifStcPhoRecTimeMapEM->Sumw2();
 
-//  fOutAveXtalRtOOTPhoRecTimeMapEB = new TH2F("AveXtalRtOOTPhoRecTimeEBMap","AveXtalRtOOTPhoRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
-//  fOutAveXtalRtOOTPhoRecTimeMapEB->Sumw2();
-//  fOutAveXtalRtOOTPhoRecTimeMapEP = new TH2F("AveXtalRtOOTPhoRecTimeEPMap","AveXtalRtOOTPhoRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
-//  fOutAveXtalRtOOTPhoRecTimeMapEP->Sumw2();
-//  fOutAveXtalRtOOTPhoRecTimeMapEM = new TH2F("AveXtalRtOOTPhoRecTimeEMMap","AveXtalRtOOTPhoRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
-//  fOutAveXtalRtOOTPhoRecTimeMapEM->Sumw2();
-//
-//  fOutAveXtalRtOOTStcPhoRecTimeMapEB = new TH2F("AveXtalRtOOTStcPhoRecTimeEBMap","AveXtalRtOOTStcPhoRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
-//  fOutAveXtalRtOOTStcPhoRecTimeMapEB->Sumw2();
-//  fOutAveXtalRtOOTStcPhoRecTimeMapEP = new TH2F("AveXtalRtOOTStcPhoRecTimeEPMap","AveXtalRtOOTStcPhoRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
-//  fOutAveXtalRtOOTStcPhoRecTimeMapEP->Sumw2();
-//  fOutAveXtalRtOOTStcPhoRecTimeMapEM = new TH2F("AveXtalRtOOTStcPhoRecTimeEMMap","AveXtalRtOOTStcPhoRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
-//  fOutAveXtalRtOOTStcPhoRecTimeMapEM->Sumw2();
+  fOutAveXtalRtOOTPhoRecTimeMapEB = new TH2F("AveXtalRtOOTPhoRecTimeEBMap","AveXtalRtOOTPhoRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtOOTPhoRecTimeMapEB->Sumw2();
+  fOutAveXtalRtOOTPhoRecTimeMapEP = new TH2F("AveXtalRtOOTPhoRecTimeEPMap","AveXtalRtOOTPhoRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTPhoRecTimeMapEP->Sumw2();
+  fOutAveXtalRtOOTPhoRecTimeMapEM = new TH2F("AveXtalRtOOTPhoRecTimeEMMap","AveXtalRtOOTPhoRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTPhoRecTimeMapEM->Sumw2();
+
+  fOutAveXtalRtOOTStcPhoRecTimeMapEB = new TH2F("AveXtalRtOOTStcPhoRecTimeEBMap","AveXtalRtOOTStcPhoRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtOOTStcPhoRecTimeMapEB->Sumw2();
+  fOutAveXtalRtOOTStcPhoRecTimeMapEP = new TH2F("AveXtalRtOOTStcPhoRecTimeEPMap","AveXtalRtOOTStcPhoRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcPhoRecTimeMapEP->Sumw2();
+  fOutAveXtalRtOOTStcPhoRecTimeMapEM = new TH2F("AveXtalRtOOTStcPhoRecTimeEMMap","AveXtalRtOOTStcPhoRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcPhoRecTimeMapEM->Sumw2();
+
+
 
   fOutAveXtalPhoOccMapEB = new TH2F("AveXtalPhoOccEBMap","AveXtalPhoOcc Map EB",171,-85.5,85.5,360,0.5,360.5);
   fOutAveXtalPhoOccMapEB->Sumw2();
@@ -367,28 +523,75 @@ Skimmer::Skimmer(const TString & indir, const TString & outdir, const TString & 
   fOutDifXtalRtStcPhoRecTimeMapEM = new TH2F("DifXtalRtStcPhoRecTimeEMMap","DifXtalRtStcPhoRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
   fOutDifXtalRtStcPhoRecTimeMapEM->Sumw2();
 
-//  fOutDifXtalRtOOTPhoRecTimeMapEB = new TH2F("DifXtalRtOOTPhoRecTimeEBMap","DifXtalRtOOTPhoRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
-//  fOutDifXtalRtOOTPhoRecTimeMapEB->Sumw2();
-//  fOutDifXtalRtOOTPhoRecTimeMapEP = new TH2F("DifXtalRtOOTPhoRecTimeEPMap","DifXtalRtOOTPhoRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
-//  fOutDifXtalRtOOTPhoRecTimeMapEP->Sumw2();
-//  fOutDifXtalRtOOTPhoRecTimeMapEM = new TH2F("DifXtalRtOOTPhoRecTimeEMMap","DifXtalRtOOTPhoRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
-//  fOutDifXtalRtOOTPhoRecTimeMapEM->Sumw2();
-//
-//  fOutDifXtalRtDifOOTPhoRecTimeMapEB = new TH2F("DifXtalRtDifOOTPhoRecTimeEBMap","DifXtalRtDifOOTPhoRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
-//  fOutDifXtalRtDifOOTPhoRecTimeMapEB->Sumw2();
-//  fOutDifXtalRtDifOOTPhoRecTimeMapEP = new TH2F("DifXtalRtDifOOTPhoRecTimeEPMap","DifXtalRtDifOOTPhoRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
-//  fOutDifXtalRtDifOOTPhoRecTimeMapEP->Sumw2();
-//  fOutDifXtalRtDifOOTPhoRecTimeMapEM = new TH2F("DifXtalRtDifOOTPhoRecTimeEMMap","DifXtalRtDifOOTPhoRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
-//  fOutDifXtalRtDifOOTPhoRecTimeMapEM->Sumw2();
-//
-//  fOutDifXtalRtOOTStcPhoRecTimeMapEB = new TH2F("DifXtalRtOOTStcPhoRecTimeEBMap","DifXtalRtOOTStcPhoRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
-//  fOutDifXtalRtOOTStcPhoRecTimeMapEB->Sumw2();
-//  fOutDifXtalRtOOTStcPhoRecTimeMapEP = new TH2F("DifXtalRtOOTStcPhoRecTimeEPMap","DifXtalRtOOTStcPhoRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
-//  fOutDifXtalRtOOTStcPhoRecTimeMapEP->Sumw2();
-//  fOutDifXtalRtOOTStcPhoRecTimeMapEM = new TH2F("DifXtalRtOOTStcPhoRecTimeEMMap","DifXtalRtOOTStcPhoRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
-//  fOutDifXtalRtOOTStcPhoRecTimeMapEM->Sumw2();
+  fOutDifXtalRtOOTPhoRecTimeMapEB = new TH2F("DifXtalRtOOTPhoRecTimeEBMap","DifXtalRtOOTPhoRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutDifXtalRtOOTPhoRecTimeMapEB->Sumw2();
+  fOutDifXtalRtOOTPhoRecTimeMapEP = new TH2F("DifXtalRtOOTPhoRecTimeEPMap","DifXtalRtOOTPhoRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutDifXtalRtOOTPhoRecTimeMapEP->Sumw2();
+  fOutDifXtalRtOOTPhoRecTimeMapEM = new TH2F("DifXtalRtOOTPhoRecTimeEMMap","DifXtalRtOOTPhoRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutDifXtalRtOOTPhoRecTimeMapEM->Sumw2();
 
-  std::cout << "Finished setting up for skim" << std::endl;
+  fOutDifXtalRtOOTStcPhoRecTimeMapEB = new TH2F("DifXtalRtOOTStcPhoRecTimeEBMap","DifXtalRtOOTStcPhoRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutDifXtalRtOOTStcPhoRecTimeMapEB->Sumw2();
+  fOutDifXtalRtOOTStcPhoRecTimeMapEP = new TH2F("DifXtalRtOOTStcPhoRecTimeEPMap","DifXtalRtOOTStcPhoRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutDifXtalRtOOTStcPhoRecTimeMapEP->Sumw2();
+  fOutDifXtalRtOOTStcPhoRecTimeMapEM = new TH2F("DifXtalRtOOTStcPhoRecTimeEMMap","DifXtalRtOOTStcPhoRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutDifXtalRtOOTStcPhoRecTimeMapEM->Sumw2();
+
+  //std::cout << "Ssetting up for fOutAveXtalRtOOTStcPhoClRecTimeMap skim" << std::endl;
+
+  fOutAveXtalRtOOTStcPhoClRecTimeMapEB = new TH2F("AveXtalRtOOTStcPhoClRecTimeEBMap","AveXtalRtOOTStcPhoClRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtOOTStcPhoClRecTimeMapEB->Sumw2();
+  fOutAveXtalRtOOTStcPhoClRecTimeMapEP = new TH2F("AveXtalRtOOTStcPhoClRecTimeEPMap","AveXtalRtOOTStcPhoClRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcPhoClRecTimeMapEP->Sumw2();
+  fOutAveXtalRtOOTStcPhoClRecTimeMapEM = new TH2F("AveXtalRtOOTStcPhoClRecTimeEMMap","AveXtalRtOOTStcPhoClRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcPhoClRecTimeMapEM->Sumw2();
+
+  //std::cout << "Ssetting up for fOutAveXtalRtStcPhoClRecTimeMap skim" << std::endl;
+
+  fOutAveXtalRtStcPhoClRecTimeMapEB = new TH2F("AveXtalRtStcPhoClRecTimeEBMap","AveXtalRtStcPhoClRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtStcPhoClRecTimeMapEB->Sumw2();
+  fOutAveXtalRtStcPhoClRecTimeMapEP = new TH2F("AveXtalRtStcPhoClRecTimeEPMap","AveXtalRtStcPhoClRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtStcPhoClRecTimeMapEP->Sumw2();
+  fOutAveXtalRtStcPhoClRecTimeMapEM = new TH2F("AveXtalRtStcPhoClRecTimeEMMap","AveXtalRtStcPhoClRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtStcPhoClRecTimeMapEM->Sumw2();
+
+  //std::cout << "Ssetting up for fOutAveXtalWtOOTStcPhoClRecTimeMap skim" << std::endl;
+
+  fOutAveXtalWtOOTStcPhoClRecTimeMapEB = new TH2F("AveXtalWtOOTStcPhoClRecTimeEBMap","AveXtalWtOOTStcPhoClRecTime Map EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalWtOOTStcPhoClRecTimeMapEB->Sumw2();
+  fOutAveXtalWtOOTStcPhoClRecTimeMapEP = new TH2F("AveXtalWtOOTStcPhoClRecTimeEPMap","AveXtalWtOOTStcPhoClRecTime Map EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalWtOOTStcPhoClRecTimeMapEP->Sumw2();
+  fOutAveXtalWtOOTStcPhoClRecTimeMapEM = new TH2F("AveXtalWtOOTStcPhoClRecTimeEMMap","AveXtalWtOOTStcPhoClRecTime Map EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalWtOOTStcPhoClRecTimeMapEM->Sumw2();
+
+  //std::cout << "Ssetting up for fOutAveXtalRtOOTStcPhoIcRecTimeMap  skim" << std::endl;
+
+  fOutAveXtalRtOOTStcPhoIcRecTimeMapEB = new TH2F("AveXtalRtOOTStcPhoIcRecTimeEBMap","AveXtalRtOOTStcPhoIcRecTimeMap EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtOOTStcPhoIcRecTimeMapEB->Sumw2();
+  fOutAveXtalRtOOTStcPhoIcRecTimeMapEP = new TH2F("AveXtalRtOOTStcPhoIcRecTimeEPMap","AveXtalRtOOTStcPhoIcRecTimeMap EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcPhoIcRecTimeMapEP->Sumw2();
+  fOutAveXtalRtOOTStcPhoIcRecTimeMapEM = new TH2F("AveXtalRtOOTStcPhoIcRecTimeEMMap","AveXtalRtOOTStcPhoIcRecTimeMap EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtOOTStcPhoIcRecTimeMapEM->Sumw2();
+
+  //std::cout << "Ssetting up for fOutAveXtalRtStcPhoIcRecTimeMap skim" << std::endl;
+
+  fOutAveXtalRtStcPhoIcRecTimeMapEB = new TH2F("AveXtalRtStcPhoIcRecTimeEBMap","AveXtalRtStcPhoIcRecTimeMap EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalRtStcPhoIcRecTimeMapEB->Sumw2();
+  fOutAveXtalRtStcPhoIcRecTimeMapEP = new TH2F("AveXtalRtStcPhoIcRecTimeEPMap","AveXtalRtStcPhoIcRecTimeMap EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtStcPhoIcRecTimeMapEP->Sumw2();
+  fOutAveXtalRtStcPhoIcRecTimeMapEM = new TH2F("AveXtalRtStcPhoIcRecTimeEMMap","AveXtalRtStcPhoIcRecTimeMap EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalRtStcPhoIcRecTimeMapEM->Sumw2();
+
+  //std::cout << "Ssetting up for fOutAveXtalWtOOTStcPhoIcRecTimeMap skim" << std::endl;
+
+  fOutAveXtalWtOOTStcPhoIcRecTimeMapEB = new TH2F("AveXtalWtOOTStcPhoIcRecTimeEBMap","AveXtalWtOOTStcPhoIcRecTimeMap EB",171,-85.5,85.5,360,0.5,360.5);
+  fOutAveXtalWtOOTStcPhoIcRecTimeMapEB->Sumw2();
+  fOutAveXtalWtOOTStcPhoIcRecTimeMapEP = new TH2F("AveXtalWtOOTStcPhoIcRecTimeEPMap","AveXtalWtOOTStcPhoIcRecTimeMap EP",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalWtOOTStcPhoIcRecTimeMapEP->Sumw2();
+  fOutAveXtalWtOOTStcPhoIcRecTimeMapEM = new TH2F("AveXtalWtOOTStcPhoIcRecTimeEMMap","AveXtalWtOOTStcPhoIcRecTimeMap EM",100,0.5,100.5,100,0.5,100.5);
+  fOutAveXtalWtOOTStcPhoIcRecTimeMapEM->Sumw2();
+
+  //std::cout << "Finished setting up for skim" << std::endl;
 }
 
 Skimmer::~Skimmer()
@@ -410,11 +613,11 @@ Skimmer::~Skimmer()
   delete fOutCutFlowWgt;
   delete fOutCutFlow;
 
+  delete tofHist;
   delete fOutAveXtalRecTimeHist;
   delete fOutAveXtalRtRecTimeHist;
   delete fOutAveXtalRtStcRecTimeHist;
-  //delete fOutAveXtalRtOOTRecTimeHist;
-  //delete fOutAveXtalRtOOTStcRecTimeHist;
+  delete fOutAveXtalRtOOTRecTimeHist;
   delete fOutAveXtalOccHist;
   delete fOutAveXtalRecTimeHistEB;
   delete fOutAveXtalRecTimeHistEP;
@@ -425,12 +628,39 @@ Skimmer::~Skimmer()
   delete fOutAveXtalRtStcRecTimeHistEB;
   delete fOutAveXtalRtStcRecTimeHistEP;
   delete fOutAveXtalRtStcRecTimeHistEM;
-  //delete fOutAveXtalRtOOTRecTimeHistEB;
-  //delete fOutAveXtalRtOOTRecTimeHistEP;
-  //delete fOutAveXtalRtOOTRecTimeHistEM;
-  //delete fOutAveXtalRtOOTStcRecTimeHistEB;
-  //delete fOutAveXtalRtOOTStcRecTimeHistEP;
-  //delete fOutAveXtalRtOOTStcRecTimeHistEM;
+  delete fOutAveXtalRtOOTRecTimeHistEB;
+  delete fOutAveXtalRtOOTRecTimeHistEP;
+  delete fOutAveXtalRtOOTRecTimeHistEM;
+  delete fOutAveXtalRtOOTStcRecTimeHistEB;
+  delete fOutAveXtalRtOOTStcRecTimeHistEP;
+  delete fOutAveXtalRtOOTStcRecTimeHistEM;
+  delete fOutAveXtalRtOOTStcRecTimeE0HistEB;
+  delete fOutAveXtalRtOOTStcRecTimeE0HistEP;
+  delete fOutAveXtalRtOOTStcRecTimeE0HistEM;
+  delete fOutAveXtalRtOOTStcRecTimeE1HistEB;
+  delete fOutAveXtalRtOOTStcRecTimeE1HistEP;
+  delete fOutAveXtalRtOOTStcRecTimeE1HistEM;
+  delete fOutAveXtalRtOOTStcRecTime2E1HistEB;
+  delete fOutAveXtalRtOOTStcRecTime2E1HistEP;
+  delete fOutAveXtalRtOOTStcRecTime2E1HistEM;
+  delete fOutAveXtalRtOOTStcRecTime4E1HistEB;
+  delete fOutAveXtalRtOOTStcRecTime4E1HistEP;
+  delete fOutAveXtalRtOOTStcRecTime4E1HistEM;
+  delete fOutAveXtalRtOOTStcRecTimeE2HistEB;
+  delete fOutAveXtalRtOOTStcRecTimeE2HistEP;
+  delete fOutAveXtalRtOOTStcRecTimeE2HistEM;
+  delete fOutAveXtalRtOOTStcRecTimeE5HistEB;
+  delete fOutAveXtalRtOOTStcRecTimeE5HistEP;
+  delete fOutAveXtalRtOOTStcRecTimeE5HistEM;
+  delete fOutAveXtalRtOOTStcRecTime2E5HistEB;
+  delete fOutAveXtalRtOOTStcRecTime2E5HistEP;
+  delete fOutAveXtalRtOOTStcRecTime2E5HistEM;  
+  delete fOutAveXtalRtOOTStcRecTime4E5HistEB;
+  delete fOutAveXtalRtOOTStcRecTime4E5HistEP;
+  delete fOutAveXtalRtOOTStcRecTime4E5HistEM;
+  delete fOutAveXtalRtOOTStcRecTimeE10HistEB;
+  delete fOutAveXtalRtOOTStcRecTimeE10HistEP;
+  delete fOutAveXtalRtOOTStcRecTimeE10HistEM;
   delete fOutAveXtalOccHistEB;
   delete fOutAveXtalOccHistEP;
   delete fOutAveXtalOccHistEM;
@@ -443,12 +673,47 @@ Skimmer::~Skimmer()
   delete fOutAveXtalRtStcRecTimeMapEB;
   delete fOutAveXtalRtStcRecTimeMapEP;
   delete fOutAveXtalRtStcRecTimeMapEM;
-  //delete fOutAveXtalRtOOTRecTimeMapEB;
-  //delete fOutAveXtalRtOOTRecTimeMapEP;
-  //delete fOutAveXtalRtOOTRecTimeMapEM;
-  //delete fOutAveXtalRtOOTStcRecTimeMapEB;
-  //delete fOutAveXtalRtOOTStcRecTimeMapEP;
-  //delete fOutAveXtalRtOOTStcRecTimeMapEM;
+  delete fOutAveXtalRtOOTRecTimeMapEB;
+  delete fOutAveXtalRtOOTRecTimeMapEP;
+  delete fOutAveXtalRtOOTRecTimeMapEM;
+  delete fOutAveXtalRtOOTStcRecTimeMapEB;
+  delete fOutAveXtalRtOOTStcRecTimeMapEP;
+  delete fOutAveXtalRtOOTStcRecTimeMapEM;
+  delete fOutAveXtalRtOOTStcRecTimeE0MapEB;
+  delete fOutAveXtalRtOOTStcRecTimeE0MapEP;
+  delete fOutAveXtalRtOOTStcRecTimeE0MapEM;
+  delete fOutAveXtalRtOOTStcRecTimeE1MapEB;
+  delete fOutAveXtalRtOOTStcRecTimeE1MapEP;
+  delete fOutAveXtalRtOOTStcRecTimeE1MapEM;
+  delete fOutAveXtalRtOOTStcRecTime2E1MapEB;
+  delete fOutAveXtalRtOOTStcRecTime2E1MapEP;
+  delete fOutAveXtalRtOOTStcRecTime2E1MapEM;
+  delete fOutAveXtalRtOOTStcRecTime4E1MapEB;
+  delete fOutAveXtalRtOOTStcRecTime4E1MapEP;
+  delete fOutAveXtalRtOOTStcRecTime4E1MapEM;
+  delete fOutAveXtalRtOOTStcRecTimeE2MapEB;
+  delete fOutAveXtalRtOOTStcRecTimeE2MapEP;
+  delete fOutAveXtalRtOOTStcRecTimeE2MapEM;
+  delete fOutAveXtalRtOOTStcRecTimeE5MapEB;
+  delete fOutAveXtalRtOOTStcRecTimeE5MapEP;
+  delete fOutAveXtalRtOOTStcRecTimeE5MapEM;
+
+  delete fOutAveXtalRtStcRecTimeE5MapEB;
+  delete fOutAveXtalRtStcRecTimeE5MapEP;
+  delete fOutAveXtalRtStcRecTimeE5MapEM;
+  delete fOutAveXtalWtOOTStcRecTimeE5MapEB;
+  delete fOutAveXtalWtOOTStcRecTimeE5MapEP;
+  delete fOutAveXtalWtOOTStcRecTimeE5MapEM;
+
+  delete fOutAveXtalRtOOTStcRecTime2E5MapEB;
+  delete fOutAveXtalRtOOTStcRecTime2E5MapEP;
+  delete fOutAveXtalRtOOTStcRecTime2E5MapEM;
+  delete fOutAveXtalRtOOTStcRecTime4E5MapEB;
+  delete fOutAveXtalRtOOTStcRecTime4E5MapEP;
+  delete fOutAveXtalRtOOTStcRecTime4E5MapEM;
+  delete fOutAveXtalRtOOTStcRecTimeE10MapEB;
+  delete fOutAveXtalRtOOTStcRecTimeE10MapEP;
+  delete fOutAveXtalRtOOTStcRecTimeE10MapEM;
   delete fOutAveXtalOccMapEB;
   delete fOutAveXtalOccMapEP;
   delete fOutAveXtalOccMapEM;
@@ -456,8 +721,8 @@ Skimmer::~Skimmer()
   delete fOutAveXtalPhoRecTimeHist;
   delete fOutAveXtalRtPhoRecTimeHist;
   delete fOutAveXtalRtStcPhoRecTimeHist;
-  //delete fOutAveXtalRtOOTPhoRecTimeHist;
-  //delete fOutAveXtalRtOOTStcPhoRecTimeHist;
+  delete fOutAveXtalRtOOTPhoRecTimeHist;
+  delete fOutAveXtalRtOOTStcPhoRecTimeHist;
   delete fOutAveXtalPhoOccHist;
   delete fOutAveXtalPhoRecTimeHistEB;
   delete fOutAveXtalPhoRecTimeHistEP;
@@ -468,12 +733,12 @@ Skimmer::~Skimmer()
   delete fOutAveXtalRtStcPhoRecTimeHistEB;
   delete fOutAveXtalRtStcPhoRecTimeHistEP;
   delete fOutAveXtalRtStcPhoRecTimeHistEM;
-  //delete fOutAveXtalRtOOTPhoRecTimeHistEB;
-  //delete fOutAveXtalRtOOTPhoRecTimeHistEP;
-  //delete fOutAveXtalRtOOTPhoRecTimeHistEM;
-  //delete fOutAveXtalRtOOTStcPhoRecTimeHistEB;
-  //delete fOutAveXtalRtOOTStcPhoRecTimeHistEP;
-  //delete fOutAveXtalRtOOTStcPhoRecTimeHistEM;
+  delete fOutAveXtalRtOOTPhoRecTimeHistEB;
+  delete fOutAveXtalRtOOTPhoRecTimeHistEP;
+  delete fOutAveXtalRtOOTPhoRecTimeHistEM;
+  delete fOutAveXtalRtOOTStcPhoRecTimeHistEB;
+  delete fOutAveXtalRtOOTStcPhoRecTimeHistEP;
+  delete fOutAveXtalRtOOTStcPhoRecTimeHistEM;
   delete fOutAveXtalPhoOccHistEB;
   delete fOutAveXtalPhoOccHistEP;
   delete fOutAveXtalPhoOccHistEM;
@@ -486,15 +751,47 @@ Skimmer::~Skimmer()
   delete fOutAveXtalRtStcPhoRecTimeMapEB;
   delete fOutAveXtalRtStcPhoRecTimeMapEP;
   delete fOutAveXtalRtStcPhoRecTimeMapEM;
-  //delete fOutAveXtalRtOOTPhoRecTimeMapEB;
-  //delete fOutAveXtalRtOOTPhoRecTimeMapEP;
-  //delete fOutAveXtalRtOOTPhoRecTimeMapEM;
-  //delete fOutAveXtalRtOOTStcPhoRecTimeMapEB;
-  //delete fOutAveXtalRtOOTStcPhoRecTimeMapEP;
-  //delete fOutAveXtalRtOOTStcPhoRecTimeMapEM;
+  delete fOutAveXtalRtOOTPhoRecTimeMapEB;
+  delete fOutAveXtalRtOOTPhoRecTimeMapEP;
+  delete fOutAveXtalRtOOTPhoRecTimeMapEM;
+  delete fOutAveXtalRtOOTStcPhoRecTimeMapEB;
+  delete fOutAveXtalRtOOTStcPhoRecTimeMapEP;
+  delete fOutAveXtalRtOOTStcPhoRecTimeMapEM;
   delete fOutAveXtalPhoOccMapEB;
   delete fOutAveXtalPhoOccMapEP;
   delete fOutAveXtalPhoOccMapEM;
+
+  delete fOutAveXtalRtOOTStcPhoClRecTimeHistEB;
+  delete fOutAveXtalRtOOTStcPhoClRecTimeHistEP;
+  delete fOutAveXtalRtOOTStcPhoClRecTimeHistEM;
+
+  delete fOutAveXtalRtOOTStcPhoIcRecTimeHistEB;
+  delete fOutAveXtalRtOOTStcPhoIcRecTimeHistEP;
+  delete fOutAveXtalRtOOTStcPhoIcRecTimeHistEM;
+
+  delete fOutAveXtalRtOOTStcPhoClRecTimeMapEB;
+  delete fOutAveXtalRtOOTStcPhoClRecTimeMapEP;
+  delete fOutAveXtalRtOOTStcPhoClRecTimeMapEM;
+
+  delete fOutAveXtalRtOOTStcPhoIcRecTimeMapEB;
+  delete fOutAveXtalRtOOTStcPhoIcRecTimeMapEP;
+  delete fOutAveXtalRtOOTStcPhoIcRecTimeMapEM;
+
+  delete fOutAveXtalRtStcPhoClRecTimeMapEB;
+  delete fOutAveXtalRtStcPhoClRecTimeMapEP;
+  delete fOutAveXtalRtStcPhoClRecTimeMapEM;
+
+  delete fOutAveXtalRtStcPhoIcRecTimeMapEB;
+  delete fOutAveXtalRtStcPhoIcRecTimeMapEP;
+  delete fOutAveXtalRtStcPhoIcRecTimeMapEM;
+
+  delete fOutAveXtalWtOOTStcPhoClRecTimeMapEB;
+  delete fOutAveXtalWtOOTStcPhoClRecTimeMapEP;
+  delete fOutAveXtalWtOOTStcPhoClRecTimeMapEM;
+
+  delete fOutAveXtalWtOOTStcPhoIcRecTimeMapEB;
+  delete fOutAveXtalWtOOTStcPhoIcRecTimeMapEP;
+  delete fOutAveXtalWtOOTStcPhoIcRecTimeMapEM;
 
   delete fOutDifXtalRtPhoRecTimeHist;
   delete fOutDifXtalRtPhoRecTimeHistEB;
@@ -510,20 +807,20 @@ Skimmer::~Skimmer()
   delete fOutDifXtalRtStcPhoRecTimeMapEB;
   delete fOutDifXtalRtStcPhoRecTimeMapEP;
   delete fOutDifXtalRtStcPhoRecTimeMapEM;
-//  delete fOutDifXtalRtOOTPhoRecTimeHist;
-//  delete fOutDifXtalRtOOTPhoRecTimeHistEB;
-//  delete fOutDifXtalRtOOTPhoRecTimeHistEP;
-//  delete fOutDifXtalRtOOTPhoRecTimeHistEM;
-//  delete fOutDifXtalRtOOTPhoRecTimeMapEB;
-//  delete fOutDifXtalRtOOTPhoRecTimeMapEP;
-//  delete fOutDifXtalRtOOTPhoRecTimeMapEM;
-//  delete fOutDifXtalRtOOTStcPhoRecTimeHist;
-//  delete fOutDifXtalRtOOTStcPhoRecTimeHistEB;
-//  delete fOutDifXtalRtOOTStcPhoRecTimeHistEP;
-//  delete fOutDifXtalRtOOTStcPhoRecTimeHistEM;
-//  delete fOutDifXtalRtOOTStcPhoRecTimeMapEB;
-//  delete fOutDifXtalRtOOTStcPhoRecTimeMapEP;
-//  delete fOutDifXtalRtOOTStcPhoRecTimeMapEM;
+  delete fOutDifXtalRtOOTPhoRecTimeHist;
+  delete fOutDifXtalRtOOTPhoRecTimeHistEB;
+  delete fOutDifXtalRtOOTPhoRecTimeHistEP;
+  delete fOutDifXtalRtOOTPhoRecTimeHistEM;
+  delete fOutDifXtalRtOOTPhoRecTimeMapEB;
+  delete fOutDifXtalRtOOTPhoRecTimeMapEP;
+  delete fOutDifXtalRtOOTPhoRecTimeMapEM;
+  delete fOutDifXtalRtOOTStcPhoRecTimeHist;
+  delete fOutDifXtalRtOOTStcPhoRecTimeHistEB;
+  delete fOutDifXtalRtOOTStcPhoRecTimeHistEP;
+  delete fOutDifXtalRtOOTStcPhoRecTimeHistEM;
+  delete fOutDifXtalRtOOTStcPhoRecTimeMapEB;
+  delete fOutDifXtalRtOOTStcPhoRecTimeMapEP;
+  delete fOutDifXtalRtOOTStcPhoRecTimeMapEM;
   delete fOutDifXtalPhoRecTimeHist;
   delete fOutDifXtalPhoRecTimeHistEB;
   delete fOutDifXtalPhoRecTimeHistEP;
@@ -541,12 +838,19 @@ void Skimmer::EventLoop()
 {
   // do loop over events, reading in branches as needed, skimming, filling output trees and hists
   const auto nEntries = fInTree->GetEntries();
-  //const auto nEntries = 10000;
+  float minRecE0 = 0.5;
+  float minRecE1 = 1.f;
+  float minRecE2 = 2.f;
+  float minRecE5 = 5.f;
+  float minRecE10 = 10.f;
+  bool useTOF = true;
+  //bool useTOF = false;
+  //const auto nEntries = 100;
   for (auto entry = 0U; entry < nEntries; entry++)
   {
     // dump status check
     if (entry%Common::nEvCheck == 0 || entry == 0) std::cout << "Processing Entry: " << entry << " out of " << nEntries << std::endl;
-//    if( entry > 100 ) break;
+    //if( entry > 10000 ) break;
     // get event weight: no scaling by BR, xsec, lumi, etc.
     if (fIsMC) fInEvent.b_genwgt->GetEntry(entry);
     const auto wgt    = (fIsMC ? fInEvent.genwgt : 1.f);
@@ -564,30 +868,86 @@ void Skimmer::EventLoop()
     fInRecHits.b_E->GetEntry(entry);
     fInRecHits.b_ID->GetEntry(entry);
     fInRecHits.b_time->GetEntry(entry);
+    fInRecHits.b_TOF->GetEntry(entry);
     b_kurhID->GetEntry(entry);
     b_kurhtime->GetEntry(entry);
     if( hasMultiKURecHit ){
 	b_kuStcrhtime->GetEntry(entry);
         b_kuNotrhtime->GetEntry(entry);
         b_kuNotStcrhtime->GetEntry(entry);
+        b_kuWootStcrhtime->GetEntry(entry);
     }
     //std::cout << "Pulling RecHits done "<< std::endl;
 
 //    gZmass = 0.f;
 //    gdR = 0.f;
     for( UInt_t idx = 0; idx < (*fInRecHits.ID).size(); idx++ ){
-               ////std::cout << "Filling first xtalRecHit " << id_i << " time with: " << t_i << std::endl;
-               const auto id_i = (*fInRecHits.ID)[idx];
-               const auto t_i = (*fInRecHits.time)[idx];
-               sumXtalRecTime[id_i] += t_i;
+        //std::cout << "Processing RecHit: " << idx << std::endl;
+        const auto id_i = (*fInRecHits.ID)[idx];
+        const auto t_i = (*fInRecHits.time)[idx];
+        const auto e_i = (*fInRecHits.E)[idx];
+        const auto tof_i = (*fInRecHits.TOF)[idx];
+        auto RtStc_t_i = 0.f;
+        auto RtOOTStc_t_i = 0.f;
+        auto WtOOTStc_t_i = 0.f;
+	auto t_tof = t_i;
+	tofHist->Fill(tof_i);
+	//if( e_i >= minRecE ){
+	//std::cout << "With: id_i: " << id_i << " time: " << t_i << " energy: " << e_i << " tof: " << tof_i << " and " << RtOOTStc_t_i << std::endl;
+               sumXtalRecTime[id_i] += t_tof;
                numXtalRecTime[id_i] += 1;
-  
+	       if( hasMultiKURecHit ){
+                  for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
+                  	if( (*kurhID)[kuseed] == id_i ){ 
+				RtStc_t_i = (*kuStcrhtime)[kuseed];
+                                RtOOTStc_t_i = (*kuNotStcrhtime)[kuseed];
+                                WtOOTStc_t_i = (*kuWootStcrhtime)[kuseed];
+				break;
+			}
+                  }      
+		  //std::cout << "Filling sumXtalRtOOTStcRecTimes " << std::endl;  
+		  if( useTOF ){ 
+			RtStc_t_i += tof_i;
+                        RtOOTStc_t_i += tof_i;
+                        WtOOTStc_t_i += tof_i;
+		  }
+		  sumXtalRtOOTStcRecTime[id_i] += RtOOTStc_t_i;
+		  numXtalRtOOTStcRecTime[id_i] += 1;
+		  if( e_i >= minRecE0 ){
+		  	sumXtalRtOOTStcRecTimeE0[id_i] += RtOOTStc_t_i;
+                  	numXtalRtOOTStcRecTimeE0[id_i] += 1;
+		  }
+		  if( e_i >= minRecE1 ){
+                        sumXtalRtOOTStcRecTimeE1[id_i] += RtOOTStc_t_i;
+                        numXtalRtOOTStcRecTimeE1[id_i] += 1;
+//			if( entry%2 == 0 ){ sumXtalRtOOTStcRecTime2E1[id_i] += RtOOTStc_t_i; numXtalRtOOTStcRecTime2E1[id_i] += 1; }
+//                        if( entry%4 == 0 ){ sumXtalRtOOTStcRecTime4E1[id_i] += RtOOTStc_t_i; numXtalRtOOTStcRecTime4E1[id_i] += 1; } 
+                  }
+ 		  if(e_i >= minRecE2 ){
+                        sumXtalRtOOTStcRecTimeE2[id_i] += RtOOTStc_t_i;
+                        numXtalRtOOTStcRecTimeE2[id_i] += 1;
+                  }
+		  if(e_i >= minRecE5 ){
+                        sumXtalRtStcRecTimeE5[id_i] += RtStc_t_i;
+                        sumXtalRtOOTStcRecTimeE5[id_i] += RtOOTStc_t_i;
+                        sumXtalWtOOTStcRecTimeE5[id_i] += WtOOTStc_t_i;
+                        numXtalRtOOTStcRecTimeE5[id_i] += 1;
+     //                   if( entry%2 == 0 ){ sumXtalRtOOTStcRecTime2E5[id_i] += RtOOTStc_t_i; numXtalRtOOTStcRecTime2E5[id_i] += 1; }
+     //                   if( entry%4 == 0 ){ sumXtalRtOOTStcRecTime4E5[id_i] += RtOOTStc_t_i; numXtalRtOOTStcRecTime4E5[id_i] += 1; }
+                  }
+		  if(e_i >= minRecE10 ){
+                        sumXtalRtOOTStcRecTimeE10[id_i] += RtOOTStc_t_i;
+                        numXtalRtOOTStcRecTimeE10[id_i] += 1;
+                  }
+	       }
+ 	//}
     }
-
+    //std::cout << "Finished Filling RecHitTimes" << std::endl;
     // perform skim: standard
     if (fSkim == SkimType::Standard) // do not apply skim selection on toy config
     {
       // leading photon skim section
+      //std::cout << "Starting Standard Skim" << std::endl;
       fInEvent.b_nphotons->GetEntry(entry);
       if (fInEvent.nphotons <= 0) continue;
       fOutCutFlow   ->Fill((cutLabels["nPhotons"]*1.f)-0.5f);
@@ -645,7 +1005,7 @@ void Skimmer::EventLoop()
       // build list of "good electrons"
       std::vector<Int_t> good_phos;
 
-      //cout << "Starting Zee Skim w/ nPhotons " << Common::nPhotons << endl;   
+      //std::cout << "Starting Zee Skim w/ nPhotons " << Common::nPhotons << endl;   
       for (auto ipho = 0; ipho < Common::nPhotons; ipho++)
       {
 	auto & inpho = fInPhos[ipho];
@@ -661,9 +1021,9 @@ void Skimmer::EventLoop()
 //	cout << "gedID " << inpho.gedID << endl;
 	if (inpho.gedID < 3) continue; //  <<<<<<<<<<<<<<<<<<<<<<<<<<  change back to inpho.gedID < 3    temp fix ro run 2018
 
-//	inpho.b_isOOT->GetEntry(entry);
+	inpho.b_isOOT->GetEntry(entry);
 //	cout << "isOOT " << inpho.isOOT << endl;
-//	if (inpho.isOOT) continue;
+	if (inpho.isOOT) continue;
 
 	good_phos.emplace_back(ipho);
       }
@@ -707,6 +1067,92 @@ void Skimmer::EventLoop()
 	  pho1vec += pho2vec;  
 	  phopairs.emplace_back(good_phos[i],good_phos[j],pho1vec.M(),dr12);
 	}
+
+        pho1.b_recHits->GetEntry(entry);
+        const auto n = pho1.recHits->size();
+        //std::cout << "Looping over zee recHits n = " << n << std::endl;
+        for (auto i = 0U; i < n; i++)
+        {
+          float subsum = 0.f;
+          float subsumnot = 0.f;
+          float subsumwoot = 0.f;
+          int subsumnum = 0;
+
+          const auto rh_i = (*pho1.recHits)[i]; // position within event rec hits vector
+          const auto E_i  = (*fInRecHits.E) [rh_i];
+          const auto id_i = (*fInRecHits.ID)[rh_i];
+          const auto t_i = (*fInRecHits.time)[rh_i];
+          const auto tof_i = (*fInRecHits.TOF)[rh_i];
+          auto RtStc_t_i = 0.f;
+          auto RtOOTStc_t_i = 0.f;
+          auto WtOOTStc_t_i = 0.f;
+
+          if( hasMultiKURecHit ){
+
+                for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
+                        if( (*kurhID)[kuseed] == id_i ){
+                                RtStc_t_i = (*kuStcrhtime)[kuseed];
+                                RtOOTStc_t_i = (*kuNotStcrhtime)[kuseed];
+                                WtOOTStc_t_i = (*kuWootStcrhtime)[kuseed];
+                                break;
+                        }
+                }
+                if( useTOF ){ 
+			RtStc_t_i += tof_i;
+                        RtOOTStc_t_i += tof_i;
+                        WtOOTStc_t_i += tof_i;
+		}
+                sumXtalRtStcPhoClRecTime[id_i] += RtStc_t_i;
+                sumXtalRtOOTStcPhoClRecTime[id_i] += RtOOTStc_t_i;
+                sumXtalWtOOTStcPhoClRecTime[id_i] += WtOOTStc_t_i;
+                numXtalRtOOTStcPhoClRecTime[id_i] += 1;
+
+          }
+          for (auto j = i+1; j < n; j++)
+          {
+            const auto rh_j = (*pho1.recHits)[j]; // position within event rec hits vector
+            const auto E_j  = (*fInRecHits.E) [rh_j];
+            const auto id_j = (*fInRecHits.ID)[rh_j];
+            auto RtStc_t_j = 0.f;
+            auto RtOOTStc_t_j = 0.f;
+            auto WtOOTStc_t_j = 0.f;
+            const auto tof_j = (*fInRecHits.TOF)[rh_j];
+
+                if( hasMultiKURecHit ){
+                        for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
+                                if( (*kurhID)[kuseed] == id_j ){
+                                        RtStc_t_j = (*kuStcrhtime)[kuseed];
+                                        RtOOTStc_t_j = (*kuNotStcrhtime)[kuseed];
+                                        WtOOTStc_t_j = (*kuWootStcrhtime)[kuseed];
+                                        break;
+                                }
+                        }
+                	if( useTOF ){
+                        	RtStc_t_j += tof_j;
+                        	RtOOTStc_t_j += tof_j;
+                        	WtOOTStc_t_j += tof_j;
+                	}
+                        //sumXtalRtOOTStcPhoIcRecTime :  numXtalRtOOTStcPhoIcRecTime                            
+                        if(1){ //if( E_i >= minRecE5 and E_j >= minRecE5 ){
+                        subsum += (RtStc_t_i - RtStc_t_j);
+                        subsumnot += (RtOOTStc_t_i - RtOOTStc_t_j);
+                        subsumwoot += (WtOOTStc_t_i - WtOOTStc_t_j);
+                        subsumnum += 1;
+                        }
+                }
+
+          } // end inner double loop over rechit
+//              >>>>  do subsums
+          if( hasMultiKURecHit ){
+                if( subsumnum == 0. ) subsumnum = 1;
+                sumXtalRtStcPhoIcRecTime[id_i] += (subsum/subsumnum);
+                sumXtalRtOOTStcPhoIcRecTime[id_i] += (subsumnot/subsumnum);
+                sumXtalWtOOTStcPhoIcRecTime[id_i] += (subsumwoot/subsumnum);
+                numXtalRtOOTStcPhoIcRecTime[id_i] += 1;
+          }
+        } // end outer double loop over rechits
+        //std::cout << "RecHits Loop done "<< std::endl;	
+
       }
       //cout << "sort by mass " << endl;
       // sort the mass structs
@@ -745,12 +1191,14 @@ void Skimmer::EventLoop()
       auto t2 = (*fInRecHits.time)[seed2];
       auto Rt_t1 = t1;
       auto RtStc_t1 = t1;
- //     auto RtOOT_t1 = t1;
- //     auto RtOOTStc_t1 = t1;
+      auto RtOOT_t1 = t1;
+      auto RtOOTStc_t1 = t1;
+      //auto WtOOTStc_t1 = t1;
       auto Rt_t2 = t1;
       auto RtStc_t2 = t1;
- //     auto RtOOT_t2 = t1;
- //     auto RtOOTStc_t2 = t1;
+      auto RtOOT_t2 = t1;
+      auto RtOOTStc_t2 = t1;
+      //auto WtOOTStc_t2 = t1;
 
       //std::cout << "Filling xtalRecHit " << id1 << " time with: " << t1 << std::endl;
       sumXtalPhoRecTime[id1] += t1;
@@ -762,14 +1210,16 @@ void Skimmer::EventLoop()
                      if( (*kurhID)[kuseed] == id1 ){
                             Rt_t1 = (*kurhtime)[kuseed];
                             RtStc_t1 = (*kuStcrhtime)[kuseed];
-   //                         RtOOT_t1 = (*kuNotrhtime)[kuseed];
-   //                         RtOOTStc_t1 = (*kuNotStcrhtime)[kuseed];
+                            RtOOT_t1 = (*kuNotrhtime)[kuseed];
+                            RtOOTStc_t1 = (*kuNotStcrhtime)[kuseed];
+     //                       WtOOTStc_t1 = (*kuWootStcrhtime)[kuseed];
                             }
                      if( (*kurhID)[kuseed] == id2 ){
                             Rt_t2 = (*kurhtime)[kuseed];
                             RtStc_t2 = (*kuStcrhtime)[kuseed];
-   //                         RtOOT_t2 = (*kuNotrhtime)[kuseed];
-   //                         RtOOTStc_t2 = (*kuNotStcrhtime)[kuseed];
+                            RtOOT_t2 = (*kuNotrhtime)[kuseed];
+                            RtOOTStc_t2 = (*kuNotStcrhtime)[kuseed];
+     //                       WtOOTStc_t2 = (*kuWootStcrhtime)[kuseed];
                             }
           }
 	  //std::cout << "Filling xtalRtPhoRecHit time with: " << Rt_t1 << std::endl;
@@ -781,14 +1231,14 @@ void Skimmer::EventLoop()
           sumXtalRtStcPhoRecTime[id2] += RtStc_t2;
           difXtalRtStcPhoRecTime[id1] += (RtStc_t1-RtStc_t2);
           difXtalRtStcPhoRecTime[id2] += (RtStc_t2-RtStc_t1);
-//          sumXtalRtOOTPhoRecTime[id1] += RtOOT_t1;
-//          sumXtalRtOOTPhoRecTime[id2] += RtOOT_t2;
-//          difXtalRtOOTPhoRecTime[id1] += (RtOOT_t1-RtOOT_t2);
-//          difXtalRtOOTPhoRecTime[id2] += (RtOOT_t2-RtOOT_t1);
-//          sumXtalRtOOTStcPhoRecTime[id1] += RtOOTStc_t1;
-//          sumXtalRtOOTStcPhoRecTime[id2] += RtOOTStc_t2;
-//          difXtalRtOOTStcPhoRecTime[id1] += (RtOOTStc_t1-RtOOTStc_t2);
-//          difXtalRtOOTStcPhoRecTime[id2] += (RtOOTStc_t2-RtOOTStc_t1);
+          sumXtalRtOOTPhoRecTime[id1] += RtOOT_t1;
+          sumXtalRtOOTPhoRecTime[id2] += RtOOT_t2;
+          difXtalRtOOTPhoRecTime[id1] += (RtOOT_t1-RtOOT_t2);
+          difXtalRtOOTPhoRecTime[id2] += (RtOOT_t2-RtOOT_t1);
+          sumXtalRtOOTStcPhoRecTime[id1] += RtOOTStc_t1;
+          sumXtalRtOOTStcPhoRecTime[id2] += RtOOTStc_t2;
+          difXtalRtOOTStcPhoRecTime[id1] += (RtOOTStc_t1-RtOOTStc_t2);
+          difXtalRtOOTStcPhoRecTime[id2] += (RtOOTStc_t2-RtOOTStc_t1);
       }
       //std::cout << "-------------Finished filling sumXtalRecHit times." << std::endl;
       numXtalPhoRecTime[id1] += 1;
@@ -866,82 +1316,95 @@ void Skimmer::EventLoop()
 	for (auto i = 0U; i < n; i++)
 	{
 	  Bool_t isGoodPair = false;
+          float subsum = 0.f;
+          int subsumnum = 0;
+          float subsumnot = 0.f;
+          float subsumwoot = 0.f;
 
 	  const auto rh_i = (*inpho.recHits)[i]; // position within event rec hits vector
 	  const auto E_i  = (*fInRecHits.E) [rh_i];
 	  const auto id_i = (*fInRecHits.ID)[rh_i];
-          const auto t_i = (*fInRecHits.time)[rh_i];
+	  const auto t_i = (*fInRecHits.time)[rh_i];
+	  const auto tof_i = (*fInRecHits.TOF)[rh_i];
+	  auto RtStc_t_i = 0.f;
+          auto RtOOTStc_t_i = 0.f;
+          auto WtOOTStc_t_i = 0.f;
 
- 	  //std::cout << "Filling xtalRecHit " << id_i << " time with: " << t_i << std::endl;
-	  //sumXtalPhoRecTime[id_i] += t_i;
-	  //std::cout << "-------------Finished filling sumXtalRecHit times." << std::endl;
-	  //numXtalPhoRecTime[id_i] += 1;
-	  //std::cout << "-------------Finished filling numXxtalRecHit times." << std::endl;
+	  if( hasMultiKURecHit ){
+
+                for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
+                        if( (*kurhID)[kuseed] == id_i ){
+                                RtStc_t_i = (*kuStcrhtime)[kuseed];
+                                RtOOTStc_t_i = (*kuNotStcrhtime)[kuseed];
+                                WtOOTStc_t_i = (*kuWootStcrhtime)[kuseed];
+                                break;
+                        }
+                }
+		if( useTOF ){ 
+			RtStc_t_i += tof_i;
+                        RtOOTStc_t_i += tof_i;
+                        WtOOTStc_t_i += tof_i;		
+		}
+		sumXtalRtStcPhoClRecTime[id_i] += RtStc_t_i;
+                sumXtalRtOOTStcPhoClRecTime[id_i] += RtOOTStc_t_i;
+                sumXtalWtOOTStcPhoClRecTime[id_i] += WtOOTStc_t_i;
+		numXtalRtOOTStcPhoClRecTime[id_i] += 1;
+	
+	  }
 
 	  for (auto j = i+1; j < n; j++)
 	  {
 	    const auto rh_j = (*inpho.recHits)[j]; // position within event rec hits vector
 	    const auto E_j  = (*fInRecHits.E) [rh_j];
 	    const auto id_j = (*fInRecHits.ID)[rh_j];
-            const auto t_j = (*fInRecHits.time)[rh_j];
-	    auto Rt_t_i = t_j;
-            auto RtStc_t_i = t_j;
-            //auto RtOOT_t_i = t_j;
-            //auto RtOOTStc_t_i = t_j;
-            auto Rt_t_j = t_j;
-            auto RtStc_t_j = t_j;
-            //auto RtOOT_t_j = t_j;
-            //auto RtOOTStc_t_j = t_j;
+	    auto RtStc_t_j = 0.f;
+            auto RtOOTStc_t_j = 0.f;
+            auto WtOOTStc_t_j = 0.f;
+	    const auto tof_j = (*fInRecHits.TOF)[rh_j];
+//		asd
+//		if( tof_i == tof_j ){
+		if( hasMultiKURecHit ){
+			for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
+                        	if( (*kurhID)[kuseed] == id_j ){
+                                	RtStc_t_j = (*kuStcrhtime)[kuseed];
+                                        RtOOTStc_t_j = (*kuNotStcrhtime)[kuseed];
+                                        WtOOTStc_t_j = (*kuWootStcrhtime)[kuseed];
+                                	break;
+                        	}	
+                	}
+                	if( useTOF ){
+                        	RtStc_t_j += tof_j;
+                        	RtOOTStc_t_j += tof_j;
+                        	WtOOTStc_t_j += tof_j;
+                	}
+			//sumXtalRtOOTStcPhoIcRecTime :  numXtalRtOOTStcPhoIcRecTime				
+			if(1){ //if( E_i >= minRecE5 and E_j >= minRecE5 ){
+			subsum += (RtStc_t_i - RtStc_t_j);
+                        subsumnot += (RtOOTStc_t_i - RtOOTStc_t_j);
+                        subsumwoot += (WtOOTStc_t_i - WtOOTStc_t_j);
+			subsumnum += 1;
+			}
+		}
+		//}  // if tof == tof
 
-	    if (E_i > (1.2f * E_j)) break; // need to be within 20% of energy
-	    if (Common::IsCrossNeighbor(id_i,id_j)) // neighboring crystals
-	    {
-	      good_pairs.emplace_back(rh_i,rh_j,ipho);
-	      isGoodPair = true;
-	      nxtal_sep = 1;
-	      sumXtalPhoRecTime[id_i] += t_i;
-              sumXtalPhoRecTime[id_j] += t_j;
-              difXtalPhoRecTime[id_i] += (t_i-t_j);
-              difXtalPhoRecTime[id_j] += (t_j-t_i);
-	      numXtalPhoRecTime[id_i] += 1;
-              numXtalPhoRecTime[id_j] += 1;
-	      if( hasMultiKURecHit ){
-		  //std::cout << "filling ku rechits times" << std::endl;
-                  for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
-                             if( (*kurhID)[kuseed] == id_i ){
-                                    Rt_t_i = (*kurhtime)[kuseed];
-                                    RtStc_t_i = (*kuStcrhtime)[kuseed];
-             //                       RtOOT_t_i = (*kuNotrhtime)[kuseed];
-             //                       RtOOTStc_t_i = (*kuNotStcrhtime)[kuseed];
-                                    }
-                             if( (*kurhID)[kuseed] == id_j ){
-                                    Rt_t_j = (*kurhtime)[kuseed];
-                                    RtStc_t_j = (*kuStcrhtime)[kuseed];
-               //                     RtOOT_t_j = (*kuNotrhtime)[kuseed];
-               //                     RtOOTStc_t_j = (*kuNotStcrhtime)[kuseed];
-                                    }
-                  }
-                  sumXtalRtPhoRecTime[id_i] += Rt_t_i;
-                  sumXtalRtPhoRecTime[id_j] += Rt_t_j;
-                  difXtalRtPhoRecTime[id_i] += (Rt_t_i-Rt_t_j);
-                  difXtalRtPhoRecTime[id_j] += (Rt_t_j-Rt_t_i);
-                  sumXtalRtStcPhoRecTime[id_i] += RtStc_t_i;
-                  sumXtalRtStcPhoRecTime[id_j] += RtStc_t_j;
-                  difXtalRtStcPhoRecTime[id_i] += (RtStc_t_i-RtStc_t_j);
-                  difXtalRtStcPhoRecTime[id_j] += (RtStc_t_j-RtStc_t_i);
-//                  sumXtalRtOOTPhoRecTime[id_i] += RtOOT_t_i;
-//                  sumXtalRtOOTPhoRecTime[id_j] += RtOOT_t_j;
-//                  difXtalRtOOTPhoRecTime[id_i] += (RtOOT_t_i-RtOOT_t_j);
-//                  difXtalRtOOTPhoRecTime[id_j] += (RtOOT_t_j-RtOOT_t_i);
-//                  sumXtalRtOOTStcPhoRecTime[id_i] += RtOOTStc_t_i;
-//                  sumXtalRtOOTStcPhoRecTime[id_j] += RtOOTStc_t_j;
-//                  difXtalRtOOTStcPhoRecTime[id_i] += (RtOOTStc_t_i-RtOOTStc_t_j);
-//                  difXtalRtOOTStcPhoRecTime[id_j] += (RtOOTStc_t_j-RtOOTStc_t_i);
-	      }
-	      break;
-	    } 
-	  } // end inner double loop over rechits
-	  if (isGoodPair) break;
+		if ( not isGoodPair ){
+	    	if (Common::IsCrossNeighbor(id_i,id_j)){ // neighboring crystals
+	    	if (E_i <= (1.2f * E_j)){ // need to be within 20% of energy  old line:  if (E_i > (1.2f * E_j)) break;
+			good_pairs.emplace_back(rh_i,rh_j,ipho);
+	      		isGoodPair = true;
+	      		nxtal_sep = 1;
+	    		//  break;
+	        }}}
+	  } // end inner double loop over rechit
+//		>>>>  do subsums
+	  if( hasMultiKURecHit ){
+		if( subsumnum == 0. ) subsumnum = 1;
+		sumXtalRtStcPhoIcRecTime[id_i] += (subsum/subsumnum);
+                sumXtalRtOOTStcPhoIcRecTime[id_i] += (subsumnot/subsumnum);
+                sumXtalWtOOTStcPhoIcRecTime[id_i] += (subsumwoot/subsumnum);
+		numXtalRtOOTStcPhoIcRecTime[id_i] += 1;
+	  }	
+	  //if (isGoodPair) break;
 	} // end outer double loop over rechits
         //std::cout << "RecHits Loop done "<< std::endl;
       } // end loop over photons
@@ -965,7 +1428,63 @@ void Skimmer::EventLoop()
       fOutPhos[0].seed = pair.rh1;
       fOutPhos[1].seed = pair.rh2;
 
-  //    //std::cout << "Filling fOutAveXtalRecTimeHist. " << std::endl;
+            const auto id_i = (*fInRecHits.ID)[pair.rh1];
+            const auto t_i = (*fInRecHits.time)[pair.rh1];
+            const auto id_j = (*fInRecHits.ID)[pair.rh2];
+            const auto t_j = (*fInRecHits.time)[pair.rh2];
+            auto Rt_t_i = t_j;
+            auto RtStc_t_i = t_j;
+            auto RtOOT_t_i = t_j;
+            auto RtOOTStc_t_i = t_j;
+            auto Rt_t_j = t_j;
+            auto RtStc_t_j = t_j;
+            auto RtOOT_t_j = t_j;
+            auto RtOOTStc_t_j = t_j;
+
+	    //std::cout << "DiXtal rh time for pho " << pair.iph << " in " << id_i << " with " << t_i << std::endl;
+
+              nxtal_sep = 1;
+              sumXtalPhoRecTime[id_i] += t_i;
+              sumXtalPhoRecTime[id_j] += t_j;
+              difXtalPhoRecTime[id_i] += (t_i-t_j);
+              difXtalPhoRecTime[id_j] += (t_j-t_i);
+              numXtalPhoRecTime[id_i] += 1;
+              numXtalPhoRecTime[id_j] += 1;
+              if( hasMultiKURecHit ){
+                  //std::cout << "filling ku rechits times" << std::endl;
+                  for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
+                             if( (*kurhID)[kuseed] == id_i ){
+                                    Rt_t_i = (*kurhtime)[kuseed];
+                                    RtStc_t_i = (*kuStcrhtime)[kuseed];
+                                    RtOOT_t_i = (*kuNotrhtime)[kuseed];
+                                    RtOOTStc_t_i = (*kuNotStcrhtime)[kuseed];
+                                    }
+                             if( (*kurhID)[kuseed] == id_j ){
+                                    Rt_t_j = (*kurhtime)[kuseed];
+                                    RtStc_t_j = (*kuStcrhtime)[kuseed];
+                                    RtOOT_t_j = (*kuNotrhtime)[kuseed];
+                                    RtOOTStc_t_j = (*kuNotStcrhtime)[kuseed];
+                                    }
+                  }
+                  sumXtalRtPhoRecTime[id_i] += Rt_t_i;
+                  sumXtalRtPhoRecTime[id_j] += Rt_t_j;
+                  difXtalRtPhoRecTime[id_i] += (Rt_t_i-Rt_t_j);
+                  difXtalRtPhoRecTime[id_j] += (Rt_t_j-Rt_t_i);
+                  sumXtalRtStcPhoRecTime[id_i] += RtStc_t_i;
+                  sumXtalRtStcPhoRecTime[id_j] += RtStc_t_j;
+                  difXtalRtStcPhoRecTime[id_i] += (RtStc_t_i-RtStc_t_j);
+                  difXtalRtStcPhoRecTime[id_j] += (RtStc_t_j-RtStc_t_i);
+                  sumXtalRtOOTPhoRecTime[id_i] += RtOOT_t_i;
+                  sumXtalRtOOTPhoRecTime[id_j] += RtOOT_t_j;
+                  difXtalRtOOTPhoRecTime[id_i] += (RtOOT_t_i-RtOOT_t_j);
+                  difXtalRtOOTPhoRecTime[id_j] += (RtOOT_t_j-RtOOT_t_i);
+                  sumXtalRtOOTStcPhoRecTime[id_i] += RtOOTStc_t_i;
+                  sumXtalRtOOTStcPhoRecTime[id_j] += RtOOTStc_t_j;
+                  difXtalRtOOTStcPhoRecTime[id_i] += (RtOOTStc_t_i-RtOOTStc_t_j);
+                  difXtalRtOOTStcPhoRecTime[id_j] += (RtOOTStc_t_j-RtOOTStc_t_i);
+	      }
+
+        //std::cout << "Filling fOutAveXtalRecTimeHist. " << std::endl;
   //    for( std::map<UInt_t,Float_t>::iterator it=sumXtalRecTime.begin(); it!=sumXtalRecTime.end(); ++it){
   //    	fOutAveXtalRecTimeHist->Fill( (it->second)/(numXtalRecTime[it->first]) );
   //    }
@@ -987,7 +1506,7 @@ void Skimmer::EventLoop()
       std::cerr << "How did this happen?? Somehow SkimType Enum is not one that is specified... Exiting..."  << std::endl;
       exit(1);
     }
-    //std::cout << "Finished proccessing skim type." << std::endl;
+    //std::cout << "Finished proccessing skim." << std::endl;
 
     // common skim params for MC
     if (fSkim != SkimType::AlwaysTrue)
@@ -1026,7 +1545,7 @@ void Skimmer::EventLoop()
 //  if (true){
 
 	  UInt_t offset = 100;
-	  //std::cout << "Filling fOutAveXtalRecTime Hists and Maps. " << std::endl;
+	  //std::cout << "Filling Hists and Maps. " << std::endl;
 	  for( std::map<UInt_t,Float_t>::iterator it=sumXtalRecTime.begin(); it!=sumXtalRecTime.end(); ++it){
 		const auto & idinfo = Common::DetIDMap[it->first];
                 const auto & aveXtalTime = (it->second)/(numXtalRecTime[it->first]);
@@ -1053,9 +1572,10 @@ void Skimmer::EventLoop()
 
 	  //std::cout << "Filling fOutAveXtalPhoRecTime Hists and Maps. " << std::endl;
 	  for( std::map<UInt_t,Float_t>::iterator it=sumXtalPhoRecTime.begin(); it!=sumXtalPhoRecTime.end(); ++it){
+                //std::cout << "Mapping " << it->first << " to idinfo." << std::endl;
                 const auto & idinfo = Common::DetIDMap[it->first];
+                //std::cout << "Filling " << idinfo.i2 << " x " << idinfo.i1 << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
                 const auto & aveXtalTime = (it->second)/(numXtalPhoRecTime[it->first]);
-//	        //std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
                 fOutAveXtalPhoRecTimeHist->Fill( aveXtalTime );
                 fOutAveXtalPhoOccHist->Fill( numXtalPhoRecTime[it->first] );
                 if( idinfo.ecal == ECAL::EB ){
@@ -1076,7 +1596,7 @@ void Skimmer::EventLoop()
                 }
 		if( hasMultiKURecHit ){
                     const auto & aveXtalRtTime = (sumXtalRtPhoRecTime[it->first])/(numXtalPhoRecTime[it->first]);
-    //              //std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
+                    //std::cout << "Filling Rt " << it->first << " with " << sumXtalRtPhoRecTime[it->first] << " / " << numXtalPhoRecTime[it->first] << std::endl;
                     fOutAveXtalRtPhoRecTimeHist->Fill( aveXtalRtTime );
                     if( idinfo.ecal == ECAL::EB ){
                             fOutAveXtalRtPhoRecTimeHistEB->Fill( aveXtalRtTime );
@@ -1091,7 +1611,7 @@ void Skimmer::EventLoop()
 		}
                 if( hasMultiKURecHit ){
                     const auto & aveXtalRtStcTime = (sumXtalRtStcPhoRecTime[it->first])/(numXtalPhoRecTime[it->first]);
-    //              //std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
+                    //std::cout << "Filling RtStc " << it->first << " with " << sumXtalRtStcPhoRecTime[it->first] << " / " << numXtalPhoRecTime[it->first] << std::endl;
                     fOutAveXtalRtStcPhoRecTimeHist->Fill( aveXtalRtStcTime );
                     if( idinfo.ecal == ECAL::EB ){
                             fOutAveXtalRtStcPhoRecTimeHistEB->Fill( aveXtalRtStcTime );
@@ -1104,42 +1624,52 @@ void Skimmer::EventLoop()
                             fOutAveXtalRtStcPhoRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtStcTime + offset );
                     }
                 }
-//                if( hasMultiKURecHit ){
-//                    const auto & aveXtalRtOOTTime = (sumXtalRtOOTPhoRecTime[it->first])/(numXtalPhoRecTime[it->first]);
-//    //              //std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
-//                    fOutAveXtalRtOOTPhoRecTimeHist->Fill( aveXtalRtOOTTime );
-//                    if( idinfo.ecal == ECAL::EB ){
-//                            fOutAveXtalRtOOTPhoRecTimeHistEB->Fill( aveXtalRtOOTTime );
-//                            fOutAveXtalRtOOTPhoRecTimeMapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTTime + offset );
-//                    } else if( idinfo.ecal == ECAL::EP ){
-//                            fOutAveXtalRtOOTPhoRecTimeHistEP->Fill( aveXtalRtOOTTime );
-//                            fOutAveXtalRtOOTPhoRecTimeMapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTTime + offset );
-//                    } else if( idinfo.ecal == ECAL::EM ){
-//                            fOutAveXtalRtOOTPhoRecTimeHistEM->Fill( aveXtalRtOOTTime );
-//                            fOutAveXtalRtOOTPhoRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTTime + offset );
-//                    }
-//                }
-//                if( hasMultiKURecHit ){
-//                    const auto & aveXtalRtOOTStcTime = (sumXtalRtOOTStcPhoRecTime[it->first])/(numXtalPhoRecTime[it->first]);
-//    //              //std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
-//                    fOutAveXtalRtOOTStcPhoRecTimeHist->Fill( aveXtalRtOOTStcTime );
-//                    if( idinfo.ecal == ECAL::EB ){
-//                            fOutAveXtalRtOOTStcPhoRecTimeHistEB->Fill( aveXtalRtOOTStcTime );
-//                            fOutAveXtalRtOOTStcPhoRecTimeMapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime + offset );
-//                    } else if( idinfo.ecal == ECAL::EP ){
-//                            fOutAveXtalRtOOTStcPhoRecTimeHistEP->Fill( aveXtalRtOOTStcTime );
-//                            fOutAveXtalRtOOTStcPhoRecTimeMapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime + offset );
-//                    } else if( idinfo.ecal == ECAL::EM ){
-//                            fOutAveXtalRtOOTStcPhoRecTimeHistEM->Fill( aveXtalRtOOTStcTime );
-//                            fOutAveXtalRtOOTStcPhoRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime + offset );
-//                    }
-//                }		
+                if( hasMultiKURecHit ){
+                    const auto & aveXtalRtOOTTime = (sumXtalRtOOTPhoRecTime[it->first])/(numXtalPhoRecTime[it->first]);
+                    //std::cout << "Filling RtOOT " << it->first << " with " << sumXtalRtOOTPhoRecTime[it->first] << " / " << numXtalPhoRecTime[it->first] << std::endl;
+                    fOutAveXtalRtOOTPhoRecTimeHist->Fill( aveXtalRtOOTTime );
+                    if( idinfo.ecal == ECAL::EB ){
+                            fOutAveXtalRtOOTPhoRecTimeHistEB->Fill( aveXtalRtOOTTime );
+                            fOutAveXtalRtOOTPhoRecTimeMapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTTime + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            fOutAveXtalRtOOTPhoRecTimeHistEP->Fill( aveXtalRtOOTTime );
+                            //auto test = idinfo.i1;
+                            //if( test > 50 ) test = test - 50;
+                            //fOutAveXtalRtOOTPhoRecTimeMapEP->Fill( test, idinfo.i2, aveXtalRtOOTTime + offset );
+                            fOutAveXtalRtOOTPhoRecTimeMapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTTime + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            fOutAveXtalRtOOTPhoRecTimeHistEM->Fill( aveXtalRtOOTTime );
+                            fOutAveXtalRtOOTPhoRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTTime + offset );
+                    }
+                }
+                if( hasMultiKURecHit ){
+                    const auto & aveXtalRtOOTStcTime = (sumXtalRtOOTStcPhoRecTime[it->first])/(numXtalPhoRecTime[it->first]);
+                    //std::cout << "Filling RtOOTStc " << it->first << " with " << sumXtalRtOOTStcPhoRecTime[it->first] << " / " << numXtalPhoRecTime[it->first] << std::endl;
+                    fOutAveXtalRtOOTStcPhoRecTimeHist->Fill( aveXtalRtOOTStcTime );
+		    //std::cout << "Filling RtOOTStc Maps and Hists with offset: " << offset << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+			    //std::cout << "Filling EB hist" << std::endl;
+                            fOutAveXtalRtOOTStcPhoRecTimeHistEB->Fill( aveXtalRtOOTStcTime );
+			    //std::cout << "Filling EB Map" << std::endl;
+                            fOutAveXtalRtOOTStcPhoRecTimeMapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime + offset );
+                            //std::cout << "Finished EB Filled" << std::endl;
+                    } else if( idinfo.ecal == ECAL::EP ){
+  			    //std::cout << "Filling EP Maps" << std::endl;
+                            fOutAveXtalRtOOTStcPhoRecTimeHistEP->Fill( aveXtalRtOOTStcTime );
+                            fOutAveXtalRtOOTStcPhoRecTimeMapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+			    //std::cout << "Filling EM Maps" << std::endl;
+                            fOutAveXtalRtOOTStcPhoRecTimeHistEM->Fill( aveXtalRtOOTStcTime );
+                            fOutAveXtalRtOOTStcPhoRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime + offset );
+                    }
+                }
+          //std::cout << "Finished Filling fOutAveXtalPhoRecTime Hists and Maps. " << std::endl;		
 	  }
           //std::cout << "Filling fOutDifXtalPhoRecTime Hists and Maps. " << std::endl;
           for( std::map<UInt_t,Float_t>::iterator it=difXtalPhoRecTime.begin(); it!=difXtalPhoRecTime.end(); ++it){
                 const auto & idinfo = Common::DetIDMap[it->first];
                 const auto & aveXtalTime = (it->second)/(numXtalPhoRecTime[it->first]);
-//              //std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
+//              std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
                 fOutDifXtalPhoRecTimeHist->Fill( aveXtalTime );
                 if( idinfo.ecal == ECAL::EB ){
                         fOutDifXtalPhoRecTimeHistEB->Fill( aveXtalTime );
@@ -1153,7 +1683,7 @@ void Skimmer::EventLoop()
                 }
                 if( hasMultiKURecHit ){
                     const auto & aveXtalRtTime = (difXtalRtPhoRecTime[it->first])/(numXtalPhoRecTime[it->first]);
-    //              //std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
+    //              std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
                     fOutDifXtalRtPhoRecTimeHist->Fill( aveXtalRtTime );
                     if( idinfo.ecal == ECAL::EB ){
                             fOutDifXtalRtPhoRecTimeHistEB->Fill( aveXtalRtTime );
@@ -1168,7 +1698,7 @@ void Skimmer::EventLoop()
                 }
                 if( hasMultiKURecHit ){
                     const auto & aveXtalRtStcTime = (difXtalRtStcPhoRecTime[it->first])/(numXtalPhoRecTime[it->first]);
-    //              //std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
+    //              std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
                     fOutDifXtalRtStcPhoRecTimeHist->Fill( aveXtalRtStcTime );
                     if( idinfo.ecal == ECAL::EB ){
                             fOutDifXtalRtStcPhoRecTimeHistEB->Fill( aveXtalRtStcTime );
@@ -1181,39 +1711,313 @@ void Skimmer::EventLoop()
                             fOutDifXtalRtStcPhoRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtStcTime + offset );
                     }
                 }
-//                if( hasMultiKURecHit ){
-//                    const auto & aveXtalRtOOTTime = (difXtalRtOOTPhoRecTime[it->first])/(numXtalPhoRecTime[it->first]);
-//    //              //std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
-//                    fOutDifXtalRtOOTPhoRecTimeHist->Fill( aveXtalRtOOTTime );
-//                    if( idinfo.ecal == ECAL::EB ){
-//                            fOutDifXtalRtOOTPhoRecTimeHistEB->Fill( aveXtalRtOOTTime );
-//                            fOutDifXtalRtOOTPhoRecTimeMapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTTime + offset );
-//                    } else if( idinfo.ecal == ECAL::EP ){
-//                            fOutDifXtalRtOOTPhoRecTimeHistEP->Fill( aveXtalRtOOTTime );
-//                            fOutDifXtalRtOOTPhoRecTimeMapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTTime + offset );
-//                    } else if( idinfo.ecal == ECAL::EM ){
-//                            fOutDifXtalRtOOTPhoRecTimeHistEM->Fill( aveXtalRtOOTTime );
-//                            fOutDifXtalRtOOTPhoRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTTime + offset );
-//                    }
-//                }
-//                if( hasMultiKURecHit ){
-//                    const auto & aveXtalRtOOTStcTime = (difXtalRtOOTStcPhoRecTime[it->first])/(numXtalPhoRecTime[it->first]);
-//    //              //std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
-//                    fOutDifXtalRtOOTStcPhoRecTimeHist->Fill( aveXtalRtOOTStcTime );
-//                    if( idinfo.ecal == ECAL::EB ){
-//                            fOutDifXtalRtOOTStcPhoRecTimeHistEB->Fill( aveXtalRtOOTStcTime );
-//                            fOutDifXtalRtOOTStcPhoRecTimeMapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime + offset );
-//                    } else if( idinfo.ecal == ECAL::EP ){
-//                            fOutDifXtalRtOOTStcPhoRecTimeHistEP->Fill( aveXtalRtOOTStcTime );
-//                            fOutDifXtalRtOOTStcPhoRecTimeMapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime + offset );
-//                    } else if( idinfo.ecal == ECAL::EM ){
-//                            fOutDifXtalRtOOTStcPhoRecTimeHistEM->Fill( aveXtalRtOOTStcTime );
-//                            fOutDifXtalRtOOTStcPhoRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime + offset );
-//                    }
-//                }
+                if( hasMultiKURecHit ){
+                    const auto & aveXtalRtOOTTime = (difXtalRtOOTPhoRecTime[it->first])/(numXtalPhoRecTime[it->first]);
+    //              std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
+                    fOutDifXtalRtOOTPhoRecTimeHist->Fill( aveXtalRtOOTTime );
+                    if( idinfo.ecal == ECAL::EB ){
+                            fOutDifXtalRtOOTPhoRecTimeHistEB->Fill( aveXtalRtOOTTime );
+                            fOutDifXtalRtOOTPhoRecTimeMapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTTime + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            fOutDifXtalRtOOTPhoRecTimeHistEP->Fill( aveXtalRtOOTTime );
+                            fOutDifXtalRtOOTPhoRecTimeMapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTTime + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            fOutDifXtalRtOOTPhoRecTimeHistEM->Fill( aveXtalRtOOTTime );
+                            fOutDifXtalRtOOTPhoRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTTime + offset );
+                    }
+                }
+                if( hasMultiKURecHit ){
+                    const auto & aveXtalRtOOTStcTime = (difXtalRtOOTStcPhoRecTime[it->first])/(numXtalPhoRecTime[it->first]);
+    //              std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalPhoRecTime[it->first] << std::endl;
+                    fOutDifXtalRtOOTStcPhoRecTimeHist->Fill( aveXtalRtOOTStcTime );
+                    if( idinfo.ecal == ECAL::EB ){
+                            fOutDifXtalRtOOTStcPhoRecTimeHistEB->Fill( aveXtalRtOOTStcTime );
+                            fOutDifXtalRtOOTStcPhoRecTimeMapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            fOutDifXtalRtOOTStcPhoRecTimeHistEP->Fill( aveXtalRtOOTStcTime );
+                            fOutDifXtalRtOOTStcPhoRecTimeMapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            fOutDifXtalRtOOTStcPhoRecTimeHistEM->Fill( aveXtalRtOOTStcTime );
+                            fOutDifXtalRtOOTStcPhoRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime + offset );
+                    }
+                }
            //std::cout << "Finished Filling fOutDifXtalPhoRecTime Hists and Maps. " << std::endl;
-           }
-
+          }
+	if( hasMultiKURecHit ){
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtOOTStcRecTime.begin(); it!=sumXtalRtOOTStcRecTime.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalRtOOTStcTime = (sumXtalRtOOTStcRecTime[it->first])/(numXtalRtOOTStcRecTime[it->first]);
+    //              std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTime[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            fOutAveXtalRtOOTStcRecTimeHistEB->Fill( aveXtalRtOOTStcTime );
+                            fOutAveXtalRtOOTStcRecTimeMapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            fOutAveXtalRtOOTStcRecTimeHistEP->Fill( aveXtalRtOOTStcTime );
+                            fOutAveXtalRtOOTStcRecTimeMapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            fOutAveXtalRtOOTStcRecTimeHistEM->Fill( aveXtalRtOOTStcTime );
+                            fOutAveXtalRtOOTStcRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime + offset );
+                    }
+          }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtOOTStcRecTimeE0.begin(); it!=sumXtalRtOOTStcRecTimeE0.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalRtOOTStcTime0 = (sumXtalRtOOTStcRecTimeE0[it->first])/(numXtalRtOOTStcRecTimeE0[it->first]);
+    //              std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTime[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            fOutAveXtalRtOOTStcRecTimeE0HistEB->Fill( aveXtalRtOOTStcTime0 );
+                            fOutAveXtalRtOOTStcRecTimeE0MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime0 + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            fOutAveXtalRtOOTStcRecTimeE0HistEP->Fill( aveXtalRtOOTStcTime0 );
+                            fOutAveXtalRtOOTStcRecTimeE0MapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime0 + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            fOutAveXtalRtOOTStcRecTimeE0HistEM->Fill( aveXtalRtOOTStcTime0 );
+                            fOutAveXtalRtOOTStcRecTimeE0MapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime0 + offset );
+                    }
+          }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtOOTStcRecTimeE1.begin(); it!=sumXtalRtOOTStcRecTimeE1.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalRtOOTStcTime1 = (sumXtalRtOOTStcRecTimeE1[it->first])/(numXtalRtOOTStcRecTimeE1[it->first]);
+          //          std::cout << "Filling E1 " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTimeE1[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            fOutAveXtalRtOOTStcRecTimeE1HistEB->Fill( aveXtalRtOOTStcTime1 );
+                            fOutAveXtalRtOOTStcRecTimeE1MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime1 + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            fOutAveXtalRtOOTStcRecTimeE1HistEP->Fill( aveXtalRtOOTStcTime1 );
+                            fOutAveXtalRtOOTStcRecTimeE1MapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime1 + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            fOutAveXtalRtOOTStcRecTimeE1HistEM->Fill( aveXtalRtOOTStcTime1 );
+                            fOutAveXtalRtOOTStcRecTimeE1MapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime1 + offset );
+                    }
+          }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtOOTStcRecTime2E1.begin(); it!=sumXtalRtOOTStcRecTime2E1.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalRtOOTStcTime1 = (sumXtalRtOOTStcRecTime2E1[it->first])/(numXtalRtOOTStcRecTime2E1[it->first]);
+        //            std::cout << "Filling fOutAveXtalRtOOTStcRecTime2E1 " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTime2E1[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+			    //std::cout << "EB" << std::endl;
+                            fOutAveXtalRtOOTStcRecTime2E1HistEB->Fill( aveXtalRtOOTStcTime1 );
+                            fOutAveXtalRtOOTStcRecTime2E1MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime1 + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+			    //std::cout << "EP" << std::endl;
+                            fOutAveXtalRtOOTStcRecTime2E1HistEP->Fill( aveXtalRtOOTStcTime1 );
+                            fOutAveXtalRtOOTStcRecTime2E1MapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime1 + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+		            //std::cout << "EM" << std::endl;
+                            fOutAveXtalRtOOTStcRecTime2E1HistEM->Fill( aveXtalRtOOTStcTime1 );
+                            fOutAveXtalRtOOTStcRecTime2E1MapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime1 + offset );
+                    }
+          }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtOOTStcRecTime4E1.begin(); it!=sumXtalRtOOTStcRecTime4E1.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalRtOOTStcTime1 = (sumXtalRtOOTStcRecTime4E1[it->first])/(numXtalRtOOTStcRecTime4E1[it->first]);
+      //              std::cout << "Filling fOutAveXtalRtOOTStcRecTime4E1 " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTime[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            fOutAveXtalRtOOTStcRecTime4E1HistEB->Fill( aveXtalRtOOTStcTime1 );
+                            fOutAveXtalRtOOTStcRecTime4E1MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime1 + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            fOutAveXtalRtOOTStcRecTime4E1HistEP->Fill( aveXtalRtOOTStcTime1 );
+                            fOutAveXtalRtOOTStcRecTime4E1MapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime1 + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            fOutAveXtalRtOOTStcRecTime4E1HistEM->Fill( aveXtalRtOOTStcTime1 );
+                            fOutAveXtalRtOOTStcRecTime4E1MapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime1 + offset );
+                    }
+          }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtOOTStcRecTimeE2.begin(); it!=sumXtalRtOOTStcRecTimeE2.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalRtOOTStcTime2 = (sumXtalRtOOTStcRecTimeE2[it->first])/(numXtalRtOOTStcRecTimeE2[it->first]);
+    //                std::cout << "Filling fOutAveXtalRtOOTStcRecTimeE2 " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTime[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            fOutAveXtalRtOOTStcRecTimeE2HistEB->Fill( aveXtalRtOOTStcTime2 );
+                            fOutAveXtalRtOOTStcRecTimeE2MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime2 + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            fOutAveXtalRtOOTStcRecTimeE2HistEP->Fill( aveXtalRtOOTStcTime2 );
+                            fOutAveXtalRtOOTStcRecTimeE2MapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime2 + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            fOutAveXtalRtOOTStcRecTimeE2HistEM->Fill( aveXtalRtOOTStcTime2 );
+                            fOutAveXtalRtOOTStcRecTimeE2MapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime2 + offset );
+                    }
+          }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtOOTStcRecTimeE5.begin(); it!=sumXtalRtOOTStcRecTimeE5.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalRtOOTStcTime5 = (sumXtalRtOOTStcRecTimeE5[it->first])/(numXtalRtOOTStcRecTimeE5[it->first]);
+                    //std::cout << "Filling fOutAveXtalRtOOTStcRecTimeE5Hist " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTime[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            fOutAveXtalRtOOTStcRecTimeE5HistEB->Fill( aveXtalRtOOTStcTime5 );
+                            fOutAveXtalRtOOTStcRecTimeE5MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime5 + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            fOutAveXtalRtOOTStcRecTimeE5HistEP->Fill( aveXtalRtOOTStcTime5 );
+                            fOutAveXtalRtOOTStcRecTimeE5MapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime5 + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            fOutAveXtalRtOOTStcRecTimeE5HistEM->Fill( aveXtalRtOOTStcTime5 );
+                            fOutAveXtalRtOOTStcRecTimeE5MapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime5 + offset );
+                    }
+          }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtStcRecTimeE5.begin(); it!=sumXtalRtStcRecTimeE5.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalRtStcTime5 = (sumXtalRtStcRecTimeE5[it->first])/(numXtalRtOOTStcRecTimeE5[it->first]);
+                    std::cout << "Filling fOutAveXtalRtStcRecTimeE5Map " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTimeE5[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            //fOutAveXtalRtStcRecTimeE5HistEB->Fill( aveXtalRtStcTime5 );
+                            fOutAveXtalRtStcRecTimeE5MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtStcTime5 + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            //fOutAveXtalRtStcRecTimeE5HistEP->Fill( aveXtalRtStcTime5 );
+                            fOutAveXtalRtStcRecTimeE5MapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtStcTime5 + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            //fOutAveXtalRtStcRecTimeE5HistEM->Fill( aveXtalRtStcTime5 );
+                            fOutAveXtalRtStcRecTimeE5MapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtStcTime5 + offset );
+                    }
+          }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalWtOOTStcRecTimeE5.begin(); it!=sumXtalWtOOTStcRecTimeE5.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalWtOOTStcTime5 = (sumXtalWtOOTStcRecTimeE5[it->first])/(numXtalRtOOTStcRecTimeE5[it->first]);
+                    std::cout << "Filling fOutAveXtalWtOOTStcRecTimeE5Map " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTimeE5[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            //fOutAveXtalWtOOTStcRecTimeE5HistEB->Fill( aveXtalWtOOTStcTime5 );
+                            fOutAveXtalWtOOTStcRecTimeE5MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalWtOOTStcTime5 + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            //fOutAveXtalWtOOTStcRecTimeE5HistEP->Fill( aveXtalWtOOTStcTime5 );
+                            fOutAveXtalWtOOTStcRecTimeE5MapEP->Fill( idinfo.i1, idinfo.i2, aveXtalWtOOTStcTime5 + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            //fOutAveXtalWtOOTStcRecTimeE5HistEM->Fill( aveXtalWtOOTStcTime5 );
+                            fOutAveXtalWtOOTStcRecTimeE5MapEM->Fill( idinfo.i1, idinfo.i2, aveXtalWtOOTStcTime5 + offset );
+                    }
+          }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtOOTStcRecTime2E5.begin(); it!=sumXtalRtOOTStcRecTime2E5.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalRtOOTStcTime1 = (sumXtalRtOOTStcRecTime2E5[it->first])/(numXtalRtOOTStcRecTime2E5[it->first]);
+           //         std::cout << "Filling fOutAveXtalRtOOTStcRecTime2E5Map " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTime[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            fOutAveXtalRtOOTStcRecTime2E5HistEB->Fill( aveXtalRtOOTStcTime1 );
+                            fOutAveXtalRtOOTStcRecTime2E5MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime1 + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            fOutAveXtalRtOOTStcRecTime2E5HistEP->Fill( aveXtalRtOOTStcTime1 );
+                            fOutAveXtalRtOOTStcRecTime2E5MapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime1 + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            fOutAveXtalRtOOTStcRecTime2E5HistEM->Fill( aveXtalRtOOTStcTime1 );
+                            fOutAveXtalRtOOTStcRecTime2E5MapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime1 + offset );
+                    }
+          }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtOOTStcRecTime4E5.begin(); it!=sumXtalRtOOTStcRecTime4E5.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalRtOOTStcTime1 = (sumXtalRtOOTStcRecTime4E5[it->first])/(numXtalRtOOTStcRecTime4E5[it->first]);
+           //         std::cout << "Filling fOutAveXtalRtOOTStcRecTime4E5Hist " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTime[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            fOutAveXtalRtOOTStcRecTime4E5HistEB->Fill( aveXtalRtOOTStcTime1 );
+                            fOutAveXtalRtOOTStcRecTime4E5MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime1 + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            fOutAveXtalRtOOTStcRecTime4E5HistEP->Fill( aveXtalRtOOTStcTime1 );
+                            fOutAveXtalRtOOTStcRecTime4E5MapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime1 + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            fOutAveXtalRtOOTStcRecTime4E5HistEM->Fill( aveXtalRtOOTStcTime1 );
+                            fOutAveXtalRtOOTStcRecTime4E5MapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime1 + offset );
+                    }
+          }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtOOTStcRecTimeE10.begin(); it!=sumXtalRtOOTStcRecTimeE10.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalRtOOTStcTime10 = (sumXtalRtOOTStcRecTimeE10[it->first])/(numXtalRtOOTStcRecTimeE10[it->first]);
+    //              std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTime[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            fOutAveXtalRtOOTStcRecTimeE10HistEB->Fill( aveXtalRtOOTStcTime10 );
+                            fOutAveXtalRtOOTStcRecTimeE10MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime10 + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            fOutAveXtalRtOOTStcRecTimeE10HistEP->Fill( aveXtalRtOOTStcTime10 );
+                            fOutAveXtalRtOOTStcRecTimeE10MapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime10 + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            fOutAveXtalRtOOTStcRecTimeE10HistEM->Fill( aveXtalRtOOTStcTime10 );
+                            fOutAveXtalRtOOTStcRecTimeE10MapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime10 + offset );
+                    }
+          }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtOOTStcPhoClRecTime.begin(); it!=sumXtalRtOOTStcPhoClRecTime.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalRtOOTStcTime = (sumXtalRtOOTStcPhoClRecTime[it->first])/(numXtalRtOOTStcPhoClRecTime[it->first]);
+                  //std::cout << "Filling " << it->first << " with " << it->second << " / " << numXtalRtOOTStcPhoClRecTime[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            fOutAveXtalRtOOTStcPhoClRecTimeHistEB->Fill( aveXtalRtOOTStcTime );
+                            fOutAveXtalRtOOTStcPhoClRecTimeMapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            fOutAveXtalRtOOTStcPhoClRecTimeHistEP->Fill( aveXtalRtOOTStcTime );
+                            fOutAveXtalRtOOTStcPhoClRecTimeMapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            fOutAveXtalRtOOTStcPhoClRecTimeHistEM->Fill( aveXtalRtOOTStcTime );
+                            fOutAveXtalRtOOTStcPhoClRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime + offset );
+                    }
+	  }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtStcPhoClRecTime.begin(); it!=sumXtalRtStcPhoClRecTime.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalRtStcTime = (sumXtalRtStcPhoClRecTime[it->first])/(numXtalRtOOTStcPhoClRecTime[it->first]);
+                    //std::cout << "Filling fOutAveXtalRtStcPhoClRecTimeMap " << it->first << " with " << it->second << " / " << numXtalRtOOTStcPhoClRecTime[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            //fOutAveXtalRtStcPhoClRecTimeHistEB->Fill( aveXtalRtStcTime );
+                            fOutAveXtalRtStcPhoClRecTimeMapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            //fOutAveXtalRtStcPhoClRecTimeHistEP->Fill( aveXtalRtStcTime );
+                            fOutAveXtalRtStcPhoClRecTimeMapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            //fOutAveXtalRtStcPhoClRecTimeHistEM->Fill( aveXtalRtStcTime );
+                            fOutAveXtalRtStcPhoClRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtStcTime + offset );
+                    }
+          }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalWtOOTStcPhoClRecTime.begin(); it!=sumXtalWtOOTStcPhoClRecTime.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalWtOOTStcTime = (sumXtalWtOOTStcPhoClRecTime[it->first])/(numXtalRtOOTStcPhoClRecTime[it->first]);
+           //  std::cout << "Filling fOutAveXtalWtOOTStcPhoClRecTimeMapEB " << it->first << " with " << it->second << " / " << numXtalRtOOTStcPhoClRecTime[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            //fOutAveXtalWtOOTStcPhoClRecTimeHistEB->Fill( aveXtalWtOOTStcTime );
+                            fOutAveXtalWtOOTStcPhoClRecTimeMapEB->Fill( idinfo.i2, idinfo.i1, aveXtalWtOOTStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            //fOutAveXtalWtOOTStcPhoClRecTimeHistEP->Fill( aveXtalWtOOTStcTime );
+                            fOutAveXtalWtOOTStcPhoClRecTimeMapEP->Fill( idinfo.i1, idinfo.i2, aveXtalWtOOTStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            //fOutAveXtalWtOOTStcPhoClRecTimeHistEM->Fill( aveXtalWtOOTStcTime );
+                            fOutAveXtalWtOOTStcPhoClRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalWtOOTStcTime + offset );
+                    }
+          }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtOOTStcPhoIcRecTime.begin(); it!=sumXtalRtOOTStcPhoIcRecTime.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalRtOOTStcTime = (sumXtalRtOOTStcPhoIcRecTime[it->first])/(numXtalRtOOTStcPhoIcRecTime[it->first]);
+           //  std::cout << "Filling fOutAveXtalRtOOTStcPhoIcRecTimeMap " << it->first << " with " << it->second << " / " << numXtalRtOOTStcPhoIcRecTime[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            fOutAveXtalRtOOTStcPhoIcRecTimeHistEB->Fill( aveXtalRtOOTStcTime );
+                            fOutAveXtalRtOOTStcPhoIcRecTimeMapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            fOutAveXtalRtOOTStcPhoIcRecTimeHistEP->Fill( aveXtalRtOOTStcTime );
+                            fOutAveXtalRtOOTStcPhoIcRecTimeMapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            fOutAveXtalRtOOTStcPhoIcRecTimeHistEM->Fill( aveXtalRtOOTStcTime );
+                            fOutAveXtalRtOOTStcPhoIcRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime + offset );
+                    }
+	  }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtStcPhoIcRecTime.begin(); it!=sumXtalRtStcPhoIcRecTime.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalRtStcTime = (sumXtalRtStcPhoIcRecTime[it->first])/(numXtalRtOOTStcPhoIcRecTime[it->first]);
+           //    std::cout << "Filling fOutAveXtalRtStcPhoIcRecTimeMap " << it->first << " with " << it->second << " / " << numXtalRtOOTStcPhoIcRecTime[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            //fOutAveXtalRtStcPhoIcRecTimeHistEB->Fill( aveXtalRtStcTime );
+                            fOutAveXtalRtStcPhoIcRecTimeMapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            //fOutAveXtalRtStcPhoIcRecTimeHistEP->Fill( aveXtalRtStcTime );
+                            fOutAveXtalRtStcPhoIcRecTimeMapEP->Fill( idinfo.i1, idinfo.i2, aveXtalRtStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            //fOutAveXtalRtStcPhoIcRecTimeHistEM->Fill( aveXtalRtStcTime );
+                            fOutAveXtalRtStcPhoIcRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtStcTime + offset );
+                    }
+          }
+          for( std::map<UInt_t,Float_t>::iterator it=sumXtalWtOOTStcPhoIcRecTime.begin(); it!=sumXtalWtOOTStcPhoIcRecTime.end(); ++it){
+                    const auto & idinfo = Common::DetIDMap[it->first];
+                    const auto & aveXtalWtOOTStcTime = (sumXtalWtOOTStcPhoIcRecTime[it->first])/(numXtalRtOOTStcPhoIcRecTime[it->first]);
+             //  std::cout << "Filling fOutAveXtalWtOOTStcPhoIcRecTimeMap " << it->first << " with " << it->second << " / " << numXtalRtOOTStcPhoIcRecTime[it->first] << std::endl;
+                    if( idinfo.ecal == ECAL::EB ){
+                            //fOutAveXtalWtOOTStcPhoIcRecTimeHistEB->Fill( aveXtalWtOOTStcTime );
+                            fOutAveXtalWtOOTStcPhoIcRecTimeMapEB->Fill( idinfo.i2, idinfo.i1, aveXtalWtOOTStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EP ){
+                            //fOutAveXtalWtOOTStcPhoIcRecTimeHistEP->Fill( aveXtalWtOOTStcTime );
+                            fOutAveXtalWtOOTStcPhoIcRecTimeMapEP->Fill( idinfo.i1, idinfo.i2, aveXtalWtOOTStcTime + offset );
+                    } else if( idinfo.ecal == ECAL::EM ){
+                            //fOutAveXtalWtOOTStcPhoIcRecTimeHistEM->Fill( aveXtalWtOOTStcTime );
+                            fOutAveXtalWtOOTStcPhoIcRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalWtOOTStcTime + offset );
+                    }
+          }
+        }
  // }
   
   // write out the output
@@ -1223,6 +2027,7 @@ void Skimmer::EventLoop()
   fOutCutFlowWgt->Write();
   fOutCutFlowScl->Write();
 
+  tofHist->Write();
   //std::cout << "write out the output!"<< std::endl;
   fOutAveXtalRecTimeHist->Write();
   fOutAveXtalOccHist->Write();
@@ -1271,21 +2076,21 @@ void Skimmer::EventLoop()
   fOutAveXtalRtStcPhoRecTimeMapEP->Write();
   fOutAveXtalRtStcPhoRecTimeMapEM->Write();
 
-//  fOutAveXtalRtOOTPhoRecTimeHist->Write();
-//  fOutAveXtalRtOOTPhoRecTimeHistEB->Write();
-//  fOutAveXtalRtOOTPhoRecTimeHistEP->Write();
-//  fOutAveXtalRtOOTPhoRecTimeHistEM->Write();
-//  fOutAveXtalRtOOTPhoRecTimeMapEB->Write();
-//  fOutAveXtalRtOOTPhoRecTimeMapEP->Write();
-//  fOutAveXtalRtOOTPhoRecTimeMapEM->Write();
-//
-//  fOutAveXtalRtOOTStcPhoRecTimeHist->Write();
-//  fOutAveXtalRtOOTStcPhoRecTimeHistEB->Write();
-//  fOutAveXtalRtOOTStcPhoRecTimeHistEP->Write();
-//  fOutAveXtalRtOOTStcPhoRecTimeHistEM->Write();
-//  fOutAveXtalRtOOTStcPhoRecTimeMapEB->Write();
-//  fOutAveXtalRtOOTStcPhoRecTimeMapEP->Write();
-//  fOutAveXtalRtOOTStcPhoRecTimeMapEM->Write();
+  fOutAveXtalRtOOTPhoRecTimeHist->Write();
+  fOutAveXtalRtOOTPhoRecTimeHistEB->Write();
+  fOutAveXtalRtOOTPhoRecTimeHistEP->Write();
+  fOutAveXtalRtOOTPhoRecTimeHistEM->Write();
+  fOutAveXtalRtOOTPhoRecTimeMapEB->Write();
+  fOutAveXtalRtOOTPhoRecTimeMapEP->Write();
+  fOutAveXtalRtOOTPhoRecTimeMapEM->Write();
+
+  fOutAveXtalRtOOTStcPhoRecTimeHist->Write();
+  fOutAveXtalRtOOTStcPhoRecTimeHistEB->Write();
+  fOutAveXtalRtOOTStcPhoRecTimeHistEP->Write();
+  fOutAveXtalRtOOTStcPhoRecTimeHistEM->Write();
+  fOutAveXtalRtOOTStcPhoRecTimeMapEB->Write();
+  fOutAveXtalRtOOTStcPhoRecTimeMapEP->Write();
+  fOutAveXtalRtOOTStcPhoRecTimeMapEM->Write();
 
   //std::cout << "write out the output!"<< std::endl;
   fOutDifXtalPhoRecTimeHist->Write();
@@ -1312,21 +2117,131 @@ void Skimmer::EventLoop()
   fOutDifXtalRtStcPhoRecTimeMapEP->Write();
   fOutDifXtalRtStcPhoRecTimeMapEM->Write();
 
-//  fOutDifXtalRtOOTPhoRecTimeHist->Write();
-//  fOutDifXtalRtOOTPhoRecTimeHistEB->Write();
-//  fOutDifXtalRtOOTPhoRecTimeHistEP->Write();
-//  fOutDifXtalRtOOTPhoRecTimeHistEM->Write();
-//  fOutDifXtalRtOOTPhoRecTimeMapEB->Write();
-//  fOutDifXtalRtOOTPhoRecTimeMapEP->Write();
-//  fOutDifXtalRtOOTPhoRecTimeMapEM->Write();
-//
-//  fOutDifXtalRtOOTStcPhoRecTimeHist->Write();
-//  fOutDifXtalRtOOTStcPhoRecTimeHistEB->Write();
-//  fOutDifXtalRtOOTStcPhoRecTimeHistEP->Write();
-//  fOutDifXtalRtOOTStcPhoRecTimeHistEM->Write();
-//  fOutDifXtalRtOOTStcPhoRecTimeMapEB->Write();
-//  fOutDifXtalRtOOTStcPhoRecTimeMapEP->Write();
-//  fOutDifXtalRtOOTStcPhoRecTimeMapEM->Write();
+  fOutDifXtalRtOOTPhoRecTimeHist->Write();
+  fOutDifXtalRtOOTPhoRecTimeHistEB->Write();
+  fOutDifXtalRtOOTPhoRecTimeHistEP->Write();
+  fOutDifXtalRtOOTPhoRecTimeHistEM->Write();
+  fOutDifXtalRtOOTPhoRecTimeMapEB->Write();
+  fOutDifXtalRtOOTPhoRecTimeMapEP->Write();
+  fOutDifXtalRtOOTPhoRecTimeMapEM->Write();
+
+  fOutDifXtalRtOOTStcPhoRecTimeHist->Write();
+  fOutDifXtalRtOOTStcPhoRecTimeHistEB->Write();
+  fOutDifXtalRtOOTStcPhoRecTimeHistEP->Write();
+  fOutDifXtalRtOOTStcPhoRecTimeHistEM->Write();
+  fOutDifXtalRtOOTStcPhoRecTimeMapEB->Write();
+  fOutDifXtalRtOOTStcPhoRecTimeMapEP->Write();
+  fOutDifXtalRtOOTStcPhoRecTimeMapEM->Write();
+
+  fOutAveXtalRtOOTStcRecTimeHistEB->Write();
+  fOutAveXtalRtOOTStcRecTimeMapEB->Write();
+  fOutAveXtalRtOOTStcRecTimeHistEP->Write();
+  fOutAveXtalRtOOTStcRecTimeMapEP->Write();
+  fOutAveXtalRtOOTStcRecTimeHistEM->Write();
+  fOutAveXtalRtOOTStcRecTimeMapEM->Write();
+
+  fOutAveXtalRtOOTStcRecTimeE0HistEB->Write();
+  fOutAveXtalRtOOTStcRecTimeE0MapEB->Write();
+  fOutAveXtalRtOOTStcRecTimeE0HistEP->Write();
+  fOutAveXtalRtOOTStcRecTimeE0MapEP->Write();
+  fOutAveXtalRtOOTStcRecTimeE0HistEM->Write();
+  fOutAveXtalRtOOTStcRecTimeE0MapEM->Write();
+
+  fOutAveXtalRtOOTStcRecTimeE1HistEB->Write();
+  fOutAveXtalRtOOTStcRecTimeE1MapEB->Write();
+  fOutAveXtalRtOOTStcRecTimeE1HistEP->Write();
+  fOutAveXtalRtOOTStcRecTimeE1MapEP->Write();
+  fOutAveXtalRtOOTStcRecTimeE1HistEM->Write();
+  fOutAveXtalRtOOTStcRecTimeE1MapEM->Write();
+
+  fOutAveXtalRtOOTStcRecTime2E1HistEB->Write();
+  fOutAveXtalRtOOTStcRecTime2E1MapEB->Write();
+  fOutAveXtalRtOOTStcRecTime2E1HistEP->Write();
+  fOutAveXtalRtOOTStcRecTime2E1MapEP->Write();
+  fOutAveXtalRtOOTStcRecTime2E1HistEM->Write();
+  fOutAveXtalRtOOTStcRecTime2E1MapEM->Write();
+
+  fOutAveXtalRtOOTStcRecTime4E1HistEB->Write();
+  fOutAveXtalRtOOTStcRecTime4E1MapEB->Write();
+  fOutAveXtalRtOOTStcRecTime4E1HistEP->Write();
+  fOutAveXtalRtOOTStcRecTime4E1MapEP->Write();
+  fOutAveXtalRtOOTStcRecTime4E1HistEM->Write();
+  fOutAveXtalRtOOTStcRecTime4E1MapEM->Write();
+
+  fOutAveXtalRtOOTStcRecTimeE2HistEB->Write();
+  fOutAveXtalRtOOTStcRecTimeE2MapEB->Write();
+  fOutAveXtalRtOOTStcRecTimeE2HistEP->Write();
+  fOutAveXtalRtOOTStcRecTimeE2MapEP->Write();
+  fOutAveXtalRtOOTStcRecTimeE2HistEM->Write();
+  fOutAveXtalRtOOTStcRecTimeE2MapEM->Write();
+
+  fOutAveXtalRtOOTStcRecTimeE5HistEB->Write();
+  fOutAveXtalRtOOTStcRecTimeE5MapEB->Write();
+  fOutAveXtalRtOOTStcRecTimeE5HistEP->Write();
+  fOutAveXtalRtOOTStcRecTimeE5MapEP->Write();
+  fOutAveXtalRtOOTStcRecTimeE5HistEM->Write();
+  fOutAveXtalRtOOTStcRecTimeE5MapEM->Write();
+
+  fOutAveXtalRtStcRecTimeE5MapEB->Write();
+  fOutAveXtalRtStcRecTimeE5MapEP->Write();
+  fOutAveXtalRtStcRecTimeE5MapEM->Write();
+
+  fOutAveXtalWtOOTStcRecTimeE5MapEB->Write();
+  fOutAveXtalWtOOTStcRecTimeE5MapEP->Write();
+  fOutAveXtalWtOOTStcRecTimeE5MapEM->Write();
+
+  fOutAveXtalRtOOTStcRecTime2E5HistEB->Write();
+  fOutAveXtalRtOOTStcRecTime2E5MapEB->Write();
+  fOutAveXtalRtOOTStcRecTime2E5HistEP->Write();
+  fOutAveXtalRtOOTStcRecTime2E5MapEP->Write();
+  fOutAveXtalRtOOTStcRecTime2E5HistEM->Write();
+  fOutAveXtalRtOOTStcRecTime2E5MapEM->Write();
+
+  fOutAveXtalRtOOTStcRecTime4E5HistEB->Write();
+  fOutAveXtalRtOOTStcRecTime4E5MapEB->Write();
+  fOutAveXtalRtOOTStcRecTime4E5HistEP->Write();
+  fOutAveXtalRtOOTStcRecTime4E5MapEP->Write();
+  fOutAveXtalRtOOTStcRecTime4E5HistEM->Write();
+  fOutAveXtalRtOOTStcRecTime4E5MapEM->Write();
+
+  fOutAveXtalRtOOTStcRecTimeE10HistEB->Write();
+  fOutAveXtalRtOOTStcRecTimeE10MapEB->Write();
+  fOutAveXtalRtOOTStcRecTimeE10HistEP->Write();
+  fOutAveXtalRtOOTStcRecTimeE10MapEP->Write();
+  fOutAveXtalRtOOTStcRecTimeE10HistEM->Write();
+  fOutAveXtalRtOOTStcRecTimeE10MapEM->Write();
+
+  fOutAveXtalRtOOTStcPhoClRecTimeHistEB->Write();
+  fOutAveXtalRtOOTStcPhoClRecTimeHistEP->Write();
+  fOutAveXtalRtOOTStcPhoClRecTimeHistEM->Write();
+
+  fOutAveXtalRtOOTStcPhoIcRecTimeHistEB->Write();
+  fOutAveXtalRtOOTStcPhoIcRecTimeHistEP->Write();
+  fOutAveXtalRtOOTStcPhoIcRecTimeHistEM->Write();
+
+  fOutAveXtalRtOOTStcPhoClRecTimeMapEB->Write();
+  fOutAveXtalRtOOTStcPhoClRecTimeMapEP->Write();
+  fOutAveXtalRtOOTStcPhoClRecTimeMapEM->Write();
+
+  fOutAveXtalRtOOTStcPhoIcRecTimeMapEB->Write();
+  fOutAveXtalRtOOTStcPhoIcRecTimeMapEP->Write();
+  fOutAveXtalRtOOTStcPhoIcRecTimeMapEM->Write();
+
+  fOutAveXtalRtStcPhoClRecTimeMapEB->Write();
+  fOutAveXtalRtStcPhoClRecTimeMapEP->Write();
+  fOutAveXtalRtStcPhoClRecTimeMapEM->Write();
+
+  fOutAveXtalRtStcPhoIcRecTimeMapEB->Write();
+  fOutAveXtalRtStcPhoIcRecTimeMapEP->Write();
+  fOutAveXtalRtStcPhoIcRecTimeMapEM->Write();
+
+  fOutAveXtalWtOOTStcPhoClRecTimeMapEB->Write();
+  fOutAveXtalWtOOTStcPhoClRecTimeMapEP->Write();
+  fOutAveXtalWtOOTStcPhoClRecTimeMapEM->Write();
+
+  fOutAveXtalWtOOTStcPhoIcRecTimeMapEB->Write();
+  fOutAveXtalWtOOTStcPhoIcRecTimeMapEP->Write();
+  fOutAveXtalWtOOTStcPhoIcRecTimeMapEM->Write();
 
   //std::cout << "write out the output!"<< std::endl;
   fOutConfigTree->Write();
@@ -1410,7 +2325,7 @@ void Skimmer::FillOutEvent(const UInt_t entry, const Float_t evtwgt)
    b_train_number->GetEntry(entry);   //!
    }
 
-  //std::cout << "lhcinfo done" << std::endl;
+ // std::cout << "lhcinfo done" << std::endl;
   // isMC only conditions
   fOutEvent.run = fInEvent.run;
   fOutEvent.lumi = fInEvent.lumi;
@@ -1652,6 +2567,13 @@ void Skimmer::FillOutPhos(const UInt_t entry)
   b_kuNotStcrhtimeErr->GetEntry(entry);
   b_kuNotStcrhTOF->GetEntry(entry);
   b_kuNotStcrhID->GetEntry(entry);
+
+  b_kuWootStcrhE->GetEntry(entry);
+  b_kuWootStcrhtime->GetEntry(entry);
+  b_kuWootStcrhtimeErr->GetEntry(entry);
+  b_kuWootStcrhTOF->GetEntry(entry);
+  b_kuWootStcrhID->GetEntry(entry);
+
   }
         if( hasUrecDigi ){
                 //std::cout << "Getting UrecDigi Info" << std::endl;
@@ -1741,7 +2663,11 @@ void Skimmer::FillOutPhos(const UInt_t entry)
 	// get trigger tower
 	outpho.seedTT = Common::GetTriggerTower((*fInRecHits.ID)[seed]);
 	
-	// outpho.seedID    = (*fInRecHits.ID)[seed];
+	outpho.seedID    = (*fInRecHits.ID)[seed];
+        const auto & sidinfo = Common::DetIDMap[(*fInRecHits.ID)[seed]];
+        outpho.seedI1    = sidinfo.i1;
+	outpho.seedI2    = sidinfo.i2;
+	outpho.seedEcal  = sidinfo.ecal;
 	// outpho.seedisOOT = (*fInRecHits.isOOT)[seed];
 
 	outpho.seedootA0 = 0.0;
@@ -1811,6 +2737,16 @@ void Skimmer::FillOutPhos(const UInt_t entry)
                         outpho.seedkuNotStcID = (*kuNotStcrhID)[kuNotStcseed];
                 }
         }
+        //for(UInt_t kuWootStcseed = 0; kuWootStcseed < (*kuWootStcrhID).size(); kuWootStcseed++ ){
+        //        if( (*kuWootStcrhID)[kuWootStcseed] == (*fInRecHits.ID)[seed] ){
+        //                outpho.seedkuWootStcE = (*kuWootStcrhE)[kuWootStcseed];
+        //                outpho.seedkuWootStctime = (*kuWootStcrhtime)[kuWootStcseed];
+        //                outpho.seedkuWootStctimeErr = (*kuWootStcrhtimeErr)[kuWootStcseed];
+        //                outpho.seedkuWootStcTOF = (*kuWootStcrhTOF)[kuWootStcseed];
+        //                outpho.seedkuWootStcID = (*kuWootStcrhID)[kuWootStcseed];
+        //        }
+        //}
+
         }
 
         if( hasUrecDigi ){
@@ -1966,6 +2902,12 @@ void Skimmer::FillOutPhos(const UInt_t entry)
         outpho.seedkuNotStctimeErr = -9999.f;
         outpho.seedkuNotStcTOF     = -9999.f;
         outpho.seedkuNotStcID    = 0;
+
+        outpho.seedkuWootStcE = -9999.f;
+        outpho.seedkuWootStctime    = -9999.f;
+        outpho.seedkuWootStctimeErr = -9999.f;
+        outpho.seedkuWootStcTOF     = -9999.f;
+        outpho.seedkuWootStcID    = 0;
         }
 
 	outpho.nrechits             = -1;
@@ -2153,6 +3095,12 @@ void Skimmer::InitInBranchVecs()
   kuNotStcrhtimeErr = 0;
   kuNotStcrhTOF = 0;
   kuNotStcrhID = 0;
+
+  kuWootStcrhE = 0;
+  kuWootStcrhtime = 0;
+  kuWootStcrhtimeErr = 0;
+  kuWootStcrhTOF = 0;
+  kuWootStcrhID = 0;
   }
 
   if( hasUrecDigi ){
@@ -2330,6 +3278,25 @@ void Skimmer::InitInBranches()
    fInTree->SetBranchAddress("kuNotStcrhtimeErr", &kuNotStcrhtimeErr, &b_kuNotStcrhtimeErr);
    fInTree->SetBranchAddress("kuNotStcrhTOF", &kuNotStcrhTOF, &b_kuNotStcrhTOF);
    fInTree->SetBranchAddress("kuNotStcrhID", &kuNotStcrhID, &b_kuNotStcrhID);
+
+//   fInTree->SetBranchAddress("kuWootStcrhE", &kuNotStcrhE, &b_kuNotStcrhE);
+//   fInTree->SetBranchAddress("kuWootStcrhtime", &kuNotStcrhtime, &b_kuNotStcrhtime);
+//   fInTree->SetBranchAddress("kuWootStcrhtimeErr", &kuNotStcrhtimeErr, &b_kuNotStcrhtimeErr);
+//   fInTree->SetBranchAddress("kuWootStcrhTOF", &kuNotStcrhTOF, &b_kuNotStcrhTOF);
+//   fInTree->SetBranchAddress("kuWootStcrhID", &kuNotStcrhID, &b_kuNotStcrhID);
+
+   fInTree->SetBranchAddress("kuWootStcrhE", &kuWootStcrhE, &b_kuWootStcrhE);
+   fInTree->SetBranchAddress("kuWootStcrhtime", &kuWootStcrhtime, &b_kuWootStcrhtime);
+   fInTree->SetBranchAddress("kuWootStcrhtimeErr", &kuWootStcrhtimeErr, &b_kuWootStcrhtimeErr);
+   fInTree->SetBranchAddress("kuWootStcrhTOF", &kuWootStcrhTOF, &b_kuWootStcrhTOF);
+   fInTree->SetBranchAddress("kuWootStcrhID", &kuWootStcrhID, &b_kuWootStcrhID);
+
+//   fInTree->SetBranchAddress("kuNotStcrhE", &kuWootStcrhE, &b_kuWootStcrhE);
+//   fInTree->SetBranchAddress("kuNotStcrhtime", &kuWootStcrhtime, &b_kuWootStcrhtime);
+//   fInTree->SetBranchAddress("kuNotStcrhtimeErr", &kuWootStcrhtimeErr, &b_kuWootStcrhtimeErr);
+//   fInTree->SetBranchAddress("kuNotStcrhTOF", &kuWootStcrhTOF, &b_kuWootStcrhTOF);
+//   fInTree->SetBranchAddress("kuNotStcrhID", &kuWootStcrhID, &b_kuWootStcrhID);
+
    }
 
   if( hasUrecDigi ){
@@ -2714,7 +3681,10 @@ void Skimmer::InitOutBranches()
     fOutTree->Branch(Form("%s_%i",pho.s_seedtime.c_str(),ipho), &pho.seedtime);
     // fOutTree->Branch(Form("%s_%i",pho.s_seedtimeErr.c_str(),ipho), &pho.seedtimeErr);
     fOutTree->Branch(Form("%s_%i",pho.s_seedTOF.c_str(),ipho), &pho.seedTOF);
-    // fOutTree->Branch(Form("%s_%i",pho.s_seedID.c_str(),ipho), &pho.seedID);
+    fOutTree->Branch(Form("%s_%i",pho.s_seedID.c_str(),ipho), &pho.seedID);
+    fOutTree->Branch(Form("%s_%i",pho.s_seedI1.c_str(),ipho), &pho.seedI1);
+    fOutTree->Branch(Form("%s_%i",pho.s_seedI2.c_str(),ipho), &pho.seedI2);
+    fOutTree->Branch(Form("%s_%i",pho.s_seedEcal.c_str(),ipho), &pho.seedEcal);
     // fOutTree->Branch(Form("%s_%i",pho.s_seedisOOT.c_str(),ipho), &pho.seedisOOT);
     fOutTree->Branch(Form("%s_%i",pho.s_seedisGS6.c_str(),ipho), &pho.seedisGS6);
     fOutTree->Branch(Form("%s_%i",pho.s_seedisGS1.c_str(),ipho), &pho.seedisGS1);
@@ -2750,6 +3720,13 @@ void Skimmer::InitOutBranches()
     fOutTree->Branch(Form("%s_%i",pho.s_seedkuNotStctimeErr.c_str(),ipho), &pho.seedkuNotStctimeErr);
     fOutTree->Branch(Form("%s_%i",pho.s_seedkuNotStcTOF.c_str(),ipho), &pho.seedkuNotStcTOF);
     fOutTree->Branch(Form("%s_%i",pho.s_seedkuNotStcID.c_str(),ipho), &pho.seedkuNotStcID);
+
+    fOutTree->Branch(Form("%s_%i",pho.s_seedkuWootStcE.c_str(),ipho), &pho.seedkuWootStcE);
+    fOutTree->Branch(Form("%s_%i",pho.s_seedkuWootStctime.c_str(),ipho), &pho.seedkuWootStctime);
+    fOutTree->Branch(Form("%s_%i",pho.s_seedkuWootStctimeErr.c_str(),ipho), &pho.seedkuWootStctimeErr);
+    fOutTree->Branch(Form("%s_%i",pho.s_seedkuWootStcTOF.c_str(),ipho), &pho.seedkuWootStcTOF);
+    fOutTree->Branch(Form("%s_%i",pho.s_seedkuWootStcID.c_str(),ipho), &pho.seedkuWootStcID);
+
     }
 
     fOutTree->Branch(Form("%s_%i",pho.s_seedootA0.c_str(),ipho), &pho.seedootA0);
@@ -2975,7 +3952,7 @@ void Skimmer::SetupSkimConfig()
       exit(1);
     }
   }
-  std::cout << "hasMultiKURecHit = " << hasMultiKURecHit << std::endl;
+  //std::cout << "hasMultiKURecHit = " << hasMultiKURecHit << std::endl;
   // reduce output of DiXtal
   fNOutPhos = (fSkim == SkimType::DiXtal ? 2 : Common::nPhotons);
 }

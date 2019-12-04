@@ -1250,8 +1250,8 @@ void Skimmer::EventLoop()
   //    cout << "Seed1: " << seed1 << " ID: " << id1 << endl;
   //    cout << "Seed2: " << seed2 << " ID: " << id2 << endl;
 
-      nxtal_sep =  0;
-  //    nxtal_sep =  Common::Xtal_Seperation(id1,id2);
+  //    nxtal_sep =  0;
+      nxtal_sep =  Common::Xtal_Seperation(id1,id2);
   //   //std::cout << " nxtal_sep : " << nxtal_sep << std::endl;
  
 //            const auto rh_j = (*inpho.recHits)[j]; // position within event rec hits vector
@@ -2611,7 +2611,7 @@ void Skimmer::FillOutPhos(const UInt_t entry)
     out_kuStcrhtime = kuStcrhtime;
     //out_kuNotrhtime = kuNotrhtime;
     out_kuNotStcrhtime = kuNotStcrhtime;
-//    out_kuWootStcrhtime = kuWootStcrhtime;
+    out_kuWootStcrhtime = kuWootStcrhtime;
 
  //std::cout << "Finished get entry" << std::endl;
   // set output photon branches
@@ -3295,29 +3295,29 @@ void Skimmer::InitInBranches()
    //fInTree->SetBranchAddress("kuNotrhTOF", &kuNotrhTOF, &b_kuNotrhTOF);
    //fInTree->SetBranchAddress("kuNotrhID", &kuNotrhID, &b_kuNotrhID);
 
-   //fInTree->SetBranchAddress("kuNotStcrhE", &kuNotStcrhE, &b_kuNotStcrhE);
-   fInTree->SetBranchAddress("kuNotStcrhtime", &kuNotStcrhtime, &b_kuNotStcrhtime);
-   fInTree->SetBranchAddress("kuNotStcrhtimeErr", &kuNotStcrhtimeErr, &b_kuNotStcrhtimeErr);
-   //fInTree->SetBranchAddress("kuNotStcrhTOF", &kuNotStcrhTOF, &b_kuNotStcrhTOF);
-   fInTree->SetBranchAddress("kuNotStcrhID", &kuNotStcrhID, &b_kuNotStcrhID);
+//   //fInTree->SetBranchAddress("kuNotStcrhE", &kuNotStcrhE, &b_kuNotStcrhE);
+//   fInTree->SetBranchAddress("kuNotStcrhtime", &kuNotStcrhtime, &b_kuNotStcrhtime);
+//   fInTree->SetBranchAddress("kuNotStcrhtimeErr", &kuNotStcrhtimeErr, &b_kuNotStcrhtimeErr);
+//   //fInTree->SetBranchAddress("kuNotStcrhTOF", &kuNotStcrhTOF, &b_kuNotStcrhTOF);
+//   fInTree->SetBranchAddress("kuNotStcrhID", &kuNotStcrhID, &b_kuNotStcrhID);
 //>>>>  alt def
 //   fInTree->SetBranchAddress("kuWootStcrhE", &kuNotStcrhE, &b_kuNotStcrhE);
-//   fInTree->SetBranchAddress("kuWootStcrhtime", &kuNotStcrhtime, &b_kuNotStcrhtime);
-//   fInTree->SetBranchAddress("kuWootStcrhtimeErr", &kuNotStcrhtimeErr, &b_kuNotStcrhtimeErr);
+   fInTree->SetBranchAddress("kuMfootStcrhtime", &kuNotStcrhtime, &b_kuNotStcrhtime);
+   fInTree->SetBranchAddress("kuMfootStcrhtimeErr", &kuNotStcrhtimeErr, &b_kuNotStcrhtimeErr);
 //   fInTree->SetBranchAddress("kuWootStcrhTOF", &kuNotStcrhTOF, &b_kuNotStcrhTOF);
-//   fInTree->SetBranchAddress("kuWootStcrhID", &kuNotStcrhID, &b_kuNotStcrhID);
+   fInTree->SetBranchAddress("kuMfootStcrhID", &kuNotStcrhID, &b_kuNotStcrhID);
 
- //  fInTree->SetBranchAddress("kuWootStcrhE", &kuWootStcrhE, &b_kuWootStcrhE);
-   fInTree->SetBranchAddress("kuWootStcrhtime", &kuWootStcrhtime, &b_kuWootStcrhtime);
-   fInTree->SetBranchAddress("kuWootStcrhtimeErr", &kuWootStcrhtimeErr, &b_kuWootStcrhtimeErr);
-  // fInTree->SetBranchAddress("kuWootStcrhTOF", &kuWootStcrhTOF, &b_kuWootStcrhTOF);
-   fInTree->SetBranchAddress("kuWootStcrhID", &kuWootStcrhID, &b_kuWootStcrhID);
+// //  fInTree->SetBranchAddress("kuWootStcrhE", &kuWootStcrhE, &b_kuWootStcrhE);
+//   fInTree->SetBranchAddress("kuWootStcrhtime", &kuWootStcrhtime, &b_kuWootStcrhtime);
+//   fInTree->SetBranchAddress("kuWootStcrhtimeErr", &kuWootStcrhtimeErr, &b_kuWootStcrhtimeErr);
+//  // fInTree->SetBranchAddress("kuWootStcrhTOF", &kuWootStcrhTOF, &b_kuWootStcrhTOF);
+//   fInTree->SetBranchAddress("kuWootStcrhID", &kuWootStcrhID, &b_kuWootStcrhID);
 //  >>>>>>>   alt def
 //   fInTree->SetBranchAddress("kuNotStcrhE", &kuWootStcrhE, &b_kuWootStcrhE);
-//   fInTree->SetBranchAddress("kuNotStcrhtime", &kuWootStcrhtime, &b_kuWootStcrhtime);
-//   fInTree->SetBranchAddress("kuNotStcrhtimeErr", &kuWootStcrhtimeErr, &b_kuWootStcrhtimeErr);
+   fInTree->SetBranchAddress("kuMfootCCStcrhtime", &kuWootStcrhtime, &b_kuWootStcrhtime);
+   fInTree->SetBranchAddress("kuMfootCCStcrhtimeErr", &kuWootStcrhtimeErr, &b_kuWootStcrhtimeErr);
 //   fInTree->SetBranchAddress("kuNotStcrhTOF", &kuWootStcrhTOF, &b_kuWootStcrhTOF);
-//   fInTree->SetBranchAddress("kuNotStcrhID", &kuWootStcrhID, &b_kuWootStcrhID);
+   fInTree->SetBranchAddress("kuMfootCCStcrhID", &kuWootStcrhID, &b_kuWootStcrhID);
 
    }
 
@@ -3671,7 +3671,7 @@ void Skimmer::InitOutBranches()
   fOutTree->Branch("out_kuStcrhtime", &out_kuStcrhtime);
   //fOutTree->Branch("out_kuNotrhtime", &out_kuNotrhtime);
   fOutTree->Branch("out_kuNotStcrhtime", &out_kuNotStcrhtime);
- // fOutTree->Branch("out_kuWootStcrhtime", &out_kuWootStcrhtime);
+  fOutTree->Branch("out_kuWootStcrhtime", &out_kuWootStcrhtime);
   }
   fOutTree->Branch("nurechits", &nurechits);
   fOutTree->Branch("ndigis", &ndigis);

@@ -117,6 +117,7 @@ private:
   TH1F  * fOutCutFlowScl;
   TH1F  * tofHist;   
 
+//  ave and diff hists
   TH1F  * fOutAveXtalRecTimeHist;
   TH1F  * fOutAveXtalPhoRecTimeHist;
   TH1F  * fOutDifXtalPhoRecTimeHist;
@@ -124,18 +125,23 @@ private:
   TH1F  * fOutAveXtalRtRecTimeHist;
   TH1F  * fOutAveXtalRtPhoRecTimeHist;
   TH1F  * fOutDifXtalRtPhoRecTimeHist;
+
   TH1F  * fOutAveXtalRtStcRecTimeHist;
   TH1F  * fOutAveXtalRtStcPhoRecTimeHist;
   TH1F  * fOutDifXtalRtStcPhoRecTimeHist;
+
   TH1F  * fOutAveXtalRtOOTRecTimeHist;
   TH1F  * fOutAveXtalRtOOTPhoRecTimeHist;
   TH1F  * fOutDifXtalRtOOTPhoRecTimeHist;
+
+  TH1F  * fOutAveXtalRtOOTStcRecTimeHist;
   TH1F  * fOutAveXtalRtOOTStcPhoRecTimeHist;
   TH1F  * fOutDifXtalRtOOTStcPhoRecTimeHist;
 
   TH1F  * fOutAveXtalOccHist;
   TH1F  * fOutAveXtalPhoOccHist;
 
+//  ave hists
   TH1F  * fOutAveXtalRecTimeHistEB;
   TH1F  * fOutAveXtalRecTimeHistEP;
   TH1F  * fOutAveXtalRecTimeHistEM;
@@ -143,9 +149,11 @@ private:
   TH1F  * fOutAveXtalRtRecTimeHistEB;
   TH1F  * fOutAveXtalRtRecTimeHistEP;
   TH1F  * fOutAveXtalRtRecTimeHistEM;
+
   TH1F  * fOutAveXtalRtStcRecTimeHistEB;
   TH1F  * fOutAveXtalRtStcRecTimeHistEP;
   TH1F  * fOutAveXtalRtStcRecTimeHistEM;
+
   TH1F  * fOutAveXtalRtOOTRecTimeHistEB;
   TH1F  * fOutAveXtalRtOOTRecTimeHistEP;
   TH1F  * fOutAveXtalRtOOTRecTimeHistEM;
@@ -153,34 +161,45 @@ private:
   TH1F  * fOutAveXtalRtOOTStcRecTimeHistEB;
   TH1F  * fOutAveXtalRtOOTStcRecTimeHistEP;
   TH1F  * fOutAveXtalRtOOTStcRecTimeHistEM;
+
+/// energy threshold cali hists
   TH1F  * fOutAveXtalRtOOTStcRecTimeE0HistEB;
   TH1F  * fOutAveXtalRtOOTStcRecTimeE0HistEP;
   TH1F  * fOutAveXtalRtOOTStcRecTimeE0HistEM;
+
   TH1F  * fOutAveXtalRtOOTStcRecTimeE1HistEB;
   TH1F  * fOutAveXtalRtOOTStcRecTimeE1HistEP;
   TH1F  * fOutAveXtalRtOOTStcRecTimeE1HistEM;
+
   TH1F  * fOutAveXtalRtOOTStcRecTime2E1HistEB;
   TH1F  * fOutAveXtalRtOOTStcRecTime2E1HistEP;
   TH1F  * fOutAveXtalRtOOTStcRecTime2E1HistEM;
+
   TH1F  * fOutAveXtalRtOOTStcRecTime4E1HistEB;
   TH1F  * fOutAveXtalRtOOTStcRecTime4E1HistEP;
   TH1F  * fOutAveXtalRtOOTStcRecTime4E1HistEM;
+
   TH1F  * fOutAveXtalRtOOTStcRecTimeE2HistEB;
   TH1F  * fOutAveXtalRtOOTStcRecTimeE2HistEP;
   TH1F  * fOutAveXtalRtOOTStcRecTimeE2HistEM;
+
   TH1F  * fOutAveXtalRtOOTStcRecTimeE5HistEB;
   TH1F  * fOutAveXtalRtOOTStcRecTimeE5HistEP;
   TH1F  * fOutAveXtalRtOOTStcRecTimeE5HistEM;
+
   TH1F  * fOutAveXtalRtOOTStcRecTime2E5HistEB;
   TH1F  * fOutAveXtalRtOOTStcRecTime2E5HistEP;
   TH1F  * fOutAveXtalRtOOTStcRecTime2E5HistEM;
+
   TH1F  * fOutAveXtalRtOOTStcRecTime4E5HistEB;
   TH1F  * fOutAveXtalRtOOTStcRecTime4E5HistEP;
   TH1F  * fOutAveXtalRtOOTStcRecTime4E5HistEM;
+
   TH1F  * fOutAveXtalRtOOTStcRecTimeE10HistEB;
   TH1F  * fOutAveXtalRtOOTStcRecTimeE10HistEP;
   TH1F  * fOutAveXtalRtOOTStcRecTimeE10HistEM;
 
+/// ave and diff hists
   TH1F  * fOutAveXtalOccHistEB;
   TH1F  * fOutAveXtalOccHistEP;
   TH1F  * fOutAveXtalOccHistEM;
@@ -192,12 +211,15 @@ private:
   TH1F  * fOutAveXtalRtPhoRecTimeHistEB;
   TH1F  * fOutAveXtalRtPhoRecTimeHistEP;
   TH1F  * fOutAveXtalRtPhoRecTimeHistEM;
+
   TH1F  * fOutAveXtalRtStcPhoRecTimeHistEB;
   TH1F  * fOutAveXtalRtStcPhoRecTimeHistEP;
   TH1F  * fOutAveXtalRtStcPhoRecTimeHistEM;
+
   TH1F  * fOutAveXtalRtOOTPhoRecTimeHistEB;
   TH1F  * fOutAveXtalRtOOTPhoRecTimeHistEP;
   TH1F  * fOutAveXtalRtOOTPhoRecTimeHistEM;
+
   TH1F  * fOutAveXtalRtOOTStcPhoRecTimeHistEB;
   TH1F  * fOutAveXtalRtOOTStcPhoRecTimeHistEP;
   TH1F  * fOutAveXtalRtOOTStcPhoRecTimeHistEM;
@@ -213,16 +235,20 @@ private:
   TH1F  * fOutDifXtalRtPhoRecTimeHistEB;
   TH1F  * fOutDifXtalRtPhoRecTimeHistEP;
   TH1F  * fOutDifXtalRtPhoRecTimeHistEM;
+
   TH1F  * fOutDifXtalRtStcPhoRecTimeHistEB;
   TH1F  * fOutDifXtalRtStcPhoRecTimeHistEP;
   TH1F  * fOutDifXtalRtStcPhoRecTimeHistEM;
+
   TH1F  * fOutDifXtalRtOOTPhoRecTimeHistEB;
   TH1F  * fOutDifXtalRtOOTPhoRecTimeHistEP;
   TH1F  * fOutDifXtalRtOOTPhoRecTimeHistEM;
+
   TH1F  * fOutDifXtalRtOOTStcPhoRecTimeHistEB;
   TH1F  * fOutDifXtalRtOOTStcPhoRecTimeHistEP;
   TH1F  * fOutDifXtalRtOOTStcPhoRecTimeHistEM;
 
+// maps   ave and diff
   TH2F  * fOutAveXtalRecTimeMapEB;
   TH2F  * fOutAveXtalRecTimeMapEP;
   TH2F  * fOutAveXtalRecTimeMapEM;
@@ -247,6 +273,11 @@ private:
   TH2F  * fOutAveXtalRtOOTStcRecTimeMapEP;
   TH2F  * fOutAveXtalRtOOTStcRecTimeMapEM;
 
+  TH2F  * fOutAveXtalRtDifOOTPhoRecTimeMapEB;
+  TH2F  * fOutAveXtalRtDifOOTPhoRecTimeMapEP;
+  TH2F  * fOutAveXtalRtDifOOTPhoRecTimeMapEM;
+
+// energy thresholds cali
   TH2F  * fOutAveXtalRtOOTStcRecTimeE0MapEB;
   TH2F  * fOutAveXtalRtOOTStcRecTimeE0MapEP;
   TH2F  * fOutAveXtalRtOOTStcRecTimeE0MapEM;
@@ -275,14 +306,19 @@ private:
   TH2F  * fOutAveXtalRtOOTStcRecTime4E5MapEP;
   TH2F  * fOutAveXtalRtOOTStcRecTime4E5MapEM;
 
+  TH2F  * fOutAveXtalRtStcRecTimeE5MapEB;
+  TH2F  * fOutAveXtalRtStcRecTimeE5MapEP;
+  TH2F  * fOutAveXtalRtStcRecTimeE5MapEM;
+
+  TH2F  * fOutAveXtalWtOOTStcRecTimeE5MapEB;
+  TH2F  * fOutAveXtalWtOOTStcRecTimeE5MapEP;
+  TH2F  * fOutAveXtalWtOOTStcRecTimeE5MapEM;
+
   TH2F  * fOutAveXtalRtOOTStcRecTimeE10MapEB;
   TH2F  * fOutAveXtalRtOOTStcRecTimeE10MapEP;
   TH2F  * fOutAveXtalRtOOTStcRecTimeE10MapEM;
 
-  TH2F  * fOutAveXtalRtDifOOTPhoRecTimeMapEB;
-  TH2F  * fOutAveXtalRtDifOOTPhoRecTimeMapEP;
-  TH2F  * fOutAveXtalRtDifOOTPhoRecTimeMapEM;
-
+/// ave diff maps
   TH2F  * fOutAveXtalOccMapEB;
   TH2F  * fOutAveXtalOccMapEP;
   TH2F  * fOutAveXtalOccMapEM;
@@ -294,12 +330,15 @@ private:
   TH2F  * fOutAveXtalRtPhoRecTimeMapEB;
   TH2F  * fOutAveXtalRtPhoRecTimeMapEP;
   TH2F  * fOutAveXtalRtPhoRecTimeMapEM;
+
   TH2F  * fOutAveXtalRtStcPhoRecTimeMapEB;
   TH2F  * fOutAveXtalRtStcPhoRecTimeMapEP;
   TH2F  * fOutAveXtalRtStcPhoRecTimeMapEM;
+
   TH2F  * fOutAveXtalRtOOTPhoRecTimeMapEB;
   TH2F  * fOutAveXtalRtOOTPhoRecTimeMapEP;
   TH2F  * fOutAveXtalRtOOTPhoRecTimeMapEM;
+
   TH2F  * fOutAveXtalRtOOTStcPhoRecTimeMapEB;
   TH2F  * fOutAveXtalRtOOTStcPhoRecTimeMapEP;
   TH2F  * fOutAveXtalRtOOTStcPhoRecTimeMapEM;
@@ -315,16 +354,20 @@ private:
   TH2F  * fOutDifXtalRtPhoRecTimeMapEB;
   TH2F  * fOutDifXtalRtPhoRecTimeMapEP;
   TH2F  * fOutDifXtalRtPhoRecTimeMapEM;
+
   TH2F  * fOutDifXtalRtStcPhoRecTimeMapEB;
   TH2F  * fOutDifXtalRtStcPhoRecTimeMapEP;
   TH2F  * fOutDifXtalRtStcPhoRecTimeMapEM;
+
   TH2F  * fOutDifXtalRtOOTPhoRecTimeMapEB;
   TH2F  * fOutDifXtalRtOOTPhoRecTimeMapEP;
   TH2F  * fOutDifXtalRtOOTPhoRecTimeMapEM;
+
   TH2F  * fOutDifXtalRtOOTStcPhoRecTimeMapEB;
   TH2F  * fOutDifXtalRtOOTStcPhoRecTimeMapEP;
   TH2F  * fOutDifXtalRtOOTStcPhoRecTimeMapEM;
 
+/// hists for cl and ic cali
   TH1F  * fOutAveXtalRtOOTStcPhoClRecTimeHistEB;
   TH1F  * fOutAveXtalRtOOTStcPhoClRecTimeHistEP;
   TH1F  * fOutAveXtalRtOOTStcPhoClRecTimeHistEM;
@@ -333,6 +376,15 @@ private:
   TH1F  * fOutAveXtalRtOOTStcPhoIcRecTimeHistEP;
   TH1F  * fOutAveXtalRtOOTStcPhoIcRecTimeHistEM;
 
+///   maps for cl and ic cali
+  TH2F  * fOutAveXtalRtStcPhoClRecTimeMapEB;
+  TH2F  * fOutAveXtalRtStcPhoClRecTimeMapEP;
+  TH2F  * fOutAveXtalRtStcPhoClRecTimeMapEM;
+
+  TH2F  * fOutAveXtalRtStcPhoIcRecTimeMapEB;
+  TH2F  * fOutAveXtalRtStcPhoIcRecTimeMapEP;
+  TH2F  * fOutAveXtalRtStcPhoIcRecTimeMapEM;
+
   TH2F  * fOutAveXtalRtOOTStcPhoClRecTimeMapEB;
   TH2F  * fOutAveXtalRtOOTStcPhoClRecTimeMapEP;
   TH2F  * fOutAveXtalRtOOTStcPhoClRecTimeMapEM;
@@ -340,6 +392,16 @@ private:
   TH2F  * fOutAveXtalRtOOTStcPhoIcRecTimeMapEB;
   TH2F  * fOutAveXtalRtOOTStcPhoIcRecTimeMapEP;
   TH2F  * fOutAveXtalRtOOTStcPhoIcRecTimeMapEM;
+
+  TH2F  * fOutAveXtalWtOOTStcPhoClRecTimeMapEB;
+  TH2F  * fOutAveXtalWtOOTStcPhoClRecTimeMapEP;
+  TH2F  * fOutAveXtalWtOOTStcPhoClRecTimeMapEM;
+
+  TH2F  * fOutAveXtalWtOOTStcPhoIcRecTimeMapEB;
+  TH2F  * fOutAveXtalWtOOTStcPhoIcRecTimeMapEP;
+  TH2F  * fOutAveXtalWtOOTStcPhoIcRecTimeMapEM;
+
+//////////////////////////////////////////////////////
 
   GmsbVec fOutGMSBs;
   HvdsVec fOutHVDSs;
@@ -362,8 +424,8 @@ private:
    //typedef std::map<UInt_t,Float_t> sumXtalRecTime_t;
    std::map<UInt_t,Float_t> sumXtalRecTime;
    //std::map<UInt_t,Float_t> sumXtalRtRecTime;
-   //std::map<UInt_t,Float_t> sumXtalRtStcRecTime;
-   //std::map<UInt_t,Float_t> sumXtalRtOOTRecTime;
+   std::map<UInt_t,Float_t> sumXtalRtStcRecTime;
+   std::map<UInt_t,Float_t> sumXtalWtOOTStcRecTime;
    std::map<UInt_t,Float_t> sumXtalRtOOTStcRecTime;
 
    std::map<UInt_t,UInt_t> numXtalRecTime;
@@ -440,32 +502,36 @@ private:
 
    std::map<UInt_t,Float_t> sumXtalRtOOTStcRecTimeE0;
    std::map<UInt_t,UInt_t> numXtalRtOOTStcRecTimeE0;
-
    std::map<UInt_t,Float_t> sumXtalRtOOTStcRecTimeE1;
    std::map<UInt_t,UInt_t> numXtalRtOOTStcRecTimeE1;
    std::map<UInt_t,Float_t> sumXtalRtOOTStcRecTime2E1;
    std::map<UInt_t,UInt_t> numXtalRtOOTStcRecTime2E1;
    std::map<UInt_t,Float_t> sumXtalRtOOTStcRecTime4E1;
    std::map<UInt_t,UInt_t> numXtalRtOOTStcRecTime4E1;
-
    std::map<UInt_t,Float_t> sumXtalRtOOTStcRecTimeE2;
    std::map<UInt_t,UInt_t> numXtalRtOOTStcRecTimeE2;
 
-   std::map<UInt_t,Float_t> sumXtalRtOOTStcRecTimeE5;
+   std::map<UInt_t,Float_t> sumXtalRtStcRecTimeE5;
    std::map<UInt_t,UInt_t> numXtalRtOOTStcRecTimeE5;
+   std::map<UInt_t,Float_t> sumXtalRtOOTStcRecTimeE5;
+   std::map<UInt_t,Float_t> sumXtalWtOOTStcRecTimeE5;
+
    std::map<UInt_t,Float_t> sumXtalRtOOTStcRecTime2E5;
    std::map<UInt_t,UInt_t> numXtalRtOOTStcRecTime2E5;
    std::map<UInt_t,Float_t> sumXtalRtOOTStcRecTime4E5;
    std::map<UInt_t,UInt_t> numXtalRtOOTStcRecTime4E5;
-
    std::map<UInt_t,Float_t> sumXtalRtOOTStcRecTimeE10;
    std::map<UInt_t,UInt_t> numXtalRtOOTStcRecTimeE10;
 
    std::map<UInt_t,Float_t> sumXtalRtOOTStcPhoClRecTime;
    std::map<UInt_t,UInt_t> numXtalRtOOTStcPhoClRecTime;
+   std::map<UInt_t,Float_t> sumXtalRtStcPhoClRecTime;
+   std::map<UInt_t,Float_t> sumXtalWtOOTStcPhoClRecTime;
 
    std::map<UInt_t,Float_t> sumXtalRtOOTStcPhoIcRecTime;
    std::map<UInt_t,UInt_t> numXtalRtOOTStcPhoIcRecTime;
+   std::map<UInt_t,Float_t> sumXtalRtStcPhoIcRecTime;
+   std::map<UInt_t,Float_t> sumXtalWtOOTStcPhoIcRecTime;
 
    //Float_t	   aveRecTime;
    //UInt_t	   numAveRecTime;
@@ -489,6 +555,7 @@ private:
    Int_t          nkuStcrechits;
    Int_t          nkuNotrechits;
    Int_t          nkuNotStcrechits;
+   Int_t          nkuWootStcrechits;
    Int_t          ndigis;
 
    std::vector<Float_t>  * ootA0;
@@ -529,11 +596,33 @@ private:
    std::vector<Float_t> * kuNotStcrhTOF;
    std::vector<UInt_t>  * kuNotStcrhID;
 
+   std::vector<Float_t> * kuWootStcrhE;
+   std::vector<Float_t> * kuWootStcrhtime;
+   std::vector<Float_t> * kuWootStcrhtimeErr;
+   std::vector<Float_t> * kuWootStcrhTOF;
+   std::vector<UInt_t>  * kuWootStcrhID;
+
+   std::vector<Int_t> * out_npho_recHits_0;
+   std::vector<Int_t> * out_npho_recHits_1;
+   std::vector<Int_t> * out_npho_recHits_2;
+   std::vector<Int_t> * out_npho_recHits_3;
+   std::vector<Float_t> *   out_fInRecHits_E;
+   std::vector<UInt_t> *   out_fInRecHits_ID;
+   std::vector<Float_t> *   out_fInRecHits_time;
+   std::vector<Float_t> *   out_fInRecHits_TOF;
+   std::vector<Float_t> *   out_kurhtime;
+   std::vector<UInt_t> *   out_kurhID;
+   std::vector<Float_t> *   out_kuStcrhtime;
+   std::vector<Float_t> *   out_kuNotrhtime;
+   std::vector<Float_t> *   out_kuNotStcrhtime;
+   std::vector<Float_t> *   out_kuWootStcrhtime;
+
    TBranch        *b_nurechits;
    TBranch        *b_nkurechits;
    TBranch        *b_nkuStcrechits;
    TBranch        *b_nkuNotrechits;
    TBranch        *b_nkuNotStcrechits;
+   TBranch        *b_nkuWootStcrechits;
    TBranch        *b_ndigis;
    TBranch        *b_uRhId;
 
@@ -585,6 +674,12 @@ private:
    TBranch        *b_kuNotStcrhtimeErr;
    TBranch        *b_kuNotStcrhTOF;
    TBranch        *b_kuNotStcrhID;
+
+   TBranch        *b_kuWootStcrhE;
+   TBranch        *b_kuWootStcrhtime;
+   TBranch        *b_kuWootStcrhtimeErr;
+   TBranch        *b_kuWootStcrhTOF;
+   TBranch        *b_kuWootStcrhID;
 
 };
 
