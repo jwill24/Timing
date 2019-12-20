@@ -4,22 +4,27 @@
 
 #include <iostream>
 
-void wc_ku_InterCali_v1( string infilename ){
+void wc_ku_InterCali_v1( string infilename, string outfilename ){
 
-    const int  nIterations = 2;
-    const int  nAlgos = 2; // RtStc, RtOOTStc //, WtOOTStc
+    const int  nIterations = 25;
+    const int  nAlgos = 4; // RtStc, RtOOTStc, WtStc, WtOOTStc
     const int  nPhotons = 4;
     const float offset = 100.0;
     const int bin_offset = 86;
+    const float ri_ecut = 5.0;
+    const float rj_ecut = 5.0;
 
     float M[nIterations] = {0.f};
     float Mnot[nIterations] = {0.f};
+    float Mwt[nIterations] = {0.f};
     float Mwoot[nIterations] = {0.f};
     int nM[nIterations] = {0};
     const int power = 2;
 
-    auto MHist = new TH1F( "MHistV2", "M V2 Histogram", nIterations, 0, nIterations);
-    auto MnotHist = new TH1F( "MnotHistV2", "Mnot V2 Histogram", nIterations, 0, nIterations);
+    auto MHist = new TH1F( "MHist", "M Histogram", nIterations, 0, nIterations);
+    auto MnotHist = new TH1F( "MnotHist", "Mnot Histogram", nIterations, 0, nIterations);
+    auto MwtHist = new TH1F( "MwtHist", "Mwt Histogram", nIterations, 0, nIterations);
+    auto MwootHist = new TH1F( "MwootHist", "Mwoot Histogram", nIterations, 0, nIterations);
 
     const string disphotreename("disphotree");
 
@@ -88,17 +93,19 @@ void wc_ku_InterCali_v1( string infilename ){
     std::vector<Float_t> *   kuStcrhtime = 0;
     std::vector<Float_t> *   kuNotrhtime = 0;
     std::vector<Float_t> *   kuNotStcrhtime = 0;
+    std::vector<Float_t> *   kuWtStcrhtime = 0;
     std::vector<Float_t> *   kuWootStcrhtime = 0;
 
 //{sumXtalRtStcPhoIcRecTime, sumXtalRtOOTStcPhoIcRecTime }; //, sumXtalWtOOTStcPhoIcRecTime };
 
     std::map<UInt_t,Float_t> sumXtalRtStcPhoIcRecTime;
     std::map<UInt_t,Float_t> sumXtalRtOOTStcPhoIcRecTime;
+    std::map<UInt_t,Float_t> sumXtalWtStcPhoIcRecTime;
     std::map<UInt_t,Float_t> sumXtalWtOOTStcPhoIcRecTime;
     std::map<UInt_t,Float_t> numXtalIcRecTime;
-//    float normRtStc = 0.f;
-//    float normRtOOTStc = 0.f;
-//    float normWtOOTStc = 0.f;
+    //float normRtStc = 0.f;
+    //float normRtOOTStc = 0.f;
+    //float normWtOOTStc = 0.f;
 
     bool isOOT_0;
     bool isOOT_1;
@@ -126,6 +133,7 @@ void wc_ku_InterCali_v1( string infilename ){
     TBranch * b_kuStcrhtime;
     TBranch * b_kuNotrhtime;
     TBranch * b_kuNotStcrhtime;
+    TBranch * b_kuWtStcrhtime;
     TBranch * b_kuWootStcrhtime;
     TBranch * b_isOOT_0;
     TBranch * b_isOOT_1;
@@ -165,31 +173,38 @@ void wc_ku_InterCali_v1( string infilename ){
     fInTree->SetBranchAddress("out_kuStcrhtime",&kuStcrhtime,&b_kuStcrhtime);
     fInTree->SetBranchAddress("out_kuNotrhtime",&kuNotrhtime,&b_kuNotrhtime);
     fInTree->SetBranchAddress("out_kuNotStcrhtime",&kuNotStcrhtime,&b_kuNotStcrhtime);
-    //fInTree->SetBranchAddress("out_kuWootStcrhtime",&kuWootStcrhtime,&b_kuWootStcrhtime);
+    fInTree->SetBranchAddress("out_kuWtStcrhtime",&kuWtStcrhtime,&b_kuWtStcrhtime);
+    fInTree->SetBranchAddress("out_kuWootStcrhtime",&kuWootStcrhtime,&b_kuWootStcrhtime);
 
     TH2F * IcMapEB[nAlgos][nIterations+1];
     TH2F * IcMapEP[nAlgos][nIterations+1];
     TH2F * IcMapEM[nAlgos][nIterations+1];
 
-    string algostring[nAlgos] = { "RtStc", "RtOOTStc" }; // "WtOOTStc" };
+    string algostring[nAlgos] = { "RtStc", "RtOOTStc", "WtStc", "WtOOTStc" };
     IcMapEB[0][0] =  ebmapkue5;
     IcMapEP[0][0] =  ebmapkue5;
     IcMapEM[0][0] =  ebmapkue5;
     IcMapEB[1][0] =  ebmapic;
     IcMapEP[1][0] =  epmapcl;
     IcMapEM[1][0] =  emmapcl;
+    IcMapEB[2][0] =  ebmapic;
+    IcMapEP[2][0] =  epmapcl;
+    IcMapEM[2][0] =  emmapcl;
+    IcMapEB[3][0] =  ebmapic;
+    IcMapEP[3][0] =  epmapcl;
+    IcMapEM[3][0] =  emmapcl;
     for( auto i = 0; i < nAlgos; i++){
             for( auto j = 1; j < nIterations+1; j++ ){
-		string hnameEB( "CaliV2"+algostring[i]+"PhoIcRecTimeEBMap_i"+to_string(j)); 
-                string htitleEB( "CaliV2"+algostring[i]+"IcRecTimeEBMap EB "+to_string(j));
+		string hnameEB( "AveXtal"+algostring[i]+"PhoIcRecTimeEBMap_i"+to_string(j)); 
+                string htitleEB( "AveXtal"+algostring[i]+"IcRecTimeEBMap EB "+to_string(j));
                 IcMapEB[i][j] = new TH2F(hnameEB.c_str(),htitleEB.c_str(),171,-85.5,85.5,360,0.5,360.5);
                 IcMapEB[i][j]->Sumw2();
-                string hnameEP( "CaliV2"+algostring[i]+"PhoIcRecTimeEPMap_i"+to_string(j)); 
-                string htitleEP( "CaliV2"+algostring[i]+"IcRecTimeEPMap EB "+to_string(j));
+                string hnameEP( "AveXtal"+algostring[i]+"PhoIcRecTimeEPMap_i"+to_string(j)); 
+                string htitleEP( "AveXtal"+algostring[i]+"IcRecTimeEPMap EB "+to_string(j));
                 IcMapEP[i][j] = new TH2F(hnameEP.c_str(),htitleEP.c_str(),100,0.5,100.5,100,0.5,100.5);
                 IcMapEP[i][j]->Sumw2();
-                string hnameEM( "CaliV2"+algostring[i]+"PhoIcRecTimeEMMap_i"+to_string(j)); 
-                string htitleEM( "CaliV2"+algostring[i]+"IcRecTimeEBMap EM "+to_string(j));
+                string hnameEM( "AveXtal"+algostring[i]+"PhoIcRecTimeEMMap_i"+to_string(j)); 
+                string htitleEM( "AveXtal"+algostring[i]+"IcRecTimeEBMap EM "+to_string(j));
                 IcMapEM[i][j] = new TH2F(hnameEM.c_str(),htitleEM.c_str(),100,0.5,100.5,100,0.5,100.5);
                 IcMapEM[i][j]->Sumw2();
              }
@@ -200,7 +215,7 @@ void wc_ku_InterCali_v1( string infilename ){
     // >> calcs  <<
 
     const auto nEntries = fInTree->GetEntries();
-    //const auto nEntries = 10000;
+    //const auto nEntries = 100;
     for( auto iter = 0; iter < nIterations; iter++){
     for (auto entry = 0U; entry < nEntries; entry++){
 	if( entry%100000 == 0 ) std::cout << "Proccessed " << entry << " of " << nEntries << " entries for " << iter << " of " << nIterations << " Iterations." << std::endl;
@@ -236,7 +251,8 @@ void wc_ku_InterCali_v1( string infilename ){
         b_kuStcrhtime->GetEntry(entry);
         b_kuNotrhtime->GetEntry(entry);
         b_kuNotStcrhtime->GetEntry(entry);
-        //b_kuWootStcrhtime->GetEntry(entry);
+        b_kuWtStcrhtime->GetEntry(entry);
+        b_kuWootStcrhtime->GetEntry(entry);
         //std::cout << "GetEntries kurh times Finished "<< std::endl;
 
 	std::vector<Int_t> * cluster[nPhotons] = {npho_recHits_0,npho_recHits_1,npho_recHits_2,npho_recHits_3};
@@ -267,10 +283,12 @@ void wc_ku_InterCali_v1( string infilename ){
              for (auto i = 0U; i < nRecHits; i++){
 		  float subM = 0.f;
                   float subsum = 0.f;
-                  float subsumE = 0.f;
                   int subsumnum = 0;
                   float subMnot = 0.f;
                   float subsumnot = 0.f;
+                  float subMwt = 0.f;
+                  float subsumwt = 0.f;
+                  float subMwoot = 0.f;
                   float subsumwoot = 0.f;
     
                   const auto rh_i = (*(cluster[ipho]))[i]; // position within event rec hits vector
@@ -280,15 +298,17 @@ void wc_ku_InterCali_v1( string infilename ){
                   const auto tof_i = (*fInRecHits_TOF)[rh_i];
                   auto RtStc_t_i = 0.f;
                   auto RtOOTStc_t_i = 0.f;
+                  auto WtStc_t_i = 0.f;
                   auto WtOOTStc_t_i = 0.f;
 		  float prev_i[nAlgos] = {0.f};   			
 
-		  if( E_i < 2.0 ) continue;
+		  if( E_i < ri_ecut ) continue;
                   for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
                           if( (*kurhID)[kuseed] == id_i ){
                                   RtStc_t_i = (*kuStcrhtime)[kuseed];
                                   RtOOTStc_t_i = (*kuNotStcrhtime)[kuseed];
-         //                         WtOOTStc_t_i = (*kuWootStcrhtime)[kuseed];
+                                  WtStc_t_i = (*kuWtStcrhtime)[kuseed];
+                                  WtOOTStc_t_i = (*kuWootStcrhtime)[kuseed];
                                   break;
                           }
     
@@ -296,6 +316,7 @@ void wc_ku_InterCali_v1( string infilename ){
 
                   RtStc_t_i += tof_i;
                   RtOOTStc_t_i += tof_i;
+                  WtStc_t_i += tof_i;
                   WtOOTStc_t_i += tof_i;
                   const auto & id_i_info = Common::DetIDMap[id_i];
                   for( auto a = 0; a < nAlgos; a++ ){
@@ -319,22 +340,25 @@ void wc_ku_InterCali_v1( string infilename ){
                         const auto id_j = (*fInRecHits_ID)[rh_j];
                         auto RtStc_t_j = 0.f;
                         auto RtOOTStc_t_j = 0.f;
+                        auto WtStc_t_j = 0.f;
                         auto WtOOTStc_t_j = 0.f;
                         const auto tof_j = (*fInRecHits_TOF)[rh_j];
                         float prev_j[nAlgos] = {0.f};
-		        if( E_j < 1.0 ) continue;
+		        if( E_j < rj_ecut ) continue;
                         for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
                                 if( (*kurhID)[kuseed] == id_j ){
                                         RtStc_t_j = (*kuStcrhtime)[kuseed];
                                         RtOOTStc_t_j = (*kuNotStcrhtime)[kuseed];
-         //                               WtOOTStc_t_j = (*kuWootStcrhtime)[kuseed];
+                                        WtStc_t_j = (*kuWtStcrhtime)[kuseed];
+                                        WtOOTStc_t_j = (*kuWootStcrhtime)[kuseed];
                                         break;
                                 }
                         }
 
                         RtStc_t_j += tof_j;
                         RtOOTStc_t_j += tof_j;
-                        //WtOOTStc_t_j += tof_j;
+                        WtStc_t_j += tof_j;
+                        WtOOTStc_t_j += tof_j;
                         const auto & id_j_info = Common::DetIDMap[id_j];
 			for( auto a = 0; a < nAlgos; a++ ){
               			if( id_j_info.ecal == ECAL::EB ){
@@ -346,31 +370,38 @@ void wc_ku_InterCali_v1( string infilename ){
               			}
 			}
 
-			subsum += E_j*(RtStc_t_j + prev_j[0]);
-                        //subsum += (RtStc_t_i - RtStc_t_j + prev_j[0]); 
-                        subsumE += E_j;
-                        //subMnot += ((RtOOTStc_t_i - prev_i[1] - RtOOTStc_t_j + prev_j[1])*(RtOOTStc_t_i - prev_i[1] - RtOOTStc_t_j + prev_j[1]));
-                        subsumnot += E_j*(RtOOTStc_t_j + prev_j[1]);
-                        //subsumwoot += (WtOOTStc_t_i + prev_j[1] ); //+ prev[2]);
+			auto tmpsum1 = RtStc_t_i - prev_i[0] - RtStc_t_j + prev_j[0];
+			subM += (tmpsum1 * tmpsum1);
+			//(RtStc_t_i - prev_i[0] - RtStc_t_j + prev_j[0])*(RtStc_t_i - prev_i[0] - RtStc_t_j + prev_j[0]));
+                        subsum += (tmpsum1 + prev_i[0]); 
+			auto tmpsum2 = RtOOTStc_t_i - prev_i[1] - RtOOTStc_t_j + prev_j[1];
+                        subMnot += (tmpsum2 * tmpsum2);
+			//(RtOOTStc_t_i - prev_i[1] - RtOOTStc_t_j + prev_j[1])*(RtOOTStc_t_i - prev_i[1] - RtOOTStc_t_j + prev_j[1]));
+                        subsumnot += (tmpsum2 + prev_i[1]);
+                        auto tmpsum3 = WtStc_t_i - prev_i[2] - WtStc_t_j + prev_j[2];
+                        subMwt += (tmpsum3 * tmpsum3);
+                        subsumwt += (tmpsum3 + prev_i[2]); //(WtStc_t_i - WtStc_t_j ); //+ prev[2]);
+                        auto tmpsum4 = WtOOTStc_t_i - prev_i[3] - WtOOTStc_t_j + prev_j[3];
+                        subMwoot += (tmpsum4 * tmpsum4);
+                        subsumwoot += (tmpsum4 + prev_i[3]); //(WtOOTStc_t_i - WtOOTStc_t_j ); //+ prev[2]);
                         subsumnum += 1;
 
                   } // end inner double loop over rechit
     //            >>>>  do subsums
-    //            RtStc_t_i - prev_i[0] - 
-    //
                   if( subsumnum == 0. ) continue;
-		  auto tot = ( RtStc_t_i - prev_i[0] - (subsum/subsumE) )
-                  auto totnot = ( RtOOTStc_t_i - prev_i[0] - (subsumnot/subsumE) )
-	          M[iter] += tot*tot;
-		  Mnot[iter] += totnot*totnot;
-		  nM[iter] += 1;
-		  //normRtStc += tot;
-                  //normRtOOTStc += totnot;
+	          M[iter] += subM;
+		  Mnot[iter] += subMnot;
+                  Mwt[iter] += subMwt;
+                  Mwoot[iter] += subMwoot;
+		  nM[iter] += subsumnum;
+		  //normRtStc += subsum;
+                  //normRtOOTStc += subsumnot;
                   //normWtOOTStc += subsumwoot;
-                  sumXtalRtStcPhoIcRecTime[id_i] += tot; //(subsum/subsumnum);
-                  sumXtalRtOOTStcPhoIcRecTime[id_i] += totnot; //(subsumnot/subsumnum);
-                  //sumXtalWtOOTStcPhoIcRecTime[id_i] += subsumwoot; //(subsumwoot/subsumnum);
-                  numXtalIcRecTime[id_i] += 1;
+                  sumXtalRtStcPhoIcRecTime[id_i] += subsum; //(subsum/subsumnum);
+                  sumXtalRtOOTStcPhoIcRecTime[id_i] += subsumnot; //(subsumnot/subsumnum);
+                  sumXtalWtStcPhoIcRecTime[id_i] += subsumwt; //(subsumwoot/subsumnum);
+                  sumXtalWtOOTStcPhoIcRecTime[id_i] += subsumwoot; //(subsumwoot/subsumnum);
+                  numXtalIcRecTime[id_i] += subsumnum; //1;
              } // end outer double loop over rechits
              //std::cout << "RecHits Loop done "<< std::endl;
         } // end loop over photons
@@ -381,15 +412,14 @@ void wc_ku_InterCali_v1( string infilename ){
     }  //  end entry loop
 
     //float  norm[nAlgos] = { normRtStc, normRtOOTStc };
-    std::map<UInt_t,Float_t> *  icmaps[nAlgos] = {&sumXtalRtStcPhoIcRecTime, &sumXtalRtOOTStcPhoIcRecTime }; //, sumXtalWtOOTStcPhoIcRecTime };
-    
+    std::map<UInt_t,Float_t> *  icmaps[nAlgos] = {&sumXtalRtStcPhoIcRecTime, &sumXtalRtOOTStcPhoIcRecTime, sumXtalWtStcPhoIcRecTime, sumXtalWtOOTStcPhoIcRecTime };
+
     for( auto ai = 0; ai < nAlgos; ai++ ){
-         float drift = 0.f;
-         for( std::map<UInt_t,Float_t>::iterator it=(*icmaps[ai]).begin(); it!=(*icmaps[ai]).end(); ++it){ drift += (((*icmaps[ai])[it->first])/(numXtalIcRecTime[it->first])); }
-	 auto drift_comp = drift/(icmaps[ai]->size());
+	 float drift = 0.f;
+	 for( std::map<UInt_t,Float_t>::iterator it=(*icmaps[ai]).begin(); it!=(*icmaps[ai]).end(); ++it){ drift += (((*icmaps[ai])[it->first])/(numXtalIcRecTime[it->first])); }
          for( std::map<UInt_t,Float_t>::iterator it=(*icmaps[ai]).begin(); it!=(*icmaps[ai]).end(); ++it){
                    const auto & fill_idinfo = Common::DetIDMap[it->first];
-                   const auto & map_time = ((*icmaps[ai])[it->first])/(numXtalIcRecTime[it->first]) + offset - drift_comp;
+                   const auto & map_time = ((*icmaps[ai])[it->first])/(numXtalIcRecTime[it->first]) + offset - (drift/(icmaps[ai]->size()));
 		   //std::cout << "Fill hist for Algo " << i << " at " << fill_idinfo.i2 << " " << fill_idinfo.i1 << " with " << map_time << " for iter " << iter << std::endl;
                    if( fill_idinfo.ecal == ECAL::EB ){
 //		   std::cout << "Fill EB hist for Algo " << ai << " at " << fill_idinfo.i2 << " " << fill_idinfo.i1 << " with " << map_time << " for iter " << iter << std::endl;
@@ -409,8 +439,10 @@ void wc_ku_InterCali_v1( string infilename ){
     //normWtOOTStc = 0.f;
     sumXtalRtStcPhoIcRecTime.clear();
     sumXtalRtOOTStcPhoIcRecTime.clear();
+    sumXtalWtStcPhoIcRecTime.clear();
     sumXtalWtOOTStcPhoIcRecTime.clear();
     numXtalIcRecTime.clear();
+    std::cout << "For iter " << iter+1 << " we have M values of " << M[iter]/nM[iter] << " for " << M[iter] << " / " << nM[iter] << std::endl;
 
     }  //  end iteration loop
     //std::cout << " End of Interation Loops " << std::endl;
@@ -420,10 +452,14 @@ void wc_ku_InterCali_v1( string infilename ){
 	std::cout << "For iter " << iter+1 << " filling " << M[iter]/nM[iter] << " for " << M[iter] << " / " << nM[iter] << std::endl;
 	MHist->Fill( iter, M[iter]/nM[iter] );
  	MnotHist->Fill( iter, Mnot[iter]/nM[iter] );
+        MwtHist->Fill( iter, Mwt[iter]/nM[iter] );
+        MwootHist->Fill( iter, Mwoot[iter]/nM[iter] );
     }
 
+    TFile* fOutFile = new TFile( outfilename.c_str(), "RECREATE" );
+    fOutFile->cd();
+
     std::cout << "Write IcMaps" << std::endl;
-    fInFile->cd();
     for( auto i = 0; i < nAlgos; i++){
 	    for( auto j = 1; j < nIterations+1; j++ ){
 		IcMapEB[i][j]->Write();

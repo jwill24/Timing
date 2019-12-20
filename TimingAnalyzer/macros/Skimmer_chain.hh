@@ -87,8 +87,8 @@ private:
 
   // Input
   TFile * fInFile;
-  TTree * fInTree; 
-  TTree * fInConfigTree;
+  TChain * fInTree; 
+  TChain * fInConfigTree;
   TH1F  * fInCutFlow;
   TH1F  * fInCutFlowWgt;
   TFile * fInPUWgtFile;
@@ -311,10 +311,6 @@ private:
   TH2F  * fOutAveXtalRtStcRecTimeE5MapEP;
   TH2F  * fOutAveXtalRtStcRecTimeE5MapEM;
 
-  TH2F  * fOutAveXtalWtStcRecTimeE5MapEB;
-  TH2F  * fOutAveXtalWtStcRecTimeE5MapEP;
-  TH2F  * fOutAveXtalWtStcRecTimeE5MapEM;
-
   TH2F  * fOutAveXtalWtOOTStcRecTimeE5MapEB;
   TH2F  * fOutAveXtalWtOOTStcRecTimeE5MapEP;
   TH2F  * fOutAveXtalWtOOTStcRecTimeE5MapEM;
@@ -398,14 +394,6 @@ private:
   TH2F  * fOutAveXtalRtOOTStcPhoIcRecTimeMapEP;
   TH2F  * fOutAveXtalRtOOTStcPhoIcRecTimeMapEM;
 
-  TH2F  * fOutAveXtalWtStcPhoClRecTimeMapEB;
-  TH2F  * fOutAveXtalWtStcPhoClRecTimeMapEP;
-  TH2F  * fOutAveXtalWtStcPhoClRecTimeMapEM;
-
-  TH2F  * fOutAveXtalWtStcPhoIcRecTimeMapEB;
-  TH2F  * fOutAveXtalWtStcPhoIcRecTimeMapEP;
-  TH2F  * fOutAveXtalWtStcPhoIcRecTimeMapEM;
-
   TH2F  * fOutAveXtalWtOOTStcPhoClRecTimeMapEB;
   TH2F  * fOutAveXtalWtOOTStcPhoClRecTimeMapEP;
   TH2F  * fOutAveXtalWtOOTStcPhoClRecTimeMapEM;
@@ -438,7 +426,6 @@ private:
    std::map<UInt_t,Float_t> sumXtalRecTime;
    //std::map<UInt_t,Float_t> sumXtalRtRecTime;
    std::map<UInt_t,Float_t> sumXtalRtStcRecTime;
-   std::map<UInt_t,Float_t> sumXtalWtStcRecTime;
    std::map<UInt_t,Float_t> sumXtalWtOOTStcRecTime;
    std::map<UInt_t,Float_t> sumXtalRtOOTStcRecTime;
 
@@ -528,7 +515,6 @@ private:
    std::map<UInt_t,Float_t> sumXtalRtStcRecTimeE5;
    std::map<UInt_t,UInt_t> numXtalRtOOTStcRecTimeE5;
    std::map<UInt_t,Float_t> sumXtalRtOOTStcRecTimeE5;
-   std::map<UInt_t,Float_t> sumXtalWtStcRecTimeE5;
    std::map<UInt_t,Float_t> sumXtalWtOOTStcRecTimeE5;
 
    std::map<UInt_t,Float_t> sumXtalRtOOTStcRecTime2E5;
@@ -541,13 +527,11 @@ private:
    std::map<UInt_t,Float_t> sumXtalRtOOTStcPhoClRecTime;
    std::map<UInt_t,UInt_t> numXtalRtOOTStcPhoClRecTime;
    std::map<UInt_t,Float_t> sumXtalRtStcPhoClRecTime;
-   std::map<UInt_t,Float_t> sumXtalWtStcPhoClRecTime;
    std::map<UInt_t,Float_t> sumXtalWtOOTStcPhoClRecTime;
 
    std::map<UInt_t,Float_t> sumXtalRtOOTStcPhoIcRecTime;
    std::map<UInt_t,UInt_t> numXtalRtOOTStcPhoIcRecTime;
    std::map<UInt_t,Float_t> sumXtalRtStcPhoIcRecTime;
-   std::map<UInt_t,Float_t> sumXtalWtStcPhoIcRecTime;
    std::map<UInt_t,Float_t> sumXtalWtOOTStcPhoIcRecTime;
 
    //Float_t	   aveRecTime;
@@ -572,7 +556,6 @@ private:
    Int_t          nkuStcrechits;
    Int_t          nkuNotrechits;
    Int_t          nkuNotStcrechits;
-   Int_t          nkuWtStcrechits;
    Int_t          nkuWootStcrechits;
    Int_t          ndigis;
 
@@ -614,12 +597,6 @@ private:
    std::vector<Float_t> * kuNotStcrhTOF;
    std::vector<UInt_t>  * kuNotStcrhID;
 
-   std::vector<Float_t> * kuWtStcrhE;
-   std::vector<Float_t> * kuWtStcrhtime;
-   std::vector<Float_t> * kuWtStcrhtimeErr;
-   std::vector<Float_t> * kuWtStcrhTOF;
-   std::vector<UInt_t>  * kuWtStcrhID;
-
    std::vector<Float_t> * kuWootStcrhE;
    std::vector<Float_t> * kuWootStcrhtime;
    std::vector<Float_t> * kuWootStcrhtimeErr;
@@ -639,7 +616,6 @@ private:
    std::vector<Float_t> *   out_kuStcrhtime;
    std::vector<Float_t> *   out_kuNotrhtime;
    std::vector<Float_t> *   out_kuNotStcrhtime;
-   std::vector<Float_t> *   out_kuWtStcrhtime;
    std::vector<Float_t> *   out_kuWootStcrhtime;
 
    TBranch        *b_nurechits;
@@ -647,7 +623,6 @@ private:
    TBranch        *b_nkuStcrechits;
    TBranch        *b_nkuNotrechits;
    TBranch        *b_nkuNotStcrechits;
-   TBranch        *b_nkuWtStcrechits;
    TBranch        *b_nkuWootStcrechits;
    TBranch        *b_ndigis;
    TBranch        *b_uRhId;
@@ -700,12 +675,6 @@ private:
    TBranch        *b_kuNotStcrhtimeErr;
    TBranch        *b_kuNotStcrhTOF;
    TBranch        *b_kuNotStcrhID;
-
-   TBranch        *b_kuWtStcrhE;
-   TBranch        *b_kuWtStcrhtime;
-   TBranch        *b_kuWtStcrhtimeErr;
-   TBranch        *b_kuWtStcrhTOF;
-   TBranch        *b_kuWtStcrhID;
 
    TBranch        *b_kuWootStcrhE;
    TBranch        *b_kuWootStcrhtime;

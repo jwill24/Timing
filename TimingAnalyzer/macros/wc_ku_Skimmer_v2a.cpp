@@ -96,7 +96,7 @@ Skimmer::Skimmer(const TString & indir, const TString & outdir, const TString & 
   Skimmer::InitAndSetOutConfig();
   Skimmer::InitOutTree();
   Skimmer::InitOutCutFlowHists();
- //std::cout << "Finished setting up output skim" << std::endl;
+  //std::cout << "Finished setting up output skim" << std::endl;
 
   tofHist = new TH1F("tofHist","Time of Flight [ns]",10000,-5,5);
   tofHist->Sumw2(); 
@@ -846,11 +846,11 @@ void Skimmer::EventLoop()
   float minRecE10 = 10.f;
   bool useTOF = true;
   //bool useTOF = false;
-  //const auto nEntries = 10;
+  //const auto nEntries = 100;
   for (auto entry = 0U; entry < nEntries; entry++)
   {
     // dump status check
-    if (entry%Common::nEvCheck == 0 || entry == 0) std::cout << "Processing Entry: " << entry << " out of " << nEntries << std::endl;
+    if (entry%Common::nEvCheck == 0 || entry == 0) //std::cout << "Processing Entry: " << entry << " out of " << nEntries << std::endl;
     //if( entry > 100 ) break;
     // get event weight: no scaling by BR, xsec, lumi, etc.
     if (fIsMC) fInEvent.b_genwgt->GetEntry(entry);
@@ -883,7 +883,7 @@ void Skimmer::EventLoop()
 //    gZmass = 0.f;
 //    gdR = 0.f;
     for( UInt_t idx = 0; idx < (*fInRecHits.ID).size(); idx++ ){
-       //std::cout << "Processing RecHit: " << idx << std::endl;
+//       //std::cout << "Processing RecHit: " << idx << std::endl;
         const auto id_i = (*fInRecHits.ID)[idx];
         const auto t_i = (*fInRecHits.time)[idx];
         const auto e_i = (*fInRecHits.E)[idx];
@@ -894,7 +894,7 @@ void Skimmer::EventLoop()
 	auto t_tof = t_i;
 	tofHist->Fill(tof_i);
 	//if( e_i >= minRecE ){
-	//std::cout << "With: id_i: " << id_i << " time: " << t_i << " energy: " << e_i << " tof: " << tof_i << " and " << RtOOTStc_t_i << std::endl;
+//	//std::cout << "With: id_i: " << id_i << " time: " << t_i << " energy: " << e_i << " tof: " << tof_i << " and " << RtOOTStc_t_i << std::endl;
                sumXtalRecTime[id_i] += t_tof;
                numXtalRecTime[id_i] += 1;
 	       if( hasMultiKURecHit ){
@@ -906,7 +906,7 @@ void Skimmer::EventLoop()
 				break;
 			}
                   }      
-		 //std::cout << "Filling sumXtalRtOOTStcRecTimes " << std::endl;  
+//		 //std::cout << "Filling sumXtalRtOOTStcRecTimes " << std::endl;  
 		  if( useTOF ){ 
 			RtStc_t_i += tof_i;
                         RtOOTStc_t_i += tof_i;
@@ -1103,7 +1103,7 @@ void Skimmer::EventLoop()
                         RtOOTStc_t_i += tof_i;
                         WtOOTStc_t_i += tof_i;
 		}
-		if( E_i >= 3 ){
+		if( E_i >= 5 ){
                 sumXtalRtStcPhoClRecTime[id_i] += RtStc_t_i;
                 sumXtalRtOOTStcPhoClRecTime[id_i] += RtOOTStc_t_i;
                 sumXtalWtOOTStcPhoClRecTime[id_i] += WtOOTStc_t_i;
@@ -1135,7 +1135,7 @@ void Skimmer::EventLoop()
                         	WtOOTStc_t_j += tof_j;
                 	}
                         //sumXtalRtOOTStcPhoIcRecTime :  numXtalRtOOTStcPhoIcRecTime                            
-                        if( E_i >= 3 and E_j >= 1 ){
+                        if( E_i >= 5 and E_j >= 3 ){
                         subsum += (RtStc_t_i - RtStc_t_j);
                         subsumnot += (RtOOTStc_t_i - RtOOTStc_t_j);
                         subsumwoot += (WtOOTStc_t_i - WtOOTStc_t_j);
@@ -1247,12 +1247,12 @@ void Skimmer::EventLoop()
       numXtalPhoRecTime[id2] += 1;
      //std::cout << "-------------Finished filling numXxtalRecHit times." << std::endl;
 
-  //    cout << "Seed1: " << seed1 << " ID: " << id1 << endl;
-  //    cout << "Seed2: " << seed2 << " ID: " << id2 << endl;
+  // //   cout << "Seed1: " << seed1 << " ID: " << id1 << endl;
+  // //   cout << "Seed2: " << seed2 << " ID: " << id2 << endl;
 
   //    nxtal_sep =  0;
       nxtal_sep =  Common::Xtal_Seperation(id1,id2);
-  //   //std::cout << " nxtal_sep : " << nxtal_sep << std::endl;
+  // //  //std::cout << " nxtal_sep : " << nxtal_sep << std::endl;
  
 //            const auto rh_j = (*inpho.recHits)[j]; // position within event rec hits vector
 //            const auto E_j  = (*fInRecHits.E) [rh_j];
@@ -1262,7 +1262,7 @@ void Skimmer::EventLoop()
       pho2.b_pt->GetEntry(entry);
 
       // now start to save them
-      //cout << "save photon " << endl;
+      ////cout << "save photon " << endl;
       fPhoList.clear();
       fPhoList.emplace_back((pho1.pt > pho2.pt) ? phopair.ipho1 : phopair.ipho2);
       fPhoList.emplace_back((pho1.pt > pho2.pt) ? phopair.ipho2 : phopair.ipho1);
@@ -1276,12 +1276,12 @@ void Skimmer::EventLoop()
     } // end of ZeeSkim
     else if (fSkim == SkimType::DiXtal) // this is a hack selection, which mixes up seeds and photons --> do NOT use this for analysis
     {
-     ////std::cout << "Start DiXtal "<< std::endl;
+     //std::cout << "Start DiXtal "<< std::endl;
       // get rechits
 //      fInRecHits.b_E->GetEntry(entry);
 //      fInRecHits.b_ID->GetEntry(entry);
 //      fInRecHits.b_time->GetEntry(entry);
-//     //std::cout << "Pulling RecHits done "<< std::endl;
+        //std::cout << "Pulling RecHits done "<< std::endl;
 //
       gZmass = 0.f;     
       gdR = 0.f; 
@@ -1294,7 +1294,7 @@ void Skimmer::EventLoop()
 //      }
 
       // loop over photons, getting pairs of rec hits that are most energetic and match!
-     ////std::cout << "Looping over Photons "<< std::endl;
+     //std::cout << "Looping over Photons "<< std::endl;
       std::vector<DiXtalInfo> good_pairs;
       for (auto ipho = 0; ipho < Common::nPhotons; ipho++)
       {	
@@ -1314,7 +1314,7 @@ void Skimmer::EventLoop()
 	inpho.b_recHits->GetEntry(entry);
 
 	const auto n = inpho.recHits->size();
-   //    //std::cout << "Looping over recHits n = " << n << std::endl;
+        //std::cout << "Looping over recHits n = " << n << std::endl;
 	for (auto i = 0U; i < n; i++)
 	{
 	  Bool_t isGoodPair = false;
@@ -1492,7 +1492,7 @@ void Skimmer::EventLoop()
   //    for( std::map<UInt_t,Float_t>::iterator it=sumXtalRecTime.begin(); it!=sumXtalRecTime.end(); ++it){
   //    	fOutAveXtalRecTimeHist->Fill( (it->second)/(numXtalRecTime[it->first]) );
   //    }
- //    //std::cout << "DiXtal: Set pho list in standard fashion." << std::endl;
+      //std::cout << "DiXtal: Set pho list in standard fashion." << std::endl;
       fPhoList.clear();
       fPhoList.emplace_back(pair.iph);
       fPhoList.emplace_back(pair.iph);
@@ -1535,11 +1535,11 @@ void Skimmer::EventLoop()
 //    if (fOutConfig.isHVDS) Skimmer::FillOutHVDSs(entry);
 //   if (fOutConfig.isToy)  Skimmer::FillOutToys(entry);
     Skimmer::FillOutEvent(entry,evtwgt);
-   //std::cout << "Finished proccessing event info." << std::endl;
+    //std::cout << "Finished proccessing event info." << std::endl;
     //if (fSkim != SkimType::DiXtal) Skimmer::FillOutJets(entry);
     //std::cout << "Start proccessing phos info." << std::endl;
     Skimmer::FillOutPhos(entry);
-   //std::cout << "Finished proccessing phos info." << std::endl;
+    //std::cout << "Finished proccessing phos info." << std::endl;
 //    if (fIsMC) Skimmer::CorrectMET();
 
     // fill the tree
@@ -1550,7 +1550,7 @@ void Skimmer::EventLoop()
 //  if (true){
 
 	  UInt_t offset = 100;
-	 //std::cout << "Filling Hists and Maps. " << std::endl;
+	  //std::cout << "Filling Hists and Maps. " << std::endl;
 	  for( std::map<UInt_t,Float_t>::iterator it=sumXtalRecTime.begin(); it!=sumXtalRecTime.end(); ++it){
 		const auto & idinfo = Common::DetIDMap[it->first];
                 const auto & aveXtalTime = (it->second)/(numXtalRecTime[it->first]);
@@ -1575,7 +1575,7 @@ void Skimmer::EventLoop()
 		}
 	  }
 
-	 //std::cout << "Filling fOutAveXtalPhoRecTime Hists and Maps. " << std::endl;
+	  //std::cout << "Filling fOutAveXtalPhoRecTime Hists and Maps. " << std::endl;
 	  for( std::map<UInt_t,Float_t>::iterator it=sumXtalPhoRecTime.begin(); it!=sumXtalPhoRecTime.end(); ++it){
                //std::cout << "Mapping " << it->first << " to idinfo." << std::endl;
                 const auto & idinfo = Common::DetIDMap[it->first];
@@ -1668,9 +1668,9 @@ void Skimmer::EventLoop()
                             fOutAveXtalRtOOTStcPhoRecTimeMapEM->Fill( idinfo.i1, idinfo.i2, aveXtalRtOOTStcTime + offset );
                     }
                 }
-         //std::cout << "Finished Filling fOutAveXtalPhoRecTime Hists and Maps. " << std::endl;		
+          //std::cout << "Finished Filling fOutAveXtalPhoRecTime Hists and Maps. " << std::endl;		
 	  }
-         //std::cout << "Filling fOutDifXtalPhoRecTime Hists and Maps. " << std::endl;
+          //std::cout << "Filling fOutDifXtalPhoRecTime Hists and Maps. " << std::endl;
           for( std::map<UInt_t,Float_t>::iterator it=difXtalPhoRecTime.begin(); it!=difXtalPhoRecTime.end(); ++it){
                 const auto & idinfo = Common::DetIDMap[it->first];
                 const auto & aveXtalTime = (it->second)/(numXtalPhoRecTime[it->first]);
@@ -1815,7 +1815,7 @@ void Skimmer::EventLoop()
           for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtOOTStcRecTime4E1.begin(); it!=sumXtalRtOOTStcRecTime4E1.end(); ++it){
                     const auto & idinfo = Common::DetIDMap[it->first];
                     const auto & aveXtalRtOOTStcTime1 = (sumXtalRtOOTStcRecTime4E1[it->first])/(numXtalRtOOTStcRecTime4E1[it->first]);
-      //             //std::cout << "Filling fOutAveXtalRtOOTStcRecTime4E1 " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTime[it->first] << std::endl;
+                    //std::cout << "Filling fOutAveXtalRtOOTStcRecTime4E1 " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTime[it->first] << std::endl;
                     if( idinfo.ecal == ECAL::EB ){
                             fOutAveXtalRtOOTStcRecTime4E1HistEB->Fill( aveXtalRtOOTStcTime1 );
                             fOutAveXtalRtOOTStcRecTime4E1MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime1 + offset );
@@ -1830,7 +1830,7 @@ void Skimmer::EventLoop()
           for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtOOTStcRecTimeE2.begin(); it!=sumXtalRtOOTStcRecTimeE2.end(); ++it){
                     const auto & idinfo = Common::DetIDMap[it->first];
                     const auto & aveXtalRtOOTStcTime2 = (sumXtalRtOOTStcRecTimeE2[it->first])/(numXtalRtOOTStcRecTimeE2[it->first]);
-    //               //std::cout << "Filling fOutAveXtalRtOOTStcRecTimeE2 " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTime[it->first] << std::endl;
+                    //std::cout << "Filling fOutAveXtalRtOOTStcRecTimeE2 " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTime[it->first] << std::endl;
                     if( idinfo.ecal == ECAL::EB ){
                             fOutAveXtalRtOOTStcRecTimeE2HistEB->Fill( aveXtalRtOOTStcTime2 );
                             fOutAveXtalRtOOTStcRecTimeE2MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime2 + offset );
@@ -1845,7 +1845,7 @@ void Skimmer::EventLoop()
           for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtOOTStcRecTimeE5.begin(); it!=sumXtalRtOOTStcRecTimeE5.end(); ++it){
                     const auto & idinfo = Common::DetIDMap[it->first];
                     const auto & aveXtalRtOOTStcTime5 = (sumXtalRtOOTStcRecTimeE5[it->first])/(numXtalRtOOTStcRecTimeE5[it->first]);
-                   //std::cout << "Filling fOutAveXtalRtOOTStcRecTimeE5Hist " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTime[it->first] << std::endl;
+                    //std::cout << "Filling fOutAveXtalRtOOTStcRecTimeE5Hist " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTime[it->first] << std::endl;
                     if( idinfo.ecal == ECAL::EB ){
                             fOutAveXtalRtOOTStcRecTimeE5HistEB->Fill( aveXtalRtOOTStcTime5 );
                             fOutAveXtalRtOOTStcRecTimeE5MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtOOTStcTime5 + offset );
@@ -1860,7 +1860,7 @@ void Skimmer::EventLoop()
           for( std::map<UInt_t,Float_t>::iterator it=sumXtalRtStcRecTimeE5.begin(); it!=sumXtalRtStcRecTimeE5.end(); ++it){
                     const auto & idinfo = Common::DetIDMap[it->first];
                     const auto & aveXtalRtStcTime5 = (sumXtalRtStcRecTimeE5[it->first])/(numXtalRtOOTStcRecTimeE5[it->first]);
-                   //std::cout << "Filling fOutAveXtalRtStcRecTimeE5Map " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTimeE5[it->first] << std::endl;
+                    //std::cout << "Filling fOutAveXtalRtStcRecTimeE5Map " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTimeE5[it->first] << std::endl;
                     if( idinfo.ecal == ECAL::EB ){
                             //fOutAveXtalRtStcRecTimeE5HistEB->Fill( aveXtalRtStcTime5 );
                             fOutAveXtalRtStcRecTimeE5MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalRtStcTime5 + offset );
@@ -1875,7 +1875,7 @@ void Skimmer::EventLoop()
           for( std::map<UInt_t,Float_t>::iterator it=sumXtalWtOOTStcRecTimeE5.begin(); it!=sumXtalWtOOTStcRecTimeE5.end(); ++it){
                     const auto & idinfo = Common::DetIDMap[it->first];
                     const auto & aveXtalWtOOTStcTime5 = (sumXtalWtOOTStcRecTimeE5[it->first])/(numXtalRtOOTStcRecTimeE5[it->first]);
-                   //std::cout << "Filling fOutAveXtalWtOOTStcRecTimeE5Map " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTimeE5[it->first] << std::endl;
+                    //std::cout << "Filling fOutAveXtalWtOOTStcRecTimeE5Map " << it->first << " with " << it->second << " / " << numXtalRtOOTStcRecTimeE5[it->first] << std::endl;
                     if( idinfo.ecal == ECAL::EB ){
                             //fOutAveXtalWtOOTStcRecTimeE5HistEB->Fill( aveXtalWtOOTStcTime5 );
                             fOutAveXtalWtOOTStcRecTimeE5MapEB->Fill( idinfo.i2, idinfo.i1, aveXtalWtOOTStcTime5 + offset );
@@ -4000,7 +4000,7 @@ void Skimmer::SetupSkimType(const TString & skim_type)
   if      (skim_type.EqualTo("Standard"   ,TString::kExact)) fSkim = SkimType::Standard;
   else if (skim_type.EqualTo("Zee"        ,TString::kExact)) fSkim = SkimType::Zee;
   else if (skim_type.EqualTo("DiXtal"     ,TString::kExact)) fSkim = SkimType::DiXtal;
-  else if (skim_type.EqualTo("DiXtal"     ,TString::kExact)) fSkim = SkimType::DiXtal;
+ // else if (skim_type.EqualTo("DiXtal"     ,TString::kExact)) fSkim = SkimType::DiXtal;
   else if (skim_type.EqualTo("AlwaysTrue" ,TString::kExact)) fSkim = SkimType::AlwaysTrue;
   else if (skim_type.EqualTo("AlwaysFalse",TString::kExact)) fSkim = SkimType::AlwaysFalse;
   else

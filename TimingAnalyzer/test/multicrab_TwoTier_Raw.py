@@ -140,8 +140,8 @@ def subcrab( runs, events, reqmem ):
 	    #trial          = "twotier_rm_w_ks_kscc_v3"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=25000, reduced size
             #trial          = "twotier_rm_w_ks_kscc_v5"  # mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=3750, reduced size
             #trial          = "twotier_rm_w_woot_ks_kscc_lhc0_v5"  # endfill0 mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=3750, reduced size
-            trial          = "twotier_rm_w_woot_ks_kscc_lhc0_v6"  # startfill mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=3750, reduced size
-            #trial          = "twotier_rm_w_woot_ks_kscc_nolhc_v6"  # no lhc mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=3750, reduced size
+            #trial          = "twotier_rm_w_woot_ks_kscc_lhc0_v6"  # startfill mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=3750, reduced size
+            trial          = "twotier_rm_w_woot_ks_kscc_nolhc_v7"  # no lhc mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=3750, reduced size
 
             config.General.requestName   = trial+"_"+primaryDataset+"_"+runEra+"_"+runs+"_"+dataset+"_dispho"
             config.Data.outputDatasetTag = trial+"_"+primaryDataset+"_"+dataset+"_"+runEra+"_"+runs+"_dispho"

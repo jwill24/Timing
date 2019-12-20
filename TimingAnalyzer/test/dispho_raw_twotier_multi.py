@@ -212,23 +212,23 @@ process.MessageLogger.destinations = ['cout', 'cerr']
 process.MessageLogger.cerr.FwkReport.reportEvery = 1000
 
 # LHC Info
-process.LHCInfoReader = cms.ESSource("PoolDBESSource",
-				     DBParameters = cms.PSet(
-		messageLevel = cms.untracked.int32(0),
-		authenticationPath = cms.untracked.string('')),
-				     toGet = cms.VPSet( 
-		cms.PSet(
-			record = cms.string("LHCInfoRcd"),
-			tag = cms.string("LHCInfoStartFill_prompt_v0")
-                        #tag = cms.string("LHCInfoEndFill_prompt_v0") 
-                        #tag = cms.string("LHCInfoEndFill_prompt_v1")
-                        #tag = cms.string("LHCInfoEndFill_prompt_v2")
-			)
-		),
-				     connect = cms.string('frontier://FrontierProd/CMS_CONDITIONS')
-				     )
-
-process.lhcinfo_prefer = cms.ESPrefer("PoolDBESSource","LHCInfoReader")
+#process.LHCInfoReader = cms.ESSource("PoolDBESSource",
+#				     DBParameters = cms.PSet(
+#		messageLevel = cms.untracked.int32(0),
+#		authenticationPath = cms.untracked.string('')),
+#				     toGet = cms.VPSet( 
+#		cms.PSet(
+#			record = cms.string("LHCInfoRcd"),
+#			tag = cms.string("LHCInfoStartFill_prompt_v0")
+#                        #tag = cms.string("LHCInfoEndFill_prompt_v0") 
+#                        #tag = cms.string("LHCInfoEndFill_prompt_v1")
+#                        #tag = cms.string("LHCInfoEndFill_prompt_v2")
+#			)
+#		),
+#				     connect = cms.string('frontier://FrontierProd/CMS_CONDITIONS')
+#				     )
+#
+#process.lhcinfo_prefer = cms.ESPrefer("PoolDBESSource","LHCInfoReader")
 
 
 ## Define the input source

@@ -112,6 +112,8 @@ void wc_ku_InterCali_v1( string infilename ){
     float smaj_1;
     float smaj_2;
     float smaj_3;
+    int seed_0;
+    int seed_1;
 
     TBranch * b_npho_recHits_0;
     TBranch * b_npho_recHits_1;
@@ -139,7 +141,11 @@ void wc_ku_InterCali_v1( string infilename ){
     TBranch * b_smaj_1;
     TBranch * b_smaj_2;
     TBranch * b_smaj_3;
+    TBranch * b_seed_0;
+    TBranch * b_seed_1;
 
+    fInTree->SetBranchAddress("phoseed_0",&seed_0,&b_seed_0);
+    fInTree->SetBranchAddress("phoseed_1",&seed_1,&b_seed_1);
     fInTree->SetBranchAddress("phoisOOT_0",&isOOT_0,&b_isOOT_0);
     fInTree->SetBranchAddress("phoisOOT_1",&isOOT_1,&b_isOOT_1);
     fInTree->SetBranchAddress("phoisOOT_2",&isOOT_2,&b_isOOT_2);
@@ -212,6 +218,9 @@ void wc_ku_InterCali_v1( string infilename ){
         //std::cout << "GetEntries rh for photons 2 Finished "<< std::endl;
         b_npho_recHits_3->GetEntry(entry);
         //std::cout << "GetEntries rh for photons 3 Finished "<< std::endl;
+        b_seed_0->GetEntry(entry);
+        b_seed_1->GetEntry(entry);
+        //std::cout << "GetEntries seed Finished "<< std::endl;
         b_isOOT_0->GetEntry(entry);
         b_isOOT_1->GetEntry(entry);
         b_isOOT_2->GetEntry(entry);
@@ -245,34 +254,44 @@ void wc_ku_InterCali_v1( string infilename ){
         bool cl_isOOT[nPhotons] = { isOOT_0, isOOT_1, isOOT_2, isOOT_3};
 
         //std::cout << "Looping over Photons "<< std::endl;
-        for (auto ipho = 0; ipho < nPhotons; ipho++){
+//        for (auto ipho = 0; ipho < nPhotons; ipho++){
 
              //auto & inpho = cluster[ipho];
     
              // skip OOT for now
              //inpho.b_isOOT->GetEntry(entry);
-             if (cl_isOOT[ipho]) continue;
+             //if (cl_isOOT[ipho]) continue;
     
              //inpho.b_smin->GetEntry(entry);
              //inpho.b_smaj->GetEntry(entry);
     
-             if (cl_smin[ipho] > 0.3) continue;
-             if (cl_smaj[ipho] > 0.5) continue;
+             //if (cl_smin[ipho] > 0.3) continue;
+             //if (cl_smaj[ipho] > 0.5) continue;
     
              // get pair of rechits that are good candidates : double loop, yo
              // inpho.b_recHits->GetEntry(entry);
-    
-             const auto nRecHits = (cluster[ipho])->size();
-             //std::cout << "Looping over recHits n = " << n << std::endl;
-             for (auto i = 0U; i < nRecHits; i++){
+
+	     int ipho0 = 0;
+	     int ipho1 = 1;    
+
+
+	     const auto rh_seed0 = (*(cluster[ipho0]))[seed0];
+	     auto seed_e0 = (*fInRecHits_E) [rh_seed0];
+             const auto rh_seed1 = (*(cluster[ipho1]))[seed1];
+             auto seed_e1 = (*fInRecHits_E) [rh_seed1];
+
+             const auto nRecHits0 = (cluster[ipho0])->size();
+             std::cout << "Looping over recHits n = " << n << std::endl;
+             for (auto i = 0U; i < nRecHits0; i++){
+             //for (auto i = 0U; i < 1; i++){
 		  float subM = 0.f;
                   float subsum = 0.f;
                   int subsumnum = 0;
                   float subMnot = 0.f;
                   float subsumnot = 0.f;
                   float subsumwoot = 0.f;
-    
-                  const auto rh_i = (*(cluster[ipho]))[i]; // position within event rec hits vector
+
+                  const auto rh_i = (*(cluster[ipho0]))[i]; // position within event rec hits vector
                   const auto E_i  = (*fInRecHits_E) [rh_i];
                   const auto id_i = (*fInRecHits_ID)[rh_i];
                   const auto t_i = (*fInRecHits_time)[rh_i];
@@ -282,7 +301,7 @@ void wc_ku_InterCali_v1( string infilename ){
                   auto WtOOTStc_t_i = 0.f;
 		  float prev_i[nAlgos] = {0.f};   			
 
-		  if( E_i < 5.0 ) continue;
+		  if( E_i < 0.8*seed_e0 or E_i > 1.2*seed_e0 ) continue;
                   for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
                           if( (*kurhID)[kuseed] == id_i ){
                                   RtStc_t_i = (*kuStcrhtime)[kuseed];
@@ -309,11 +328,13 @@ void wc_ku_InterCali_v1( string infilename ){
    //                               std::cout << "For EM a = " << a << " prev_i[a] = " << prev_i[a]  << " at " << id_i_info.i2 << " " << id_i_info.i1  << std::endl;
                           }
                   }
-                  for (auto j = 0U; j < nRecHits; j++){
+                  const auto nRecHits1 = (cluster[ipho1])->size();
+                  for (auto j = 0U; j < nRecHits1; j++){
+                  //for (auto j = 0U; j < 1; j++){
 
-			if( i == j ) continue;
+			//if( i == j ) continue;
 
-                        const auto rh_j = (*(cluster[ipho]))[j]; // position within event rec hits vector
+                        const auto rh_j = (*(cluster[ipho1]))[j]; // position within event rec hits vector
                         const auto E_j  = (*fInRecHits_E) [rh_j];
                         const auto id_j = (*fInRecHits_ID)[rh_j];
                         auto RtStc_t_j = 0.f;
@@ -321,7 +342,7 @@ void wc_ku_InterCali_v1( string infilename ){
                         auto WtOOTStc_t_j = 0.f;
                         const auto tof_j = (*fInRecHits_TOF)[rh_j];
                         float prev_j[nAlgos] = {0.f};
-		        if( E_j < 3.0 ) continue;
+			if( E_j < 0.8*seed_e1 or E_j > 1.2*seed_e1 ) continue;
                         for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
                                 if( (*kurhID)[kuseed] == id_j ){
                                         RtStc_t_j = (*kuStcrhtime)[kuseed];
@@ -371,7 +392,7 @@ void wc_ku_InterCali_v1( string infilename ){
                   numXtalIcRecTime[id_i] += subsumnum; //1;
              } // end outer double loop over rechits
              //std::cout << "RecHits Loop done "<< std::endl;
-        } // end loop over photons
+ //       } // end loop over photons
         //std::cout << "Photon Loop done "<< std::endl;
    
 

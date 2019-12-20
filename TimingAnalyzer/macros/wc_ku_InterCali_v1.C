@@ -4,13 +4,15 @@
 
 #include <iostream>
 
-void wc_ku_InterCali_v1( string infilename ){
+void wc_ku_InterCali_v1( string infilename, string outfilename ){
 
     const int  nIterations = 25;
     const int  nAlgos = 2; // RtStc, RtOOTStc //, WtOOTStc
     const int  nPhotons = 4;
     const float offset = 100.0;
     const int bin_offset = 86;
+    const float ri_ecut = 5.0;
+    const float rj_ecut = 5.0;
 
     float M[nIterations] = {0.f};
     float Mnot[nIterations] = {0.f};
@@ -200,7 +202,7 @@ void wc_ku_InterCali_v1( string infilename ){
     // >> calcs  <<
 
     const auto nEntries = fInTree->GetEntries();
-    //const auto nEntries = 10000;
+    //const auto nEntries = 100;
     for( auto iter = 0; iter < nIterations; iter++){
     for (auto entry = 0U; entry < nEntries; entry++){
 	if( entry%100000 == 0 ) std::cout << "Proccessed " << entry << " of " << nEntries << " entries for " << iter << " of " << nIterations << " Iterations." << std::endl;
@@ -282,7 +284,7 @@ void wc_ku_InterCali_v1( string infilename ){
                   auto WtOOTStc_t_i = 0.f;
 		  float prev_i[nAlgos] = {0.f};   			
 
-		  if( E_i < 5.0 ) continue;
+		  if( E_i < ri_ecut ) continue;
                   for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
                           if( (*kurhID)[kuseed] == id_i ){
                                   RtStc_t_i = (*kuStcrhtime)[kuseed];
@@ -321,7 +323,7 @@ void wc_ku_InterCali_v1( string infilename ){
                         auto WtOOTStc_t_j = 0.f;
                         const auto tof_j = (*fInRecHits_TOF)[rh_j];
                         float prev_j[nAlgos] = {0.f};
-		        if( E_j < 3.0 ) continue;
+		        if( E_j < rj_ecut ) continue;
                         for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
                                 if( (*kurhID)[kuseed] == id_j ){
                                         RtStc_t_j = (*kuStcrhtime)[kuseed];
@@ -408,6 +410,7 @@ void wc_ku_InterCali_v1( string infilename ){
     sumXtalRtOOTStcPhoIcRecTime.clear();
     sumXtalWtOOTStcPhoIcRecTime.clear();
     numXtalIcRecTime.clear();
+    std::cout << "For iter " << iter+1 << " we have M values of " << M[iter]/nM[iter] << " for " << M[iter] << " / " << nM[iter] << std::endl;
 
     }  //  end iteration loop
     //std::cout << " End of Interation Loops " << std::endl;
@@ -419,8 +422,10 @@ void wc_ku_InterCali_v1( string infilename ){
  	MnotHist->Fill( iter, Mnot[iter]/nM[iter] );
     }
 
+    TFile* fOutFile = new TFile( outfilename.c_str(), "RECREATE" );
+    fOutFile->cd();
+
     std::cout << "Write IcMaps" << std::endl;
-    fInFile->cd();
     for( auto i = 0; i < nAlgos; i++){
 	    for( auto j = 1; j < nIterations+1; j++ ){
 		IcMapEB[i][j]->Write();
