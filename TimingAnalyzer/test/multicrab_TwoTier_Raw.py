@@ -142,6 +142,7 @@ def subcrab( runs, events, reqmem ):
             #trial          = "twotier_rm_w_woot_ks_kscc_lhc0_v5"  # endfill0 mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=3750, reduced size
             #trial          = "twotier_rm_w_woot_ks_kscc_lhc0_v6"  # startfill mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=3750, reduced size
             trial          = "twotier_rm_w_woot_ks_kscc_nolhc_v7"  # no lhc mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=3750, reduced size
+            trial          = "twotier_ks_kscc_test_v7"  # no lhc mini+raw for kurechits/uncal: true,true,false, jwkpupv3, unitsPerJob=3750, reduced size
 
             config.General.requestName   = trial+"_"+primaryDataset+"_"+runEra+"_"+runs+"_"+dataset+"_dispho"
             config.Data.outputDatasetTag = trial+"_"+primaryDataset+"_"+dataset+"_"+runEra+"_"+runs+"_dispho"
@@ -189,7 +190,8 @@ def subcrab( runs, events, reqmem ):
 event_list_path = "/home/t3-ku/jaking/trees/ecal/run_lumi_event_lists/sel_eg2018/"
 
 def submit_run2018A():
-        subcrab( "315257-315488","",2500)
+        #subcrab( "315257-315488","",2500)
+        subcrab( "315721-316240","",2500)
 
         #subcrab( "315257-315322", event_list_path + "sel_315257v315322_EG2018A.txt", 3000 )
         #subcrab( "315339-315366", event_list_path + "sel_315339v315366_EG2018A.txt", 3000 )

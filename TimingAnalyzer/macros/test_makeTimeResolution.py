@@ -66,12 +66,12 @@ inlist_dataset_egamma_woot = [
 
 #skiminfile='ku_multitest_twotier_run18D_323414_dispho.root'
 #skiminfile='ku_test_ks_1000_twotier_run18D_323414_dispho.root'
-#skiminfile='dispho_raw_eg2018A_315322.root'
+#skiminfile='dispho_raw_2018A_315322.root'
 #skiminfile='ku_twotier_run18D_320712_dispho.root'
 #skiminfile='output_235.root'
 #skiminfile='ku_rhcomp_twotier_run18D_dispho.root'
-#skiminfile='dispho_mini_eg2018A_315322.root'
-#skiminfile='dispho_2t_eg2018B.root'
+#skiminfile='dispho_mini_2018A_315322.root'
+#skiminfile='dispho_tt_2018B.root'
 #skiminfile='dispho_tt_2018A.root'
 #skiminfile='dispho_tt_2018B.root'
 #skiminfile='dispho_tt_2018C.root'
@@ -80,37 +80,37 @@ inlist_dataset_egamma_woot = [
 #skiminlist='dispho_tt_2018D_320673-320824.txt'
 #skiminfile='dispho_tt_2018A_315257-315488.root'
 #skiminlist='dispho_tt_2018A_315257-315488.txt'
-#skiminfile='dispho_2t_eg2018B_global.root'
-#skiminfile='dispho_2t_eg2018B_local_icv2.root'
-#skiminfile='dispho_2t_eg2018B_local.root'
-#skiminfile='dispho_2t_eg2018B_notof.root'
-#skiminfile='dispho_tt_2018D_320673-320824_mf.root'
+#skiminfile='dispho_tt_2018B_global.root'
+#skiminfile='dispho_tt_2018B_local_icv2.root'
+#skiminfile='dispho_tt_2018B_local.root'
+#skiminfile='dispho_tt_2018B_notof.root'
+skiminfile='dispho_tt_2018D_320673-320824_mf.root'
 #skiminfile='dispho_tt_2018pABCD_mf.root'
-skiminfile='blank.root'
+#skiminfile='blank.root'
 #preplotoutfile=skiminfile
 #preplotoutfile='ku_multitest_twotier_run18D_323414_dispho_preplot.root'
 #preplotoutfile='dispho_tt_2018B_preplot.root'
 #preplotoutfile='dispho_tt_2018C_preplot.root'
 #preplotoutfile='dispho_tt_2018D_preplot.root'
-#preplotoutfile='dispho_2t_eg2018B_local_icv2_i25_e5e5_preplot.root'
-#preplotoutfile='dispho_2t_eg2018D_global_icv2_i25_e5e3_preplot.root'
-preplotoutfile='dispho_2t_eg2018D_local_globalic_i25_e5e3_preplot.root'
-#preplotoutfile='dispho_2t_eg2018B_global_preplot.root'
-#preplotoutfile='dispho_tt_eg2018B_global_ic_preplot.root'
-#preplotoutfile='dispho_2t_eg2018B_local_preplot.root'
-#preplotoutfile='dispho_tt_eg2018B_local_ic_preplot.root'
-#preplotoutfile='dispho_2t_eg2018B_notof_preplot.root'
-#preplotoutfile='dispho_2t_eg2018B_tof_preplot.root'
-#preplotoutfile='dispho_2t_eg2018B_inter_preplot.root'
+#preplotoutfile='dispho_tt_2018B_local_icv2_i25_e5e5_preplot.root'
+#preplotoutfile='dispho_tt_2018D_global_icv2_i25_e5e3_preplot.root'
+preplotoutfile='dispho_tt_2018D_local_globalic_i25_e5e3_preplot.root'
+#preplotoutfile='dispho_tt_2018B_global_preplot.root'
+#preplotoutfile='dispho_tt_2018B_global_ic_preplot.root'
+#preplotoutfile='dispho_tt_2018B_local_preplot.root'
+#preplotoutfile='dispho_tt_2018B_local_ic_preplot.root'
+#preplotoutfile='dispho_tt_2018B_notof_preplot.root'
+#preplotoutfile='dispho_tt_2018B_tof_preplot.root'
+#preplotoutfile='dispho_tt_2018B_inter_preplot.root'
 
-#caliinfile='dispho_2t_eg2018B_local_icv2_i25_e5e5.root'
-#caliinfile='dispho_2t_eg2018D_global_e5_i25_e5e3.root'
-#caliinfile='dispho_2t_eg2018D_global_i25_e5e3.root'
-caliinfile='dispho_2t_2018pABCD_global_i25_e5e3.root'
+#caliinfile='dispho_tt_2018B_local_icv2_i25_e5e5.root'
+#caliinfile='dispho_tt_2018D_global_e5_i25_e5e3.root'
+caliinfile='dispho_tt_2018D_global_v2_i25_e5e3.root'
+#caliinfile='dispho_tt_2018pABCD_global_i25_e5e3.root'
 
-cali1infile='dispho_2t_eg2018D_global_e5_i25_e5e3.root'
-cali2infile='dispho_2t_eg2018D_global_i25_e5e3.root'
-calioutfile='caliplots_2t_eg2018D_global_i25_e5e3.root'
+cali1infile='dispho_tt_2018D_global_e5_i25_e5e3.root'
+cali2infile='dispho_tt_2018D_global_i25_e5e3.root'
+calioutfile='caliplots_tt_2018D_global_i25_e5e3.root'
 
 infile=preplotoutfile
 #infile=skiminfile
@@ -280,12 +280,12 @@ misc_fit_cf='ku_config/tmp_misc_fit.txt'
 indir="/home/t3-ku/jaking/datasets/ecalTiming/EGamma"
 #indir="/home/t3-ku/jaking/datasets/ecalTiming/DoubleEG"
 #indir="../test/"
-#skimoutdir="skimmed/local_ta/"
-#skimoutdir="skimmed/local_tb/"
-#skimoutdir="skimmed/global_ta/"
-#skimoutdir="skimmed/global_tb/"
-skimoutdir="skimmed/"
-caliindir="skimmed/global_ta/"
+#skimoutdir="/home/t3-ku/jaking/ecaltiming/skimmed/local_ta/"
+#skimoutdir="/home/t3-ku/jaking/ecaltiming/skimmed/local_tb/"
+skimoutdir="/home/t3-ku/jaking/ecaltiming/skimmed/global_ta/"
+#skimoutdir="/home/t3-ku/jaking/ecaltiming/skimmed/global_tb/"
+#skimoutdir="/home/t3-ku/jaking/ecaltiming/skimmed/"
+caliindir="/home/t3-ku/jaking/ecaltiming/skimmed/global_ta/"
 #caliindir=skimoutdir
 outdir=infile[:-5]+"/"
 filedir="trplots/"+outdir
@@ -304,7 +304,7 @@ skim2b='root -b -q -l wc_runKUSkimmer_v2b.C\(\\"'
 #dopreplot='root -b -q -l wc_ku_Preplot.C\(\\"'
 #dopreplot='root -b -q -l wc_ku_Preplot_nowt.C\(\\"'
 dopreplot='root -b -q -l wc_ku_Preplot_ic.C\(\\"'
-dointercali='root -b -q -l wc_ku_InterCali_global_v1.C\(\\"'
+dointercali='root -b -q -l wc_ku_InterCali_global_v2.C\(\\"'
 #dointercali='root -b -q -l wc_ku_InterCali_v1.C\(\\"'
 #dointercali='root -b -q -l wc_ku_InterCali_v2.C\(\\"'
 #dointercali='root -b -q -l wc_runKUIntercalV2.C\(\\"'
@@ -379,12 +379,12 @@ def do_caliplots():
 #do_skimmer()
 #do_skimmer_list(inlist_dataset_double)
 #do_skimmer_list(inlist_tree_94)
-do_skimmer_list_wt(inlist_dataset_egamma_woot)
+#do_skimmer_list_wt(inlist_dataset_egamma_woot)
 #do_skimmer_chain()
 #do_intercali()
 #do_preplotskim()
 #do_plots( plot_list )
-#do_caliplots()
+do_caliplots()
 
 
 

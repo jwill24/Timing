@@ -62,13 +62,23 @@ void wc_ku_CaliPlots( string infilename0, string infilename1, string outfilename
     	}
     }
 
-    auto polehist = new TH1F( "icpole", "Cali Pole Plot", 1001, -0.020, 0.020 );
+    auto icdist0hist = new TH1F( "icdist0", "Cali0 EB Dist Plot", 400, -200.0, 200.0 );
+    auto icdist1hist = new TH1F( "icdist1", "Cali1 EB Dist Plot", 400, -200.0, 200.0 );
 
-    for( int i2p = -85; i2p <= 85; i2p++ ){
-	for( int i1p = 0; i1p <= 360; i1p++ ){ 	
-    		polehist->Fill( ebmaps0[nIter]->GetBinContent( i2p, i1p ) - ebmaps1[nIter]->GetBinContent( i2p, i1p ) ); 
+    auto polehist = new TH1F( "icpole", "Cali EB Pole Plot", 400, -0.020, 0.020 );
+
+    int count = 0;
+    for( int i2p = 1; i2p <= 170; i2p++ ){
+	for( int i1p = 1; i1p <= 360; i1p++ ){
+		count++;
+		if( ebmaps0[nIter]->GetBinContent( i2p, i1p ) == 0 ) continue; 	
+    		polehist->Fill( abs(ebmaps0[nIter]->GetBinContent( i2p, i1p ) - ebmaps1[nIter]->GetBinContent( i2p, i1p )) ); 
+                icdist0hist->Fill( ebmaps0[nIter]->GetBinContent( i2p, i1p ) );
+                icdist1hist->Fill( ebmaps1[nIter]->GetBinContent( i2p, i1p ) );
 	}
-    }
+    } 
+    
+    std::cout << "Count: " << count << std::endl;    
 
     for( int i = 0; i < 2; i++ ){
         for( int j= 0; j < 6; j++ ){
@@ -77,6 +87,8 @@ void wc_ku_CaliPlots( string infilename0, string infilename1, string outfilename
     }
 
     polehist->Write();
+    icdist0hist->Write();
+    icdist1hist->Write();
 
     MHist0->Write();
     MnotHist0->Write();

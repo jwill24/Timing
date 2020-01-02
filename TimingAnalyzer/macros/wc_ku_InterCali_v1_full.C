@@ -14,6 +14,7 @@ void wc_ku_InterCali_v1( string infilename, string outfilename ){
     const float ri_ecut = 5.0;
     const float rj_ecut = 5.0;
 
+
     float M[nIterations] = {0.f};
     float Mnot[nIterations] = {0.f};
     float Mwt[nIterations] = {0.f};

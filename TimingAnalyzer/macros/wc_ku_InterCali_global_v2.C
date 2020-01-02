@@ -4,13 +4,17 @@
 
 #include <iostream>
 
-void wc_ku_InterCali_v1( string infilename ){
+void wc_ku_InterCali_global_v2( string infilename, string outfilename  ){
 
     const int  nIterations = 25;
     const int  nAlgos = 2; // RtStc, RtOOTStc //, WtOOTStc
     const int  nPhotons = 4;
     const float offset = 100.0;
     const int bin_offset = 86;
+    const int mfcorrection = 6;
+
+    const float ri_ecut = 5.0;
+    const float rj_ecut = 5.0;
 
     float M[nIterations] = {0.f};
     float Mnot[nIterations] = {0.f};
@@ -112,8 +116,12 @@ void wc_ku_InterCali_v1( string infilename ){
     float smaj_1;
     float smaj_2;
     float smaj_3;
-    int seed_0;
-    int seed_1;
+    UInt_t seedID_0;
+    UInt_t seedID_1;
+    float seedE_0;
+    float seedE_1;
+    float seedTOF_0;
+    float seedTOF_1;
 
     TBranch * b_npho_recHits_0;
     TBranch * b_npho_recHits_1;
@@ -141,35 +149,44 @@ void wc_ku_InterCali_v1( string infilename ){
     TBranch * b_smaj_1;
     TBranch * b_smaj_2;
     TBranch * b_smaj_3;
-    TBranch * b_seed_0;
-    TBranch * b_seed_1;
+    TBranch * b_seedID_0;
+    TBranch * b_seedID_1;
+    TBranch * b_seedE_0;
+    TBranch * b_seedE_1;
+    TBranch * b_seedTOF_0;
+    TBranch * b_seedTOF_1;
 
-    fInTree->SetBranchAddress("phoseed_0",&seed_0,&b_seed_0);
-    fInTree->SetBranchAddress("phoseed_1",&seed_1,&b_seed_1);
-    fInTree->SetBranchAddress("phoisOOT_0",&isOOT_0,&b_isOOT_0);
-    fInTree->SetBranchAddress("phoisOOT_1",&isOOT_1,&b_isOOT_1);
-    fInTree->SetBranchAddress("phoisOOT_2",&isOOT_2,&b_isOOT_2);
-    fInTree->SetBranchAddress("phoisOOT_3",&isOOT_3,&b_isOOT_3);
-    fInTree->SetBranchAddress("phosmin_0",&smin_0,&b_smin_0);
-    fInTree->SetBranchAddress("phosmin_1",&smin_1,&b_smin_1);
-    fInTree->SetBranchAddress("phosmin_2",&smin_2,&b_smin_2);
-    fInTree->SetBranchAddress("phosmin_3",&smin_3,&b_smin_3);
-    fInTree->SetBranchAddress("phosmaj_0",&smaj_0,&b_smaj_0);
-    fInTree->SetBranchAddress("phosmaj_1",&smaj_1,&b_smaj_1);
-    fInTree->SetBranchAddress("phosmaj_2",&smaj_2,&b_smaj_2);
-    fInTree->SetBranchAddress("phosmaj_3",&smaj_3,&b_smaj_3);
+    //fInTree->SetBranchAddress("phoseedID_0",&seedID_0,&b_seedID_0);
+    //fInTree->SetBranchAddress("phoseedID_1",&seedID_1,&b_seedID_1);
+    //fInTree->SetBranchAddress("phoseedE_0",&seedE_0,&b_seedE_0);
+    //fInTree->SetBranchAddress("phoseedE_1",&seedE_1,&b_seedE_1);
+    //fInTree->SetBranchAddress("phoseedTOF_0",&seedTOF_0,&b_seedTOF_0);
+    //fInTree->SetBranchAddress("phoseedTOF_1",&seedTOF_1,&b_seedTOF_1);
+
+    //fInTree->SetBranchAddress("phoisOOT_0",&isOOT_0,&b_isOOT_0);
+    //fInTree->SetBranchAddress("phoisOOT_1",&isOOT_1,&b_isOOT_1);
+    //fInTree->SetBranchAddress("phoisOOT_2",&isOOT_2,&b_isOOT_2);
+    //fInTree->SetBranchAddress("phoisOOT_3",&isOOT_3,&b_isOOT_3);
+    //fInTree->SetBranchAddress("phosmin_0",&smin_0,&b_smin_0);
+    //fInTree->SetBranchAddress("phosmin_1",&smin_1,&b_smin_1);
+    //fInTree->SetBranchAddress("phosmin_2",&smin_2,&b_smin_2);
+    //fInTree->SetBranchAddress("phosmin_3",&smin_3,&b_smin_3);
+    //fInTree->SetBranchAddress("phosmaj_0",&smaj_0,&b_smaj_0);
+    //fInTree->SetBranchAddress("phosmaj_1",&smaj_1,&b_smaj_1);
+    //fInTree->SetBranchAddress("phosmaj_2",&smaj_2,&b_smaj_2);
+    //fInTree->SetBranchAddress("phosmaj_3",&smaj_3,&b_smaj_3);
     fInTree->SetBranchAddress("out_npho_recHits_0",&npho_recHits_0,&b_npho_recHits_0);
     fInTree->SetBranchAddress("out_npho_recHits_1",&npho_recHits_1,&b_npho_recHits_1);
     fInTree->SetBranchAddress("out_npho_recHits_2",&npho_recHits_2,&b_npho_recHits_2);
     fInTree->SetBranchAddress("out_npho_recHits_3",&npho_recHits_3,&b_npho_recHits_3);
     fInTree->SetBranchAddress("out_fInRecHits_E",&fInRecHits_E,&b_fInRecHits_E);
     fInTree->SetBranchAddress("out_fInRecHits_ID",&fInRecHits_ID,&b_fInRecHits_ID);
-    fInTree->SetBranchAddress("out_fInRecHits_time",&fInRecHits_time,&b_fInRecHits_time);
+    //fInTree->SetBranchAddress("out_fInRecHits_time",&fInRecHits_time,&b_fInRecHits_time);
     fInTree->SetBranchAddress("out_fInRecHits_TOF",&fInRecHits_TOF,&b_fInRecHits_TOF);
     fInTree->SetBranchAddress("out_kurhtime",&kurhtime,&b_kurhtime);
     fInTree->SetBranchAddress("out_kurhID",&kurhID,&b_kurhID);
     fInTree->SetBranchAddress("out_kuStcrhtime",&kuStcrhtime,&b_kuStcrhtime);
-    fInTree->SetBranchAddress("out_kuNotrhtime",&kuNotrhtime,&b_kuNotrhtime);
+    //fInTree->SetBranchAddress("out_kuNotrhtime",&kuNotrhtime,&b_kuNotrhtime);
     fInTree->SetBranchAddress("out_kuNotStcrhtime",&kuNotStcrhtime,&b_kuNotStcrhtime);
     //fInTree->SetBranchAddress("out_kuWootStcrhtime",&kuWootStcrhtime,&b_kuWootStcrhtime);
 
@@ -177,13 +194,13 @@ void wc_ku_InterCali_v1( string infilename ){
     TH2F * IcMapEP[nAlgos][nIterations+1];
     TH2F * IcMapEM[nAlgos][nIterations+1];
 
-    string algostring[nAlgos] = { "RtStc", "RtOOTStc" }; // "WtOOTStc" };
+    string algostring[4] = { "RtStc", "RtOOTStc", "WtStc", "WtOOTStc" };
     IcMapEB[0][0] =  ebmapkue5;
     IcMapEP[0][0] =  ebmapkue5;
     IcMapEM[0][0] =  ebmapkue5;
-    IcMapEB[1][0] =  ebmapic;
-    IcMapEP[1][0] =  epmapcl;
-    IcMapEM[1][0] =  emmapcl;
+    IcMapEB[1][0] =  ebmape5;
+    IcMapEP[1][0] =  epmape5;
+    IcMapEM[1][0] =  emmape5;
     for( auto i = 0; i < nAlgos; i++){
             for( auto j = 1; j < nIterations+1; j++ ){
 		string hnameEB( "AveXtal"+algostring[i]+"PhoIcRecTimeEBMap_i"+to_string(j)); 
@@ -205,8 +222,9 @@ void wc_ku_InterCali_v1( string infilename ){
 
     // >> calcs  <<
 
+    std::cout << "Starting entry and iterations loops "<< std::endl;
     const auto nEntries = fInTree->GetEntries();
-    //const auto nEntries = 10000;
+    //const auto nEntries = 100;
     for( auto iter = 0; iter < nIterations; iter++){
     for (auto entry = 0U; entry < nEntries; entry++){
 	if( entry%100000 == 0 ) std::cout << "Proccessed " << entry << " of " << nEntries << " entries for " << iter << " of " << nIterations << " Iterations." << std::endl;
@@ -218,40 +236,42 @@ void wc_ku_InterCali_v1( string infilename ){
         //std::cout << "GetEntries rh for photons 2 Finished "<< std::endl;
         b_npho_recHits_3->GetEntry(entry);
         //std::cout << "GetEntries rh for photons 3 Finished "<< std::endl;
-        b_seed_0->GetEntry(entry);
-        b_seed_1->GetEntry(entry);
+        //b_seedID_0->GetEntry(entry);
+        //b_seedID_1->GetEntry(entry);
+        //b_seedE_0->GetEntry(entry);
+        //b_seedE_1->GetEntry(entry);
         //std::cout << "GetEntries seed Finished "<< std::endl;
-        b_isOOT_0->GetEntry(entry);
-        b_isOOT_1->GetEntry(entry);
-        b_isOOT_2->GetEntry(entry);
-        b_isOOT_3->GetEntry(entry);
+        //b_isOOT_0->GetEntry(entry);
+        //b_isOOT_1->GetEntry(entry);
+        //b_isOOT_2->GetEntry(entry);
+        //b_isOOT_3->GetEntry(entry);
         //std::cout << "GetEntries isOOT Finished "<< std::endl;
-        b_smin_0->GetEntry(entry);
-        b_smin_1->GetEntry(entry);
-        b_smin_2->GetEntry(entry);
-        b_smin_3->GetEntry(entry);
-        b_smaj_0->GetEntry(entry);
-        b_smaj_1->GetEntry(entry);
-        b_smaj_2->GetEntry(entry);
-        b_smaj_3->GetEntry(entry);
+        //b_smin_0->GetEntry(entry);
+        //b_smin_1->GetEntry(entry);
+        //b_smin_2->GetEntry(entry);
+        //b_smin_3->GetEntry(entry);
+        //b_smaj_0->GetEntry(entry);
+        //b_smaj_1->GetEntry(entry);
+        //b_smaj_2->GetEntry(entry);
+        //b_smaj_3->GetEntry(entry);
         //std::cout << "GetEntries smin smaj Finished "<< std::endl;
         b_fInRecHits_E->GetEntry(entry);
         b_fInRecHits_ID->GetEntry(entry);
-        b_fInRecHits_time->GetEntry(entry);
+        //b_fInRecHits_time->GetEntry(entry);
         b_fInRecHits_TOF->GetEntry(entry);
         //std::cout << "GetEntries rh info Finished "<< std::endl;
         b_kurhtime->GetEntry(entry);
         b_kurhID->GetEntry(entry);
         b_kuStcrhtime->GetEntry(entry);
-        b_kuNotrhtime->GetEntry(entry);
+        //b_kuNotrhtime->GetEntry(entry);
         b_kuNotStcrhtime->GetEntry(entry);
         //b_kuWootStcrhtime->GetEntry(entry);
         //std::cout << "GetEntries kurh times Finished "<< std::endl;
 
 	std::vector<Int_t> * cluster[nPhotons] = {npho_recHits_0,npho_recHits_1,npho_recHits_2,npho_recHits_3};
-	float cl_smin[nPhotons] = { smin_0, smin_1, smin_2, smin_3};
-        float cl_smaj[nPhotons] = { smaj_0, smaj_1, smaj_2, smaj_3};
-        bool cl_isOOT[nPhotons] = { isOOT_0, isOOT_1, isOOT_2, isOOT_3};
+	//float cl_smin[nPhotons] = { smin_0, smin_1, smin_2, smin_3};
+        //float cl_smaj[nPhotons] = { smaj_0, smaj_1, smaj_2, smaj_3};
+        //bool cl_isOOT[nPhotons] = { isOOT_0, isOOT_1, isOOT_2, isOOT_3};
 
         //std::cout << "Looping over Photons "<< std::endl;
 //        for (auto ipho = 0; ipho < nPhotons; ipho++){
@@ -274,15 +294,9 @@ void wc_ku_InterCali_v1( string infilename ){
 	     int ipho0 = 0;
 	     int ipho1 = 1;    
 
-
-	     const auto rh_seed0 = (*(cluster[ipho0]))[seed0];
-	     auto seed_e0 = (*fInRecHits_E) [rh_seed0];
-             const auto rh_seed1 = (*(cluster[ipho1]))[seed1];
-             auto seed_e1 = (*fInRecHits_E) [rh_seed1];
-
-             const auto nRecHits0 = (cluster[ipho0])->size();
-             std::cout << "Looping over recHits n = " << n << std::endl;
-             for (auto i = 0U; i < nRecHits0; i++){
+             const auto nRecHits1 = (cluster[ipho0])->size();
+             //std::cout << "Looping over first recHits"  << std::endl;
+             for (auto i = 0U; i < nRecHits1; i++){
              //for (auto i = 0U; i < 1; i++){
 		  float subM = 0.f;
                   float subsum = 0.f;
@@ -290,18 +304,23 @@ void wc_ku_InterCali_v1( string infilename ){
                   float subMnot = 0.f;
                   float subsumnot = 0.f;
                   float subsumwoot = 0.f;
-
+    
                   const auto rh_i = (*(cluster[ipho0]))[i]; // position within event rec hits vector
+                  //const auto E_i  = seedE_0; //(*fInRecHits_E) [rh_i];
                   const auto E_i  = (*fInRecHits_E) [rh_i];
+                  //const auto id_i = seedID_0; //(*fInRecHits_ID)[rh_i];
                   const auto id_i = (*fInRecHits_ID)[rh_i];
-                  const auto t_i = (*fInRecHits_time)[rh_i];
+                  //const auto t_i = seedtime_0; //(*fInRecHits_time)[rh_i];
+                  //const auto t_i = (*fInRecHits_time)[rh_i];
+                  //const auto tof_i = seedTOF_0; //(*fInRecHits_TOF)[rh_i];
                   const auto tof_i = (*fInRecHits_TOF)[rh_i];
                   auto RtStc_t_i = 0.f;
                   auto RtOOTStc_t_i = 0.f;
                   auto WtOOTStc_t_i = 0.f;
 		  float prev_i[nAlgos] = {0.f};   			
 
-		  if( E_i < 0.8*seed_e0 or E_i > 1.2*seed_e0 ) continue;
+                  //std::cout << "Getting KU times " << std::endl;
+		  if( E_i < ri_ecut ) continue;
                   for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
                           if( (*kurhID)[kuseed] == id_i ){
                                   RtStc_t_i = (*kuStcrhtime)[kuseed];
@@ -311,38 +330,45 @@ void wc_ku_InterCali_v1( string infilename ){
                           }
     
                   }
-
+		  //std::cout << "Getting maps " << std::endl;
                   RtStc_t_i += tof_i;
                   RtOOTStc_t_i += tof_i;
-                 // WtOOTStc_t_i += tof_i;
+                  // WtOOTStc_t_i += tof_i;
                   const auto & id_i_info = Common::DetIDMap[id_i];
+	          float mfcor = 1.0;
+		  if( iter == 0 ) mfcor = mfcorrection;
                   for( auto a = 0; a < nAlgos; a++ ){
                           if( id_i_info.ecal == ECAL::EB ){
-                                  prev_i[a] = (IcMapEB[a][iter])->GetBinContent( id_i_info.i2 + bin_offset, id_i_info.i1) - offset;  //  
-//				  std::cout << "For EB a = " << a << " prev_i[a] = " << prev_i[a]  << " at " << id_i_info.i2 << " " << id_i_info.i1  << std::endl;
+                                  prev_i[a] = (((IcMapEB[a][iter])->GetBinContent( id_i_info.i2 + bin_offset, id_i_info.i1))/mfcor) - offset;  //  
+//				  //std::cout << "For EB a = " << a << " prev_i[a] = " << prev_i[a]  << " at " << id_i_info.i2 << " " << id_i_info.i1  << std::endl;
                           } else if( id_i_info.ecal == ECAL::EP ){
-                                  prev_i[a] = (IcMapEP[a][iter])->GetBinContent( id_i_info.i2, id_i_info.i1) - offset;  //  
- ///                                std::cout << "For EP a = " << a << " prev_i[a] = " << prev_i[a]  << " at " << id_i_info.i2 << " " << id_i_info.i1  << std::endl;
+                                  prev_i[a] = (((IcMapEP[a][iter])->GetBinContent( id_i_info.i2, id_i_info.i1))/mfcor) - offset;  //  
+ ///                                //std::cout << "For EP a = " << a << " prev_i[a] = " << prev_i[a]  << " at " << id_i_info.i2 << " " << id_i_info.i1  << std::endl;
                           } else if( id_i_info.ecal == ECAL::EM ){
-                                  prev_i[a] = (IcMapEM[a][iter])->GetBinContent( id_i_info.i2, id_i_info.i1) - offset;  //  
-   //                               std::cout << "For EM a = " << a << " prev_i[a] = " << prev_i[a]  << " at " << id_i_info.i2 << " " << id_i_info.i1  << std::endl;
+                                  prev_i[a] = (((IcMapEM[a][iter])->GetBinContent( id_i_info.i2, id_i_info.i1))/mfcor) - offset;  //  
+   //                               //std::cout << "For EM a = " << a << " prev_i[a] = " << prev_i[a]  << " at " << id_i_info.i2 << " " << id_i_info.i1  << std::endl;
                           }
                   }
-                  const auto nRecHits1 = (cluster[ipho1])->size();
-                  for (auto j = 0U; j < nRecHits1; j++){
+                  //std::cout << "Looping over second recHits" << std::endl;
+                  const auto nRecHits2 = (cluster[ipho1])->size();
+                  for (auto j = 0U; j < nRecHits2; j++){
                   //for (auto j = 0U; j < 1; j++){
 
 			//if( i == j ) continue;
-
+			//std::cout << "Getting cluster info" << std::endl;
                         const auto rh_j = (*(cluster[ipho1]))[j]; // position within event rec hits vector
+                        //const auto E_j  = seedE_1; //(*fInRecHits_E) [rh_j];
                         const auto E_j  = (*fInRecHits_E) [rh_j];
+                        //const auto id_j = seedID_1; //(*fInRecHits_ID)[rh_j];
                         const auto id_j = (*fInRecHits_ID)[rh_j];
                         auto RtStc_t_j = 0.f;
                         auto RtOOTStc_t_j = 0.f;
                         auto WtOOTStc_t_j = 0.f;
+                        //const auto tof_j = seedTOF_1; //(*fInRecHits_TOF)[rh_j];
                         const auto tof_j = (*fInRecHits_TOF)[rh_j];
                         float prev_j[nAlgos] = {0.f};
-			if( E_j < 0.8*seed_e1 or E_j > 1.2*seed_e1 ) continue;
+		        if( E_j < rj_ecut ) continue;
+			//std::cout << "Getting ku time info" << std::endl;
                         for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
                                 if( (*kurhID)[kuseed] == id_j ){
                                         RtStc_t_j = (*kuStcrhtime)[kuseed];
@@ -356,9 +382,11 @@ void wc_ku_InterCali_v1( string infilename ){
                         RtOOTStc_t_j += tof_j;
                         //WtOOTStc_t_j += tof_j;
                         const auto & id_j_info = Common::DetIDMap[id_j];
+                  	float mfcor = 1.0;
+                  	if( iter == 0 ) mfcor = mfcorrection;
 			for( auto a = 0; a < nAlgos; a++ ){
               			if( id_j_info.ecal == ECAL::EB ){
-                      			prev_j[a] = (IcMapEB[a][iter])->GetBinContent( id_j_info.i2 + bin_offset, id_j_info.i1) - offset;  //  
+                      			prev_j[a] = (((IcMapEB[a][iter])->GetBinContent( id_j_info.i2 + bin_offset, id_j_info.i1))/mfcor) - offset;  // 
               			} else if( id_j_info.ecal == ECAL::EP ){
                                         prev_j[a] = (IcMapEP[a][iter])->GetBinContent( id_j_info.i2, id_j_info.i1) - offset;  //  
               			} else if( id_j_info.ecal == ECAL::EM ){
@@ -431,7 +459,7 @@ void wc_ku_InterCali_v1( string infilename ){
     numXtalIcRecTime.clear();
 
     }  //  end iteration loop
-    //std::cout << " End of Interation Loops " << std::endl;
+    std::cout << " End of Interation Loops " << std::endl;
 
     std::cout << "Fill M hists  ( M vs iter )" << std::endl;
     for( auto  iter = 0; iter < nIterations; iter++){  
@@ -440,8 +468,11 @@ void wc_ku_InterCali_v1( string infilename ){
  	MnotHist->Fill( iter, Mnot[iter]/nM[iter] );
     }
 
+    TFile* fOutFile = new TFile( outfilename.c_str(), "RECREATE" );
+    fOutFile->cd();
+
     std::cout << "Write IcMaps" << std::endl;
-    fInFile->cd();
+    //fInFile->cd();
     for( auto i = 0; i < nAlgos; i++){
 	    for( auto j = 1; j < nIterations+1; j++ ){
 		IcMapEB[i][j]->Write();
