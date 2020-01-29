@@ -21,6 +21,7 @@ void wc_ku_InterCali_global_v2( string infilename, string outfilename  ){
     float Mwoot[nIterations] = {0.f};
     int nM[nIterations] = {0};
     const int power = 2;
+    const float step = 0.2;
 
     auto MHist = new TH1F( "MHist", "M Histogram", nIterations, 0, nIterations);
     auto MnotHist = new TH1F( "MnotHist", "Mnot Histogram", nIterations, 0, nIterations);
@@ -435,7 +436,7 @@ void wc_ku_InterCali_global_v2( string infilename, string outfilename  ){
 	 for( std::map<UInt_t,Float_t>::iterator it=(*icmaps[ai]).begin(); it!=(*icmaps[ai]).end(); ++it){ drift += (((*icmaps[ai])[it->first])/(numXtalIcRecTime[it->first])); }
          for( std::map<UInt_t,Float_t>::iterator it=(*icmaps[ai]).begin(); it!=(*icmaps[ai]).end(); ++it){
                    const auto & fill_idinfo = Common::DetIDMap[it->first];
-                   const auto & map_time = ((*icmaps[ai])[it->first])/(numXtalIcRecTime[it->first]) + offset - (drift/(icmaps[ai]->size()));
+                   const auto & map_time = step*(((*icmaps[ai])[it->first])/(numXtalIcRecTime[it->first]) + (drift/(icmaps[ai]->size()))) + offset;
 		   //std::cout << "Fill hist for Algo " << i << " at " << fill_idinfo.i2 << " " << fill_idinfo.i1 << " with " << map_time << " for iter " << iter << std::endl;
                    if( fill_idinfo.ecal == ECAL::EB ){
 //		   std::cout << "Fill EB hist for Algo " << ai << " at " << fill_idinfo.i2 << " " << fill_idinfo.i1 << " with " << map_time << " for iter " << iter << std::endl;

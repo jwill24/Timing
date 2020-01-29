@@ -2612,9 +2612,6 @@ void DisPhoMulti::SetRecHitBranches()
         DisPhoMulti::SetKuNotStcRecHitBranches(kuNotStcRecHitsEB,barrelGeometry,adcToGeVEB);
         DisPhoMulti::SetKuNotStcRecHitBranches(kuNotStcRecHitsEE,endcapGeometry,adcToGeVEE);
 
-        DisPhoMulti::SetKuStcRecHitBranches(kuWtStcRecHitsEB,barrelGeometry,adcToGeVEB);
-        DisPhoMulti::SetKuStcRecHitBranches(kuWtStcRecHitsEE,endcapGeometry,adcToGeVEE);
-
         DisPhoMulti::SetKuWtStcRecHitBranches(kuWtStcRecHitsEB,barrelGeometry,adcToGeVEB);
         DisPhoMulti::SetKuWtStcRecHitBranches(kuWtStcRecHitsEE,endcapGeometry,adcToGeVEE);
 

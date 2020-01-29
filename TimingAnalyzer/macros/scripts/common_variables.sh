@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ## common input info
-export skimdir="/home/t3-ku/jaking/trees/ecal/"
+export skimdir=""
 
 ## config input info
 export inTextExt="txt"

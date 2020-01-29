@@ -49,7 +49,7 @@ kuStcEcalRecHit = ecalRecHit.clone(
         EEuncalibRecHitCollection = cms.InputTag("kuEcalMultiFitUncalibRecHit","kuEcalUncalibRecHitsEE"),
         EBuncalibRecHitCollection = cms.InputTag("kuEcalMultiFitUncalibRecHit","kuEcalUncalibRecHitsEB"),
         EBrechitCollection = cms.string('kuStcRecHitsEB'),
-	skipTimeCalib = cms.bool(True),
+#	skipTimeCalib = cms.bool(True),
         )
 
 kuNotEcalRecHit = ecalRecHit.clone(
@@ -64,7 +64,7 @@ kuNotStcEcalRecHit = ecalRecHit.clone(
         EEuncalibRecHitCollection = cms.InputTag("kuNotEcalMultiFitUncalibRecHit","kuNotEcalUncalibRecHitsEE"),
         EBuncalibRecHitCollection = cms.InputTag("kuNotEcalMultiFitUncalibRecHit","kuNotEcalUncalibRecHitsEB"),
         EBrechitCollection = cms.string('kuNotStcRecHitsEB'),
-        skipTimeCalib = cms.bool(True),
+#        skipTimeCalib = cms.bool(True),
         )
 
 kuWtEcalRecHit = ecalRecHit.clone(
@@ -79,7 +79,7 @@ kuWtStcEcalRecHit = ecalRecHit.clone(
         EEuncalibRecHitCollection = cms.InputTag("kuWtEcalMultiFitUncalibRecHit","kuWtEcalUncalibRecHitsEE"),
         EBuncalibRecHitCollection = cms.InputTag("kuWtEcalMultiFitUncalibRecHit","kuWtEcalUncalibRecHitsEB"),
         EBrechitCollection = cms.string('kuWtStcRecHitsEB'),
-        skipTimeCalib = cms.bool(True),
+#        skipTimeCalib = cms.bool(True),
         )
 
 kuWootEcalRecHit = ecalRecHit.clone(
@@ -94,7 +94,7 @@ kuWootStcEcalRecHit = ecalRecHit.clone(
         EEuncalibRecHitCollection = cms.InputTag("kuWootEcalMultiFitUncalibRecHit","kuWootEcalUncalibRecHitsEE"),
         EBuncalibRecHitCollection = cms.InputTag("kuWootEcalMultiFitUncalibRecHit","kuWootEcalUncalibRecHitsEB"),
         EBrechitCollection = cms.string('kuWootStcRecHitsEB'),
-        skipTimeCalib = cms.bool(True),
+#        skipTimeCalib = cms.bool(True),
         )
 
 kuMfootEcalRecHit = ecalRecHit.clone(
@@ -109,7 +109,7 @@ kuMfootStcEcalRecHit = ecalRecHit.clone(
         EEuncalibRecHitCollection = cms.InputTag("kuMfootEcalMultiFitUncalibRecHit","kuMfootEcalUncalibRecHitsEE"),
         EBuncalibRecHitCollection = cms.InputTag("kuMfootEcalMultiFitUncalibRecHit","kuMfootEcalUncalibRecHitsEB"),
         EBrechitCollection = cms.string('kuMfootStcRecHitsEB'),
-        skipTimeCalib = cms.bool(True),
+#        skipTimeCalib = cms.bool(True),
         )
 
 kuMfootCCStcEcalRecHit = ecalRecHit.clone(
@@ -117,7 +117,7 @@ kuMfootCCStcEcalRecHit = ecalRecHit.clone(
         EEuncalibRecHitCollection = cms.InputTag("kuMfootCCEcalMultiFitUncalibRecHit","kuMfootCCEcalUncalibRecHitsEE"),
         EBuncalibRecHitCollection = cms.InputTag("kuMfootCCEcalMultiFitUncalibRecHit","kuMfootCCEcalUncalibRecHitsEB"),
         EBrechitCollection = cms.string('kuMfootCCStcRecHitsEB'),
-        skipTimeCalib = cms.bool(True),
+#        skipTimeCalib = cms.bool(True),
         )
 
 ku_ecalRecHitSequence        = cms.Sequence(ecalRecHit*

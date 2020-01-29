@@ -1,24 +1,121 @@
-#include "Skimmer.hh"
-#include "Common.cpp+"
+// ROOT includes
+#include "TFile.h"
+#include "TTree.h"
+#include "TH1F.h"
+#include "TH1D.h"
+#include "TH2F.h"
+#include "TGraphAsymmErrors.h"
+#include "TF1.h"
+#include "TMath.h"
+#include "TCanvas.h"
 #include "TROOT.h"
+#include "TStyle.h"
+#include "TString.h"
+#include "TColor.h"
+#include "TPaveText.h"
+#include "TText.h"
 
+// STL includes
+#include <map>
+#include <vector>
+#include <string>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <cstdlib>
+#include <utility>
+#include <algorithm>
+#include <sys/stat.h>
 
-void wc_ku_InterCali_global_v1( string infilename, string outfilename  ){
+using namespace std;
+
+template <typename T> std::string to_string(T value)
+{  
+   //create an output string stream
+   std::ostringstream os ;
+   
+   //throw the value into the string stream
+   os << value ;
+   
+   //convert the string stream into a string and return
+   return os.str() ;
+
+//you can also do this
+//std::string output;
+//os >> output;  //throw whats in the string stream into the string
+}
+
+enum ECAL {EB, EM, EP, NONE};
+std::string ecal_config_path("/home/t3-ku/jaking/ecaltiming/CMSSW_10_2_5/src/Timing/TimingAnalyzer/macros/ecal_config/");
+
+struct DetIDStruct
+{
+  DetIDStruct() {}
+  DetIDStruct(const Int_t inI1, const Int_t inI2, const Int_t inTT, const Int_t & inEcal) : i1(inI1), i2(inI2), TT(inTT), ecal(inEcal)  {}
+
+  Int_t i1; // EB: iphi, EE: ix
+  Int_t i2; // EB: ieta, EE: iy
+  Int_t TT; // trigger tower
+  Int_t ecal; // EB, EM, EP
+};
+
+void SetupDetIDsEB( std::map<UInt_t,DetIDStruct> &DetIDMap )
+{
+    const std::string detIDConfigEB(ecal_config_path+"fullinfo_detids_EB.txt");
+    std::ifstream infile( detIDConfigEB, std::ios::in);
+
+    UInt_t cmsswId, dbID;
+    Int_t hashedId, iphi, ieta, absieta, FED, SM, TT25, iTT, strip5, Xtal, phiSM, etaSM;
+    TString pos;
+
+    while (infile >> cmsswId >> dbID >> hashedId >> iphi >> ieta >> absieta >> pos >> FED >> SM >> TT25 >> iTT >> strip5 >> Xtal >> phiSM >> etaSM)
+    {
+        //std::cout << "DetID Input Line: " << cmsswId << " " << iphi << " "  << ieta << " " << EB << std::endl;
+        DetIDMap[cmsswId] = {iphi,ieta,TT25,EB};
+        auto idinfo = DetIDMap[cmsswId];
+        //std::cout << "DetID set to : " << idinfo.i1 << " " << idinfo.i2 << " " << idinfo.ecal << std::endl;
+    }
+}
+
+void SetupDetIDsEE( std::map<UInt_t,DetIDStruct> &DetIDMap )
+{
+    const std::string detIDConfigEE(ecal_config_path+"fullinfo_detids_EE.txt");
+    std::ifstream infile( detIDConfigEE, std::ios::in);
+
+    UInt_t cmsswId, dbID;
+    Int_t hashedId, side, ix, iy, SC, iSC, Fed, TTCCU, strip, Xtal, quadrant;
+    TString EE;
+
+    while (infile >> cmsswId >> dbID >> hashedId >> side >> ix >> iy >> SC >> iSC >> Fed >> EE >> TTCCU >> strip >> Xtal >> quadrant)
+    {
+        ECAL ec = EM;
+        if( side > 0 ) ec = EP;
+        //std::cout << "DetID Input Line: " << cmsswId << " " << ix << " "  << iy << " " << ec << std::endl; 
+        DetIDMap[cmsswId] = {ix,iy,TTCCU,ec};
+        auto idinfo = DetIDMap[cmsswId];
+        //std::cout << "DetID set to : " << idinfo.i1 << " " << idinfo.i2 << " " << idinfo.ecal << std::endl;
+    }
+}
+
+
+void wc_ku_InterCali_global_v2( string infilename, string outfilename, int mfc ){
 
     const int  nIterations = 50;
-    const float  step = 0.1;
     const int  nAlgos = 2; // RtStc, RtOOTStc //, WtOOTStc
     const int  nPhotons = 4;
-    const float offset = 100.0;
+    const double offset = 100.0;
     const int bin_offset = 86;
-    const int mfcorrection = 6;
+    const int mfcorrection = mfc;
 
-    float M[nIterations] = {0.f};
-    float Mnot[nIterations] = {0.f};
-    float Mwoot[nIterations] = {0.f};
+    const double ri_ecut = 5.0;
+    const double rj_ecut = 3.0;
+
+    double M[nIterations] = {0.0};
+    double Mnot[nIterations] = {0.0};
+    double Mwoot[nIterations] = {0.0};
     int nM[nIterations] = {0};
     const int power = 2;
+    //const double step = 0.5;
 
     auto MHist = new TH1F( "MHist", "M Histogram", nIterations, 0, nIterations);
     auto MnotHist = new TH1F( "MnotHist", "Mnot Histogram", nIterations, 0, nIterations);
@@ -83,7 +180,7 @@ void wc_ku_InterCali_global_v1( string infilename, string outfilename  ){
     std::vector<Int_t> * npho_recHits_3 = 0;
     std::vector<Float_t> *   fInRecHits_E = 0;
     std::vector<UInt_t> *   fInRecHits_ID = 0;
-    //std::vector<Float_t> *   fInRecHits_time = 0;
+    std::vector<Float_t> *   fInRecHits_time = 0;
     std::vector<Float_t> *   fInRecHits_TOF = 0;
     std::vector<Float_t> *   kurhtime = 0;
     std::vector<UInt_t> *   kurhID = 0;
@@ -98,28 +195,28 @@ void wc_ku_InterCali_global_v1( string infilename, string outfilename  ){
     std::map<UInt_t,Float_t> sumXtalRtOOTStcPhoIcRecTime;
     std::map<UInt_t,Float_t> sumXtalWtOOTStcPhoIcRecTime;
     std::map<UInt_t,Float_t> numXtalIcRecTime;
-    //float normRtStc = 0.f;
-    //float normRtOOTStc = 0.f;
-    //float normWtOOTStc = 0.f;
+    //double normRtStc = 0.0;
+    //double normRtOOTStc = 0.0;
+    //double normWtOOTStc = 0.0;
 
     bool isOOT_0;
     bool isOOT_1;
     bool isOOT_2;
     bool isOOT_3;
-    float smin_0;
-    float smin_1;
-    float smin_2;
-    float smin_3;
-    float smaj_0;
-    float smaj_1;
-    float smaj_2;
-    float smaj_3;
+    double smin_0;
+    double smin_1;
+    double smin_2;
+    double smin_3;
+    double smaj_0;
+    double smaj_1;
+    double smaj_2;
+    double smaj_3;
     UInt_t seedID_0;
     UInt_t seedID_1;
-    float seedE_0;
-    float seedE_1;
-    float seedTOF_0;
-    float seedTOF_1;
+    double seedE_0;
+    double seedE_1;
+    double seedTOF_0;
+    double seedTOF_1;
 
     TBranch * b_npho_recHits_0;
     TBranch * b_npho_recHits_1;
@@ -154,12 +251,12 @@ void wc_ku_InterCali_global_v1( string infilename, string outfilename  ){
     TBranch * b_seedTOF_0;
     TBranch * b_seedTOF_1;
 
-    fInTree->SetBranchAddress("phoseedID_0",&seedID_0,&b_seedID_0);
-    fInTree->SetBranchAddress("phoseedID_1",&seedID_1,&b_seedID_1);
-    fInTree->SetBranchAddress("phoseedE_0",&seedE_0,&b_seedE_0);
-    fInTree->SetBranchAddress("phoseedE_1",&seedE_1,&b_seedE_1);
-    fInTree->SetBranchAddress("phoseedTOF_0",&seedTOF_0,&b_seedTOF_0);
-    fInTree->SetBranchAddress("phoseedTOF_1",&seedTOF_1,&b_seedTOF_1);
+    //fInTree->SetBranchAddress("phoseedID_0",&seedID_0,&b_seedID_0);
+    //fInTree->SetBranchAddress("phoseedID_1",&seedID_1,&b_seedID_1);
+    //fInTree->SetBranchAddress("phoseedE_0",&seedE_0,&b_seedE_0);
+    //fInTree->SetBranchAddress("phoseedE_1",&seedE_1,&b_seedE_1);
+    //fInTree->SetBranchAddress("phoseedTOF_0",&seedTOF_0,&b_seedTOF_0);
+    //fInTree->SetBranchAddress("phoseedTOF_1",&seedTOF_1,&b_seedTOF_1);
 
     //fInTree->SetBranchAddress("phoisOOT_0",&isOOT_0,&b_isOOT_0);
     //fInTree->SetBranchAddress("phoisOOT_1",&isOOT_1,&b_isOOT_1);
@@ -192,7 +289,7 @@ void wc_ku_InterCali_global_v1( string infilename, string outfilename  ){
     TH2F * IcMapEP[nAlgos][nIterations+1];
     TH2F * IcMapEM[nAlgos][nIterations+1];
 
-    string algostring[nAlgos] = { "RtStc", "RtOOTStc", "WtStc", "WtOOTStc" };
+    string algostring[4] = { "RtStc", "RtOOTStc", "WtStc", "WtOOTStc" };
     IcMapEB[0][0] =  ebmapkue5;
     IcMapEP[0][0] =  ebmapkue5;
     IcMapEM[0][0] =  ebmapkue5;
@@ -216,7 +313,10 @@ void wc_ku_InterCali_global_v1( string infilename, string outfilename  ){
              }
     }
 
-    Common::SetupDetIDs();
+    std::cout << "Setting up DetIDs." << std::endl;
+    std::map<UInt_t,DetIDStruct> DetIDMap;
+    SetupDetIDsEB( DetIDMap );
+    SetupDetIDsEE( DetIDMap );
 
     // >> calcs  <<
 
@@ -234,10 +334,10 @@ void wc_ku_InterCali_global_v1( string infilename, string outfilename  ){
         //std::cout << "GetEntries rh for photons 2 Finished "<< std::endl;
         b_npho_recHits_3->GetEntry(entry);
         //std::cout << "GetEntries rh for photons 3 Finished "<< std::endl;
-        b_seedID_0->GetEntry(entry);
-        b_seedID_1->GetEntry(entry);
-        b_seedE_0->GetEntry(entry);
-        b_seedE_1->GetEntry(entry);
+        //b_seedID_0->GetEntry(entry);
+        //b_seedID_1->GetEntry(entry);
+        //b_seedE_0->GetEntry(entry);
+        //b_seedE_1->GetEntry(entry);
         //std::cout << "GetEntries seed Finished "<< std::endl;
         //b_isOOT_0->GetEntry(entry);
         //b_isOOT_1->GetEntry(entry);
@@ -267,8 +367,8 @@ void wc_ku_InterCali_global_v1( string infilename, string outfilename  ){
         //std::cout << "GetEntries kurh times Finished "<< std::endl;
 
 	std::vector<Int_t> * cluster[nPhotons] = {npho_recHits_0,npho_recHits_1,npho_recHits_2,npho_recHits_3};
-	//float cl_smin[nPhotons] = { smin_0, smin_1, smin_2, smin_3};
-        //float cl_smaj[nPhotons] = { smaj_0, smaj_1, smaj_2, smaj_3};
+	//double cl_smin[nPhotons] = { smin_0, smin_1, smin_2, smin_3};
+        //double cl_smaj[nPhotons] = { smaj_0, smaj_1, smaj_2, smaj_3};
         //bool cl_isOOT[nPhotons] = { isOOT_0, isOOT_1, isOOT_2, isOOT_3};
 
         //std::cout << "Looping over Photons "<< std::endl;
@@ -292,29 +392,33 @@ void wc_ku_InterCali_global_v1( string infilename, string outfilename  ){
 	     int ipho0 = 0;
 	     int ipho1 = 1;    
 
-             //const auto nRecHits1 = (cluster[ipho0])->size();
-             //std::cout << "Getting over first recHits"  << std::endl;
-             //for (auto i = 0U; i < nRecHits1; i++){
-             for (auto i = 0U; i < 1; i++){
-		  float subM = 0.f;
-                  float subsum = 0.f;
+             const auto nRecHits1 = (cluster[ipho0])->size();
+             //std::cout << "Looping over first recHits with M["<< iter << "] = " << M[iter] << " for " << nM[iter] << std::endl;
+             for (auto i = 0U; i < nRecHits1; i++){
+             //for (auto i = 0U; i < 1; i++){
+		  double subM = 0.0;
+                  double subsum = 0.0;
                   int subsumnum = 0;
-                  float subMnot = 0.f;
-                  float subsumnot = 0.f;
-                  float subsumwoot = 0.f;
+                  double subMnot = 0.0;
+                  double subsumnot = 0.0;
+                  double subsumwoot = 0.0;
     
-                  //const auto rh_i = (*(cluster[ipho0]))[i]; // position within event rec hits vector
-                  const auto E_i  = seedE_0; //(*fInRecHits_E) [rh_i];
-                  const auto id_i = seedID_0; //(*fInRecHits_ID)[rh_i];
+                  const auto rh_i = (*(cluster[ipho0]))[i]; // position within event rec hits vector
+                  //const auto E_i  = seedE_0; //(*fInRecHits_E) [rh_i];
+                  const auto E_i  = (*fInRecHits_E) [rh_i];
+                  //const auto id_i = seedID_0; //(*fInRecHits_ID)[rh_i];
+                  const auto id_i = (*fInRecHits_ID)[rh_i];
                   //const auto t_i = seedtime_0; //(*fInRecHits_time)[rh_i];
-                  const auto tof_i = seedTOF_0; //(*fInRecHits_TOF)[rh_i];
-                  auto RtStc_t_i = 0.f;
-                  auto RtOOTStc_t_i = 0.f;
-                  auto WtOOTStc_t_i = 0.f;
-		  float prev_i[nAlgos] = {0.f};   			
+                  //const auto t_i = (*fInRecHits_time)[rh_i];
+                  //const auto tof_i = seedTOF_0; //(*fInRecHits_TOF)[rh_i];
+                  const auto tof_i = (*fInRecHits_TOF)[rh_i];
+                  auto RtStc_t_i = 0.0;
+                  auto RtOOTStc_t_i = 0.0;
+                  auto WtOOTStc_t_i = 0.0;
+		  double prev_i[nAlgos] = {0.0};   			
 
                   //std::cout << "Getting KU times " << std::endl;
-		  //if( E_i < 5.0 ) continue;
+		  if( E_i < ri_ecut ) continue;
                   for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
                           if( (*kurhID)[kuseed] == id_i ){
                                   RtStc_t_i = (*kuStcrhtime)[kuseed];
@@ -328,8 +432,8 @@ void wc_ku_InterCali_global_v1( string infilename, string outfilename  ){
                   RtStc_t_i += tof_i;
                   RtOOTStc_t_i += tof_i;
                   // WtOOTStc_t_i += tof_i;
-                  const auto & id_i_info = Common::DetIDMap[id_i];
-	          float mfcor = 1.0;
+                  const auto & id_i_info = DetIDMap[id_i];
+	          double mfcor = 1.0;
 		  if( iter == 0 ) mfcor = mfcorrection;
                   for( auto a = 0; a < nAlgos; a++ ){
                           if( id_i_info.ecal == ECAL::EB ){
@@ -343,22 +447,26 @@ void wc_ku_InterCali_global_v1( string infilename, string outfilename  ){
    //                               //std::cout << "For EM a = " << a << " prev_i[a] = " << prev_i[a]  << " at " << id_i_info.i2 << " " << id_i_info.i1  << std::endl;
                           }
                   }
-                  //const auto nRecHits2 = (cluster[ipho1])->size();
-                  //for (auto j = 0U; j < nRecHits1; j++){
                   //std::cout << "Looping over second recHits" << std::endl;
-                  for (auto j = 0U; j < 1; j++){
+                  const auto nRecHits2 = (cluster[ipho1])->size();
+                  for (auto j = 0U; j < nRecHits2; j++){
+                  //for (auto j = 0U; j < 1; j++){
 
 			//if( i == j ) continue;
-
-                        //const auto rh_j = (*(cluster[ipho1]))[j]; // position within event rec hits vector
-                        const auto E_j  = seedE_1; //(*fInRecHits_E) [rh_j];
-                        const auto id_j = seedID_1; //(*fInRecHits_ID)[rh_j];
-                        auto RtStc_t_j = 0.f;
-                        auto RtOOTStc_t_j = 0.f;
-                        auto WtOOTStc_t_j = 0.f;
-                        const auto tof_j = seedTOF_1; //(*fInRecHits_TOF)[rh_j];
-                        float prev_j[nAlgos] = {0.f};
-		        //if( E_j < 3.0 ) continue;
+			//std::cout << "Getting cluster info" << std::endl;
+                        const auto rh_j = (*(cluster[ipho1]))[j]; // position within event rec hits vector
+                        //const auto E_j  = seedE_1; //(*fInRecHits_E) [rh_j];
+                        const auto E_j  = (*fInRecHits_E) [rh_j];
+                        //const auto id_j = seedID_1; //(*fInRecHits_ID)[rh_j];
+                        const auto id_j = (*fInRecHits_ID)[rh_j];
+                        auto RtStc_t_j = 0.0;
+                        auto RtOOTStc_t_j = 0.0;
+                        auto WtOOTStc_t_j = 0.0;
+                        //const auto tof_j = seedTOF_1; //(*fInRecHits_TOF)[rh_j];
+                        const auto tof_j = (*fInRecHits_TOF)[rh_j];
+                        double prev_j[nAlgos] = {0.0};
+		        if( E_j < rj_ecut ) continue;
+			//std::cout << "Getting ku time info" << std::endl;
                         for(UInt_t kuseed = 0; kuseed < (*kurhID).size(); kuseed++ ){
                                 if( (*kurhID)[kuseed] == id_j ){
                                         RtStc_t_j = (*kuStcrhtime)[kuseed];
@@ -371,12 +479,12 @@ void wc_ku_InterCali_global_v1( string infilename, string outfilename  ){
                         RtStc_t_j += tof_j;
                         RtOOTStc_t_j += tof_j;
                         //WtOOTStc_t_j += tof_j;
-                        const auto & id_j_info = Common::DetIDMap[id_j];
-                        float mfcor = 1.0;
-                        if( iter == 0 ) mfcor = mfcorrection;
-                        for( auto a = 0; a < nAlgos; a++ ){
-                                if( id_j_info.ecal == ECAL::EB ){
-                                        prev_j[a] = (((IcMapEB[a][iter])->GetBinContent( id_j_info.i2 + bin_offset, id_j_info.i1))/mfcor) - offset;  // 
+                        const auto & id_j_info = DetIDMap[id_j];
+                  	double mfcor = 1.0;
+                  	if( iter == 0 ) mfcor = mfcorrection;
+			for( auto a = 0; a < nAlgos; a++ ){
+              			if( id_j_info.ecal == ECAL::EB ){
+                      			prev_j[a] = (((IcMapEB[a][iter])->GetBinContent( id_j_info.i2 + bin_offset, id_j_info.i1))/mfcor) - offset;  // 
               			} else if( id_j_info.ecal == ECAL::EP ){
                                         prev_j[a] = (IcMapEP[a][iter])->GetBinContent( id_j_info.i2, id_j_info.i1) - offset;  //  
               			} else if( id_j_info.ecal == ECAL::EM ){
@@ -417,15 +525,15 @@ void wc_ku_InterCali_global_v1( string infilename, string outfilename  ){
  
     }  //  end entry loop
 
-    //float  norm[nAlgos] = { normRtStc, normRtOOTStc };
+    //double  norm[nAlgos] = { normRtStc, normRtOOTStc };
     std::map<UInt_t,Float_t> *  icmaps[nAlgos] = {&sumXtalRtStcPhoIcRecTime, &sumXtalRtOOTStcPhoIcRecTime }; //, sumXtalWtOOTStcPhoIcRecTime };
 
     for( auto ai = 0; ai < nAlgos; ai++ ){
-	 float drift = 0.f;
+	 double drift = 0.0;
 	 for( std::map<UInt_t,Float_t>::iterator it=(*icmaps[ai]).begin(); it!=(*icmaps[ai]).end(); ++it){ drift += (((*icmaps[ai])[it->first])/(numXtalIcRecTime[it->first])); }
          for( std::map<UInt_t,Float_t>::iterator it=(*icmaps[ai]).begin(); it!=(*icmaps[ai]).end(); ++it){
-                   const auto & fill_idinfo = Common::DetIDMap[it->first];
-                   const auto & map_time = step*(((*icmaps[ai])[it->first])/(numXtalIcRecTime[it->first]) - (drift/(icmaps[ai]->size()))) + offset;
+                   const auto & fill_idinfo = DetIDMap[it->first];
+                   const auto & map_time = (((*icmaps[ai])[it->first])/(numXtalIcRecTime[it->first]) - (drift/(icmaps[ai]->size()))) + offset;
 		   //std::cout << "Fill hist for Algo " << i << " at " << fill_idinfo.i2 << " " << fill_idinfo.i1 << " with " << map_time << " for iter " << iter << std::endl;
                    if( fill_idinfo.ecal == ECAL::EB ){
 //		   std::cout << "Fill EB hist for Algo " << ai << " at " << fill_idinfo.i2 << " " << fill_idinfo.i1 << " with " << map_time << " for iter " << iter << std::endl;
@@ -440,16 +548,17 @@ void wc_ku_InterCali_global_v1( string infilename, string outfilename  ){
          }
     }
 
-    //normRtStc = 0.f;
-    //normRtOOTStc = 0.f;
-    //normWtOOTStc = 0.f;
+    std::cout << "For iter " << iter+1 << " found: " << M[iter]/nM[iter] << std::endl;
+    //normRtStc = 0.0;
+    //normRtOOTStc = 0.0;
+    //normWtOOTStc = 0.0;
     sumXtalRtStcPhoIcRecTime.clear();
     sumXtalRtOOTStcPhoIcRecTime.clear();
     sumXtalWtOOTStcPhoIcRecTime.clear();
     numXtalIcRecTime.clear();
 
     }  //  end iteration loop
-    //std::cout << " End of Interation Loops " << std::endl;
+    std::cout << " End of Interation Loops " << std::endl;
 
     std::cout << "Fill M hists  ( M vs iter )" << std::endl;
     for( auto  iter = 0; iter < nIterations; iter++){  
@@ -477,3 +586,16 @@ void wc_ku_InterCali_global_v1( string infilename, string outfilename  ){
 
     //fInTree->Write(); 
 }
+
+int main ( int argc, char *argv[] ){
+
+        if( argc != 4 ) { std::cout << "Insufficent arguments." << std::endl; }
+        else {
+                auto infilename = argv[1];
+                auto outfilename = argv[2];
+		auto mfc = atoi(argv[3]);
+                wc_ku_InterCali_global_v2( infilename, outfilename, mfc );
+        }
+        return 1;
+}
+

@@ -33,8 +33,8 @@ kuEcalMultiFitUncalibRecHit = ecalMultiFitUncalibRecHit.clone(
               ##timealgo = cms.string("Kansas"),
               ##timealgo = cms.string("WeightsMethod"),
               ##timealgo = cms.string("RatioMethodOOT"),
-              #timealgo = cms.string("RatioMethod"),
-              timealgo = cms.string("Kansas"),
+              timealgo = cms.string("RatioMethod"),
+              #timealgo = cms.string("Kansas"),
               ##timealgo = cms.string("KansasCC"),
 
               # for ratio method
@@ -107,10 +107,10 @@ kuNotEcalMultiFitUncalibRecHit = ecalMultiFitUncalibRecHit.clone(
 
               # decide which algorithm to be use to calculate the jitter
               ##timealgo = cms.string("weightsMethodnoOOT"),
-	      ##timealgo = cms.string("RatioMethod"),
+	      timealgo = cms.string("RatioMethod"),
               #timealgo = cms.string("RatioMethodOOT"),
               ##timealgo = cms.string("Kansas"),
-              timealgo = cms.string("KansasCC"),
+              #timealgo = cms.string("KansasCC"),
 
               # for ratio method
               EBtimeFitParameters = cms.vdouble(-2.015452e+00, 3.130702e+00, -1.234730e+01, 4.188921e+01, -8.283944e+01, 9.101147e+01, -5.035761e+01, 1.105621e+01),
@@ -181,7 +181,8 @@ kuWtEcalMultiFitUncalibRecHit = ecalMultiFitUncalibRecHit.clone(
               addPedestalUncertaintyEE = cms.double(0.),
 
               # decide which algorithm to be use to calculate the jitter
-              timealgo = cms.string("WeightsMethod"),
+              timealgo = cms.string("RatioMethod"),
+              #timealgo = cms.string("WeightsMethod"),
               #timealgo = cms.string("WeightsMethodnoOOT"),
 
              # for ratio method
@@ -253,9 +254,9 @@ kuWootEcalMultiFitUncalibRecHit = ecalMultiFitUncalibRecHit.clone(
               addPedestalUncertaintyEE = cms.double(0.),
 
               # decide which algorithm to be use to calculate the jitter
+              timealgo = cms.string("RatioMethod"),
               #timealgo = cms.string("WeightsMethod"),
-				    #WeightsMethodnoOOT
-	      timealgo = cms.string("WeightsMethodnoOOT"),
+	      #timealgo = cms.string("WeightsMethodnoOOT"),
 
               # for ratio method
               EBtimeFitParameters = cms.vdouble(-2.015452e+00, 3.130702e+00, -1.234730e+01, 4.188921e+01, -8.283944e+01, 9.101147e+01, -5.035761e+01, 1.105621e+01),
@@ -326,7 +327,8 @@ kuMfootEcalMultiFitUncalibRecHit = ecalMultiFitUncalibRecHit.clone(
               addPedestalUncertaintyEE = cms.double(0.),
 
               # decide which algorithm to be use to calculate the jitter
-              timealgo = cms.string("Kansas"),
+              timealgo = cms.string("RatioMethod"),
+              #timealgo = cms.string("Kansas"),
 	      #timealgo = cms.string("KansasCC"),
 
               # for ratio method
@@ -398,8 +400,9 @@ kuMfootCCEcalMultiFitUncalibRecHit = ecalMultiFitUncalibRecHit.clone(
               addPedestalUncertaintyEE = cms.double(0.),
 
               # decide which algorithm to be use to calculate the jitter
+              timealgo = cms.string("RatioMethod"),
               #timealgo = cms.string("Kansas"),
-              timealgo = cms.string("KansasCC"),
+              #timealgo = cms.string("KansasCC"),
 
 
               # for ratio method

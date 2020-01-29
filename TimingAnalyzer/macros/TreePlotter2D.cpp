@@ -16,7 +16,9 @@ TreePlotter2D::TreePlotter2D(const TString & infilename, const TString & insigna
   ////////////////
 
   // Get main input file
+  std::cout << "Opening Infile : " << fInFileName.Data() << std::endl;
   fInFile = TFile::Open(Form("%s",fInFileName.Data()));
+  std::cout << "Opened tfile : " << fInFile << std::endl;
   Common::CheckValidFile(fInFile,fInFileName);
 
   // Get signal input file
@@ -82,19 +84,27 @@ void TreePlotter2D::MakeHistFromTrees(TFile *& inFile, TFile *& inSignalFile)
     // Get TTree
     //auto intree = (TTree*)infile->Get(Form("%s",treename.Data()));
     auto intree = (TTree*)infile->Get("disphotree");
+    std::cout << "Opened tree : " << intree << std::endl;
     const auto isnull = Common::IsNullTree(intree);
 
     if (!isnull)
+    //if( false )
     {
       std::cout << "Filling hist from tree..." << std::endl;
 
       // get the hist we wish to write to --> ROOT and memory residency is satanic
       auto & hist = HistMap[sample];
-      hist->SetDirectory(infile);
+      //hist->SetDirectory(infile);
       
       // Fill from tree
-      intree->Draw(Form("%s:%s>>%s",Common::YVarMap[sample].Data(),Common::XVarMap[sample].Data(),hist->GetName()),Form("%s",Common::CutWgtMap[sample].Data()),"goff");
-
+      std::cout << "Drawing from intree : " << intree  << std::endl;
+      std::cout << "From infile : " << infile  << std::endl;
+      std::cout << "Form(\"%s:%s>>%s\",Common::YVarMap[sample].Data(),Common::XVarMap[sample].Data(),hist->GetName()) : " << std::endl;
+      std::cout << "  " << Form("%s:%s>>%s",Common::YVarMap[sample].Data(),Common::XVarMap[sample].Data(),hist->GetName())  << std::endl;
+      std::cout << "Form(\"%s\",Common::CutWgtMap[sample].Data()) : " << std::endl;
+      std::cout << "  " << Form("%s",Common::CutWgtMap[sample].Data())  << std::endl;
+      //intree->Draw(Form("%s:%s>>%s",Common::YVarMap[sample].Data(),Common::XVarMap[sample].Data(),hist->GetName()),Form("%s",Common::CutWgtMap[sample].Data()),"goff");
+      //intree->Print();
       // delete tree;
       delete intree;
     }
@@ -115,7 +125,7 @@ void TreePlotter2D::MakeHistFromTrees(TFile *& inFile, TFile *& inSignalFile)
     }
   }
 
-  // save totals to output file
+ // save totals to output file
   fOutFile->cd();
   for (const auto & HistPair : HistMap)
   { 

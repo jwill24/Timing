@@ -3,16 +3,23 @@
 
 #include <iostream>
 
-void wc_ku_Preplot_ic( string califilename, string infilename, string outfilename ){
+void wc_ku_Preplot_ic( string califilename, string infilename, string treename, string bname ){
 
+    std::cout << "open input files" << std::endl;
     string disphotreename("disphotree");
 
     auto fInFile = TFile::Open(infilename.c_str(), "update");
+    fInFile->cd();
     auto fInTree = (TTree*)fInFile->Get(disphotreename.c_str());
 
     auto fCaliFile = TFile::Open(califilename.c_str(), "update");
-    //auto fCaliTree = (TTree*)fInFile->Get(disphotreename.c_str());
-    
+    std::cout << "fInFile : " << fInFile  << " fInTree : " << fInTree << " fCaliFile : " << fCaliFile << std::endl;
+
+    fInFile->cd();
+    TTree* fCaliTree = new TTree( treename.c_str(), treename.c_str());
+
+//     set branches to get from fInFile : fInTree
+    std::cout << "set branches to get from fInFile : fInTree" << std::endl;
 //#    double phoseedtimeCaliE0_0;
 //#    double phoseedtimeCaliE0_1;
 //#    double phoseedtimeCaliE1_0;
@@ -67,7 +74,7 @@ void wc_ku_Preplot_ic( string califilename, string infilename, string outfilenam
     TBranch * b_phoseedI1_1;
     TBranch * b_phoseedI2_1;
     TBranch * b_phoseedEcal_1;
-    
+
     fInTree->SetBranchAddress("phoseedI1_0", &phoseedI1_0, &b_phoseedI1_0);
     fInTree->SetBranchAddress("phoseedI2_0", &phoseedI2_0, &b_phoseedI2_0);
     fInTree->SetBranchAddress("phoseedEcal_0", &phoseedEcal_0, &b_phoseedEcal_0);
@@ -75,6 +82,9 @@ void wc_ku_Preplot_ic( string califilename, string infilename, string outfilenam
     fInTree->SetBranchAddress("phoseedI2_1", &phoseedI2_1, &b_phoseedI2_1);
     fInTree->SetBranchAddress("phoseedEcal_1", &phoseedEcal_1, &b_phoseedEcal_1);
 
+//     get maps from fCaliFile
+    std::cout << "get maps from fCaliFile" << std::endl;
+    fCaliFile->cd();
 //#    auto ebmape0 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE0EBMap");
 //#    auto epmape0 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE0EPMap");
 //#    auto emmape0 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE0EMMap");
@@ -125,18 +135,14 @@ void wc_ku_Preplot_ic( string califilename, string infilename, string outfilenam
 //    auto epmapcl = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcPhoClRecTimeEPMap");
 //    auto emmapcl = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcPhoClRecTimeEMMap");
 //    std::cout << " Cl hists: " << ebmapcl << " " << epmapcl << " " << emmapcl << std::endl;
-    auto ebmapic = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcPhoIcRecTimeEBMap_i40");
-    auto epmapic = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcPhoIcRecTimeEPMap_i40");
-    auto emmapic = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcPhoIcRecTimeEMMap_i40");
+    auto ebmapic = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcPhoIcRecTimeEBMap_i49");
+    auto epmapic = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcPhoIcRecTimeEPMap_i49");
+    auto emmapic = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcPhoIcRecTimeEMMap_i49");
     std::cout << " Ic hists: " << ebmapic << " " << epmapic << " " << emmapic << std::endl;
 
-    TFile* fOutFile = new TFile( outfilename.c_str(), "RECREATE" );
-    fOutFile->cd();  
-    auto fOutTree = fInTree->CloneTree();
-    //TTree* fOutTree = new TTree(   
-    //auto fOutTree = fInTree;
-    //auto fOutFile = fInFile;
-
+//  set branches for fCaliTree
+    std::cout << "set branches for fCaliTree" << std::endl;
+    fInFile->cd();
 //    auto b_phoseedtimeCaliE0_0 = fOutTree->Branch("phoseedtimeCaliE0_0",&phoseedtimeCaliE0_0);
 //    auto b_phoseedtimeCaliE0_1 = fOutTree->Branch("phoseedtimeCaliE0_1",&phoseedtimeCaliE0_1);
 //    auto b_phoseedtimeCaliE1_0 = fOutTree->Branch("phoseedtimeCaliE1_0",&phoseedtimeCaliE1_0);
@@ -159,8 +165,10 @@ void wc_ku_Preplot_ic( string califilename, string infilename, string outfilenam
 //    auto b_phoseedtimeCaliCl_0 = fOutTree->Branch("phoseedtimeCaliCl_0",&phoseedtimeCaliCl_0);
 //    auto b_phoseedtimeCaliCl_1 = fOutTree->Branch("phoseedtimeCaliCl_1",&phoseedtimeCaliCl_1);
 
-    auto b_phoseedtimeCaliIc_0 = fOutTree->Branch("phoseedtimeCaliIc_0",&phoseedtimeCaliIc_0);
-    auto b_phoseedtimeCaliIc_1 = fOutTree->Branch("phoseedtimeCaliIc_1",&phoseedtimeCaliIc_1);
+    auto branch_name0("phoseedtimeCali"+bname+"Ic_0");
+    auto branch_name1("phoseedtimeCali"+bname+"Ic_1");
+    auto b_phoseedtimeCaliIc_0 = fCaliTree->Branch(branch_name0.c_str(),&phoseedtimeCaliIc_0);
+    auto b_phoseedtimeCaliIc_1 = fCaliTree->Branch(branch_name1.c_str(),&phoseedtimeCaliIc_1);
 
 //    auto b_phoseedtimeKuStcCaliE5_0 = fOutTree->Branch("phoseedtimeKuStcCaliE5_0",&phoseedtimeKuStcCaliE5_0);
 //    auto b_phoseedtimeKuStcCaliE5_1 = fOutTree->Branch("phoseedtimeKuStcCaliE5_1",&phoseedtimeKuStcCaliE5_1);
@@ -168,38 +176,9 @@ void wc_ku_Preplot_ic( string califilename, string infilename, string outfilenam
 //    auto b_phoseedtimeWootStcCaliE5_0 = fOutTree->Branch("phoseedtimeWootStcCaliE5_0",&phoseedtimeWootStcCaliE5_0);
 //    auto b_phoseedtimeWootStcCaliE5_1 = fOutTree->Branch("phoseedtimeWootStcCaliE5_1",&phoseedtimeWootStcCaliE5_1);
 
-//    b_phoseedtimeCaliE0_0->SetFile(outfilename.c_str());
-//    b_phoseedtimeCaliE0_1->SetFile(outfilename.c_str());
-//    b_phoseedtimeCaliE1_0->SetFile(outfilename.c_str());
-//    b_phoseedtimeCaliE1_1->SetFile(outfilename.c_str());
-//    b_phoseedtimeCali2E1_0->SetFile(outfilename.c_str());
-//    b_phoseedtimeCali2E1_1->SetFile(outfilename.c_str());
-//    b_phoseedtimeCali4E1_0->SetFile(outfilename.c_str());
-//    b_phoseedtimeCali4E1_1->SetFile(outfilename.c_str());
-//    b_phoseedtimeCaliE2_0->SetFile(outfilename.c_str());
-//    b_phoseedtimeCaliE2_1->SetFile(outfilename.c_str());
-//    b_phoseedtimeCaliE5_0->SetFile(outfilename.c_str());
-//    b_phoseedtimeCaliE5_1->SetFile(outfilename.c_str());
-//    b_phoseedtimeCali2E5_0->SetFile(outfilename.c_str());
-//    b_phoseedtimeCali2E5_1->SetFile(outfilename.c_str());
-//    b_phoseedtimeCali4E5_0->SetFile(outfilename.c_str());
-//    b_phoseedtimeCali4E5_1->SetFile(outfilename.c_str());
-//    b_phoseedtimeCaliE10_0->SetFile(outfilename.c_str());
-//    b_phoseedtimeCaliE10_1->SetFile(outfilename.c_str());
-//
-//    b_phoseedtimeCaliCl_0->SetFile(outfilename.c_str());
-//    b_phoseedtimeCaliCl_1->SetFile(outfilename.c_str());
-
-    b_phoseedtimeCaliIc_0->SetFile(outfilename.c_str());
-    b_phoseedtimeCaliIc_1->SetFile(outfilename.c_str());
-
-//    b_phoseedtimeKuStcCaliE5_0->SetFile(outfilename.c_str());
-//    b_phoseedtimeKuStcCaliE5_1->SetFile(outfilename.c_str());
-//
-//    b_phoseedtimeWootStcCaliE5_0->SetFile(outfilename.c_str());
-//    b_phoseedtimeWootStcCaliE5_1->SetFile(outfilename.c_str());
 
     // >> calcs  <<
+    std::cout << "calculating calibration values" << std::endl;
 
     const auto nEntries = fInTree->GetEntries();
     for (auto entry = 0U; entry < nEntries; entry++){
@@ -313,7 +292,7 @@ void wc_ku_Preplot_ic( string califilename, string infilename, string outfilenam
 //                phoseedtimeWootStcCaliE5_1 = 0; //emmapwte5->GetBinContent( phoseedI2_1 + bin_offset, phoseedI1_1 ) - adjust;
                 //std::cout << "Filling EM 1 with " << phoseedI1_1 << " by " << phoseedI2_1 << " : " << phoseedtimeCali_1 << " and " << phoseedtimeStcCali_1 << std::endl;
         }
-    
+
 // 	b_phoseedtimeCaliE0_0->Fill();
 //        b_phoseedtimeCaliE0_1->Fill();
 //        b_phoseedtimeCaliE1_0->Fill();
@@ -345,28 +324,32 @@ void wc_ku_Preplot_ic( string califilename, string infilename, string outfilenam
 //        b_phoseedtimeWootStcCaliE5_0->Fill();
 //        b_phoseedtimeWootStcCaliE5_1->Fill();
 
- //   	fOutTree->Fill();
+    	fCaliTree->Fill();
     
     }
-    
-    fInFile->cd();
-    fInTree->Delete(); 
-    fOutFile->cd();
-//    fOutTree->Write();
-//    fOutTree->Print();
-    fOutFile->Write();
 
+    std::cout << "Adding fCaliTree to fInTree as friend" << std::endl;
+
+    fCaliTree->Write();
+    fInTree->AddFriend(fCaliTree);
+//    fInFile->Write();
+
+    delete fInFile;
+    delete fCaliFile;
+
+    std::cout << "Thats all Folks!" << std::endl;
 }
 
 
 int main ( int argc, char *argv[] ){
 
-        if( argc != 4 ) { std::cout << "Insufficent arguments." << std::endl; }
+        if( argc != 5 ) { std::cout << "Insufficent arguments." << std::endl; }
         else {
                 auto califilename = argv[1];
                 auto infilename = argv[2];
-                auto outfilename = argv[3];
-		wc_ku_Preplot_ic( califilename, infilename, outfilename );
+                auto treename = argv[3];
+                auto bname = argv[4];
+		wc_ku_Preplot_ic( califilename, infilename, treename, bname );
         }
         return 1;
 }
