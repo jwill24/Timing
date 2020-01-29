@@ -3,12 +3,15 @@
 
 #include <iostream>
 
-void wc_ku_Cali( string infilename, string outfilename ){
+void wc_ku_Preplot_nowt( string califilename, string infilename, string outfilename ){
 
     string disphotreename("disphotree");
 
     auto fInFile = TFile::Open(infilename.c_str(), "update");
     auto fInTree = (TTree*)fInFile->Get(disphotreename.c_str());
+
+    auto fCaliFile = TFile::Open(califilename.c_str(), "update");
+    //auto fCaliTree = (TTree*)fInFile->Get(disphotreename.c_str());
     
     double phoseedtimeCaliE0_0;
     double phoseedtimeCaliE0_1;
@@ -24,6 +27,16 @@ void wc_ku_Cali( string infilename, string outfilename ){
     double phoseedtimeCaliE2_1;
     double phoseedtimeCaliE5_0;
     double phoseedtimeCaliE5_1;
+
+    double phoseedtimeKuStcCaliE2_0;
+    double phoseedtimeKuStcCaliE2_1;
+    double phoseedtimeKuStcCaliE5_0;
+    double phoseedtimeKuStcCaliE5_1;
+
+    double phoseedtimeWootStcCaliE2_0;
+    double phoseedtimeWootStcCaliE2_1;
+    double phoseedtimeWootStcCaliE5_0;
+    double phoseedtimeWootStcCaliE5_1;
 
     double phoseedtimeCali2E5_0;
     double phoseedtimeCali2E5_1;
@@ -46,15 +59,14 @@ void wc_ku_Cali( string infilename, string outfilename ){
     TBranch * b_phoseedI1_0;
     TBranch * b_phoseedI2_0;
     TBranch * b_phoseedEcal_0;
-  
+
     Int_t   phoseedI1_1; // EB: iphi, EE: ix
     Int_t   phoseedI2_1; // EB: ieta, EE: iy
     Int_t    phoseedEcal_1; // EB, EM, EP
-  
+
     TBranch * b_phoseedI1_1;
     TBranch * b_phoseedI2_1;
     TBranch * b_phoseedEcal_1;
-
     
     fInTree->SetBranchAddress("phoseedI1_0", &phoseedI1_0, &b_phoseedI1_0);
     fInTree->SetBranchAddress("phoseedI2_0", &phoseedI2_0, &b_phoseedI2_0);
@@ -63,49 +75,59 @@ void wc_ku_Cali( string infilename, string outfilename ){
     fInTree->SetBranchAddress("phoseedI2_1", &phoseedI2_1, &b_phoseedI2_1);
     fInTree->SetBranchAddress("phoseedEcal_1", &phoseedEcal_1, &b_phoseedEcal_1);
 
-    auto ebmape0 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTimeE0EBMap");
-    auto epmape0 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTimeE0EPMap");
-    auto emmape0 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTimeE0EMMap");
+    auto ebmape0 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE0EBMap");
+    auto epmape0 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE0EPMap");
+    auto emmape0 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE0EMMap");
     std::cout << " E0 hists: " << ebmape0 << " " << epmape0 << " " << emmape0 << std::endl;
-    auto ebmape1 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTimeE1EBMap");
-    auto epmape1 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTimeE1EPMap");
-    auto emmape1 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTimeE1EMMap");
+    auto ebmape1 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE1EBMap");
+    auto epmape1 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE1EPMap");
+    auto emmape1 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE1EMMap");
     std::cout << " E1 hists: " << ebmape1 << " " << epmape1 << " " << emmape1 << std::endl;
-    auto ebmap2e1 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTime2E1EBMap");
-    auto epmap2e1 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTime2E1EPMap");
-    auto emmap2e1 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTime2E1EMMap");
+    auto ebmap2e1 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTime2E1EBMap");
+    auto epmap2e1 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTime2E1EPMap");
+    auto emmap2e1 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTime2E1EMMap");
     std::cout << " 2E1 hists: " << ebmap2e1 << " " << epmap2e1 << " " << emmap2e1 << std::endl;
-    auto ebmap4e1 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTime4E1EBMap");
-    auto epmap4e1 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTime4E1EPMap");
-    auto emmap4e1 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTime4E1EMMap");
+    auto ebmap4e1 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTime4E1EBMap");
+    auto epmap4e1 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTime4E1EPMap");
+    auto emmap4e1 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTime4E1EMMap");
     std::cout << " 4E1 hists: " << ebmap4e1 << " " << epmap4e1 << " " << emmap4e1 << std::endl;
-    auto ebmape2 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTimeE2EBMap");
-    auto epmape2 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTimeE2EPMap");
-    auto emmape2 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTimeE2EMMap");
+    auto ebmape2 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE2EBMap");
+    auto epmape2 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE2EPMap");
+    auto emmape2 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE2EMMap");
     std::cout << " E2 hists: " << ebmape2 << " " << epmape2 << " " << emmape2 << std::endl;
-    auto ebmape5 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTimeE5EBMap");
-    auto epmape5 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTimeE5EPMap");
-    auto emmape5 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTimeE5EMMap");
+    auto ebmapkue5 = (TH2F*)fCaliFile->Get("AveXtalRtStcRecTimeE5EBMap");
+    auto epmapkue5 = (TH2F*)fCaliFile->Get("AveXtalRtStcRecTimeE5EPMap");
+    auto emmapkue5 = (TH2F*)fCaliFile->Get("AveXtalRtStcRecTimeE5EMMap");
+    std::cout << " E5 hists: " << ebmapkue5 << " " << epmapkue5 << " " << emmapkue5 << std::endl;
+    auto ebmape5 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE5EBMap");
+    auto epmape5 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE5EPMap");
+    auto emmape5 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE5EMMap");
     std::cout << " E5 hists: " << ebmape5 << " " << epmape5 << " " << emmape5 << std::endl;
-    auto ebmap2e5 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTime2E5EBMap");
-    auto epmap2e5 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTime2E5EPMap");
-    auto emmap2e5 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTime2E5EMMap");
+
+    //auto ebmapwte5 = (TH2F*)fCaliFile->Get("AveXtalWtOOTStcRecTimeE5EBMap");
+    //auto epmapwte5 = (TH2F*)fCaliFile->Get("AveXtalWtOOTStcRecTimeE5EPMap");
+    //auto emmapwte5 = (TH2F*)fCaliFile->Get("AveXtalWtOOTStcRecTimeE5EMMap");
+    //std::cout << " WtOOT E5 hists: " << ebmapwte5 << " " << epmapwte5 << " " << emmapwte5 << std::endl;
+
+    auto ebmap2e5 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTime2E5EBMap");
+    auto epmap2e5 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTime2E5EPMap");
+    auto emmap2e5 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTime2E5EMMap");
     std::cout << " 2E5 hists: " << ebmap2e5 << " " << epmap2e5 << " " << emmap2e5 << std::endl;
-    auto ebmap4e5 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTime4E5EBMap");
-    auto epmap4e5 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTime4E5EPMap");
-    auto emmap4e5 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTime4E5EMMap");
+    auto ebmap4e5 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTime4E5EBMap");
+    auto epmap4e5 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTime4E5EPMap");
+    auto emmap4e5 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTime4E5EMMap");
     std::cout << " 4E5 hists: " << ebmap4e5 << " " << epmap4e5 << " " << emmap4e5 << std::endl;
-    auto ebmape10 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTimeE10EBMap");
-    auto epmape10 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTimeE10EPMap");
-    auto emmape10 = (TH2F*)fInFile->Get("AveXtalRtOOTStcRecTimeE10EMMap");
+    auto ebmape10 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE10EBMap");
+    auto epmape10 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE10EPMap");
+    auto emmape10 = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcRecTimeE10EMMap");
     std::cout << " E10 hists: " << ebmape10 << " " << epmape10 << " " << emmape10 << std::endl;
-    auto ebmapcl = (TH2F*)fInFile->Get("AveXtalRtOOTStcPhoClRecTimeEBMap");
-    auto epmapcl = (TH2F*)fInFile->Get("AveXtalRtOOTStcPhoClRecTimeEPMap");
-    auto emmapcl = (TH2F*)fInFile->Get("AveXtalRtOOTStcPhoClRecTimeEMMap");
+    auto ebmapcl = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcPhoClRecTimeEBMap");
+    auto epmapcl = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcPhoClRecTimeEPMap");
+    auto emmapcl = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcPhoClRecTimeEMMap");
     std::cout << " Cl hists: " << ebmapcl << " " << epmapcl << " " << emmapcl << std::endl;
-    auto ebmapic = (TH2F*)fInFile->Get("AveXtalRtOOTStcPhoIcRecTimeEBMap");
-    auto epmapic = (TH2F*)fInFile->Get("AveXtalRtOOTStcPhoIcRecTimeEPMap");
-    auto emmapic = (TH2F*)fInFile->Get("AveXtalRtOOTStcPhoIcRecTimeEMMap");
+    auto ebmapic = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcPhoIcRecTimeEBMap_i25");
+    auto epmapic = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcPhoIcRecTimeEPMap_i25");
+    auto emmapic = (TH2F*)fCaliFile->Get("AveXtalRtOOTStcPhoIcRecTimeEMMap_i25");
     std::cout << " Ic hists: " << ebmapic << " " << epmapic << " " << emmapic << std::endl;
 
     TFile* fOutFile = new TFile( outfilename.c_str(), "RECREATE" );
@@ -140,6 +162,12 @@ void wc_ku_Cali( string infilename, string outfilename ){
     auto b_phoseedtimeCaliIc_0 = fOutTree->Branch("phoseedtimeCaliIc_0",&phoseedtimeCaliIc_0);
     auto b_phoseedtimeCaliIc_1 = fOutTree->Branch("phoseedtimeCaliIc_1",&phoseedtimeCaliIc_1);
 
+    auto b_phoseedtimeKuStcCaliE5_0 = fOutTree->Branch("phoseedtimeKuStcCaliE5_0",&phoseedtimeKuStcCaliE5_0);
+    auto b_phoseedtimeKuStcCaliE5_1 = fOutTree->Branch("phoseedtimeKuStcCaliE5_1",&phoseedtimeKuStcCaliE5_1);
+
+    auto b_phoseedtimeWootStcCaliE5_0 = fOutTree->Branch("phoseedtimeWootStcCaliE5_0",&phoseedtimeWootStcCaliE5_0);
+    auto b_phoseedtimeWootStcCaliE5_1 = fOutTree->Branch("phoseedtimeWootStcCaliE5_1",&phoseedtimeWootStcCaliE5_1);
+
     b_phoseedtimeCaliE0_0->SetFile(outfilename.c_str());
     b_phoseedtimeCaliE0_1->SetFile(outfilename.c_str());
     b_phoseedtimeCaliE1_0->SetFile(outfilename.c_str());
@@ -164,6 +192,12 @@ void wc_ku_Cali( string infilename, string outfilename ){
 
     b_phoseedtimeCaliIc_0->SetFile(outfilename.c_str());
     b_phoseedtimeCaliIc_1->SetFile(outfilename.c_str());
+
+    b_phoseedtimeKuStcCaliE5_0->SetFile(outfilename.c_str());
+    b_phoseedtimeKuStcCaliE5_1->SetFile(outfilename.c_str());
+
+    b_phoseedtimeWootStcCaliE5_0->SetFile(outfilename.c_str());
+    b_phoseedtimeWootStcCaliE5_1->SetFile(outfilename.c_str());
 
     // >> calcs  <<
 
@@ -195,6 +229,8 @@ void wc_ku_Cali( string infilename, string outfilename ){
                 phoseedtimeCaliE10_0 = ebmape10->GetBinContent( phoseedI2_0 + bin_offset, phoseedI1_0 ) - adjust;
                 phoseedtimeCaliCl_0 = ebmapcl->GetBinContent( phoseedI2_0 + bin_offset, phoseedI1_0 ) - adjust;
                 phoseedtimeCaliIc_0 = ebmapic->GetBinContent( phoseedI2_0 + bin_offset, phoseedI1_0 ) - adjust;
+		phoseedtimeKuStcCaliE5_0 = ebmapkue5->GetBinContent( phoseedI2_0 + bin_offset, phoseedI1_0 ) - adjust;	
+                phoseedtimeWootStcCaliE5_0 = 0; //ebmapwte5->GetBinContent( phoseedI2_0 + bin_offset, phoseedI1_0 ) - adjust;
 		//if( phoseedtimeCaliCl_0 > 1.0 ){
 		//	std::cout << "Filling EB 0 with " << phoseedI2_0 << " by " << phoseedI1_0 << " : " << phoseedtimeCaliE0_0 << " and " << phoseedtimeCaliIc_0;
 		//	std::cout << phoseedtimeCaliE1_0 << phoseedtimeCaliE2_0 << phoseedtimeCaliE5_0 << phoseedtimeCaliE10_0 << phoseedtimeCaliCl_0 << std::endl;
@@ -211,6 +247,8 @@ void wc_ku_Cali( string infilename, string outfilename ){
                 phoseedtimeCaliE10_0 = epmape10->GetBinContent( phoseedI2_0, phoseedI1_0 ) - adjust;
                 phoseedtimeCaliCl_0 = epmapcl->GetBinContent( phoseedI2_0, phoseedI1_0 ) - adjust;
                 phoseedtimeCaliIc_0 = epmapic->GetBinContent( phoseedI2_0, phoseedI1_0 ) - adjust;
+                phoseedtimeKuStcCaliE5_0 = epmapkue5->GetBinContent( phoseedI2_0, phoseedI1_0 ) - adjust;
+                phoseedtimeWootStcCaliE5_0 = 0; //epmapwte5->GetBinContent( phoseedI2_0, phoseedI1_0 ) - adjust;
                 //std::cout << "Filling EP 0 with " << phoseedI1_0 << " by " << phoseedI2_0 << " : " << phoseedtimeCali_0 << " and " << phoseedtimeStcCali_0 << std::endl;
         }else if (phoseedEcal_0 == ECAL::EM ){
                 phoseedtimeCaliE0_0 = emmape0->GetBinContent( phoseedI2_0, phoseedI1_0 ) - adjust;
@@ -224,6 +262,8 @@ void wc_ku_Cali( string infilename, string outfilename ){
                 phoseedtimeCaliE10_0 = emmape10->GetBinContent( phoseedI2_0, phoseedI1_0 ) - adjust;
                 phoseedtimeCaliCl_0 = emmapcl->GetBinContent( phoseedI2_0, phoseedI1_0 ) - adjust;
                 phoseedtimeCaliIc_0 = emmapic->GetBinContent( phoseedI2_0, phoseedI1_0 ) - adjust;
+                phoseedtimeKuStcCaliE5_0 = emmapkue5->GetBinContent( phoseedI2_0, phoseedI1_0 ) - adjust;
+                phoseedtimeWootStcCaliE5_0 = 0; //emmapwte5->GetBinContent( phoseedI2_0, phoseedI1_0 ) - adjust;
 		//std::cout << "Filling EM 0 with " << phoseedI1_0 << " by " << phoseedI2_0 << " : " << phoseedtimeCali_0 << " and " << phoseedtimeStcCali_0 << std::endl;
         }
 
@@ -239,6 +279,8 @@ void wc_ku_Cali( string infilename, string outfilename ){
                 phoseedtimeCaliE10_1 = ebmape10->GetBinContent( phoseedI2_1 + bin_offset, phoseedI1_1 ) - adjust;
                 phoseedtimeCaliCl_1 = ebmapcl->GetBinContent( phoseedI2_1 + bin_offset, phoseedI1_1 ) - adjust;
                 phoseedtimeCaliIc_1 = ebmapic->GetBinContent( phoseedI2_1 + bin_offset, phoseedI1_1 ) - adjust;
+                phoseedtimeKuStcCaliE5_1 = ebmapkue5->GetBinContent( phoseedI2_1 + bin_offset, phoseedI1_1 ) - adjust;
+                phoseedtimeWootStcCaliE5_1 = 0; //ebmapwte5->GetBinContent( phoseedI2_1 + bin_offset, phoseedI1_1 ) - adjust;
                 //std::cout << "Filling EB 1 with " << phoseedI2_1 << " by " << phoseedI1_1 << " : " << phoseedtimeCali_1 << " and " << phoseedtimeStcCali_1 << std::endl;
         }else if ( phoseedEcal_1 == ECAL::EP ){
                 phoseedtimeCaliE0_1 = epmape0->GetBinContent( phoseedI2_1, phoseedI1_1 ) - adjust;
@@ -252,6 +294,8 @@ void wc_ku_Cali( string infilename, string outfilename ){
                 phoseedtimeCaliE10_1 = epmape10->GetBinContent( phoseedI2_1, phoseedI1_1 ) - adjust;
                 phoseedtimeCaliCl_1 = epmapcl->GetBinContent( phoseedI2_1, phoseedI1_1 ) - adjust;
                 phoseedtimeCaliIc_1 = epmapic->GetBinContent( phoseedI2_1, phoseedI1_1 ) - adjust;
+                phoseedtimeKuStcCaliE5_1 = epmapkue5->GetBinContent( phoseedI2_1, phoseedI1_1 ) - adjust;
+                phoseedtimeWootStcCaliE5_1 = 0;//epmapwte5->GetBinContent( phoseedI2_1 + bin_offset, phoseedI1_1 ) - adjust;
                 //std::cout << "Filling EP 1 with " << phoseedI1_1 << " by " << phoseedI2_1 << " : " << phoseedtimeCali_1 << " and " << phoseedtimeStcCali_1 << std::endl;
         }else if (phoseedEcal_1 == ECAL::EM ){
                 phoseedtimeCaliE0_1 = emmape0->GetBinContent( phoseedI2_1, phoseedI1_1 ) - adjust;
@@ -265,6 +309,8 @@ void wc_ku_Cali( string infilename, string outfilename ){
                 phoseedtimeCaliE10_1 = emmape10->GetBinContent( phoseedI2_1, phoseedI1_1 ) - adjust;
                 phoseedtimeCaliCl_1 = emmapcl->GetBinContent( phoseedI2_1, phoseedI1_1 ) - adjust;
                 phoseedtimeCaliIc_1 = emmapic->GetBinContent( phoseedI2_1, phoseedI1_1 ) - adjust;
+                phoseedtimeKuStcCaliE5_1 = emmapkue5->GetBinContent( phoseedI2_1, phoseedI1_1 ) - adjust;
+                phoseedtimeWootStcCaliE5_1 = 0; //emmapwte5->GetBinContent( phoseedI2_1 + bin_offset, phoseedI1_1 ) - adjust;
                 //std::cout << "Filling EM 1 with " << phoseedI1_1 << " by " << phoseedI2_1 << " : " << phoseedtimeCali_1 << " and " << phoseedtimeStcCali_1 << std::endl;
         }
     
@@ -292,6 +338,13 @@ void wc_ku_Cali( string infilename, string outfilename ){
 
         b_phoseedtimeCaliIc_0->Fill();
         b_phoseedtimeCaliIc_1->Fill();       
+
+        b_phoseedtimeKuStcCaliE5_0->Fill();
+        b_phoseedtimeKuStcCaliE5_1->Fill();
+
+        b_phoseedtimeWootStcCaliE5_0->Fill();
+        b_phoseedtimeWootStcCaliE5_1->Fill();
+
  //   	fOutTree->Fill();
     
     }

@@ -171,7 +171,7 @@ namespace Common
   extern std::map<TString,SampleGroup> GroupMap;
   extern std::map<TString,SampleGroup> BkgdGroupMap;
   extern std::map<TString,TString> SignalGroupMap;
-  extern std::map<TString,vector<TString> > SignalSubGroupMap;
+  extern std::map<TString,std::vector<TString> > SignalSubGroupMap;
   extern std::map<TString,TString> TreeNameMap;
   extern std::map<TString,TString> HistNameMap;
   extern std::map<TString,TString> BkgdHistNameMap;

@@ -876,7 +876,7 @@ void Skimmer::EventLoop()
 	b_kuStcrhtime->GetEntry(entry);
         //b_kuNotrhtime->GetEntry(entry);
         b_kuNotStcrhtime->GetEntry(entry);
-        b_kuWootStcrhtime->GetEntry(entry);
+        //b_kuWootStcrhtime->GetEntry(entry);
     }
    //std::cout << "Pulling RecHits done "<< std::endl;
 
@@ -902,7 +902,7 @@ void Skimmer::EventLoop()
                   	if( (*kurhID)[kuseed] == id_i ){ 
 				RtStc_t_i = (*kuStcrhtime)[kuseed];
                                 RtOOTStc_t_i = (*kuNotStcrhtime)[kuseed];
-                                WtOOTStc_t_i = (*kuWootStcrhtime)[kuseed];
+                                //1WtOOTStc_t_i = (*kuWootStcrhtime)[kuseed];
 				break;
 			}
                   }      
@@ -1094,7 +1094,7 @@ void Skimmer::EventLoop()
                         if( (*kurhID)[kuseed] == id_i ){
                                 RtStc_t_i = (*kuStcrhtime)[kuseed];
                                 RtOOTStc_t_i = (*kuNotStcrhtime)[kuseed];
-                                WtOOTStc_t_i = (*kuWootStcrhtime)[kuseed];
+                                //WtOOTStc_t_i = (*kuWootStcrhtime)[kuseed];
                                 break;
                         }
                 }
@@ -1125,7 +1125,7 @@ void Skimmer::EventLoop()
                                 if( (*kurhID)[kuseed] == id_j ){
                                         RtStc_t_j = (*kuStcrhtime)[kuseed];
                                         RtOOTStc_t_j = (*kuNotStcrhtime)[kuseed];
-                                        WtOOTStc_t_j = (*kuWootStcrhtime)[kuseed];
+                                        //WtOOTStc_t_j = (*kuWootStcrhtime)[kuseed];
                                         break;
                                 }
                         }
@@ -1214,14 +1214,14 @@ void Skimmer::EventLoop()
                             RtStc_t1 = (*kuStcrhtime)[kuseed];
                             //RtOOT_t1 = (*kuNotrhtime)[kuseed];
                             RtOOTStc_t1 = (*kuNotStcrhtime)[kuseed];
-                            WtOOTStc_t1 = (*kuWootStcrhtime)[kuseed];
+                            //WtOOTStc_t1 = (*kuWootStcrhtime)[kuseed];
                             }
                      if( (*kurhID)[kuseed] == id2 ){
                             Rt_t2 = (*kurhtime)[kuseed];
                             RtStc_t2 = (*kuStcrhtime)[kuseed];
                            // RtOOT_t2 = (*kuNotrhtime)[kuseed];
                             RtOOTStc_t2 = (*kuNotStcrhtime)[kuseed];
-                            WtOOTStc_t2 = (*kuWootStcrhtime)[kuseed];
+                           // WtOOTStc_t2 = (*kuWootStcrhtime)[kuseed];
                             }
           }
 	 //std::cout << "Filling xtalRtPhoRecHit time with: " << Rt_t1 << std::endl;
@@ -1250,8 +1250,8 @@ void Skimmer::EventLoop()
   //    cout << "Seed1: " << seed1 << " ID: " << id1 << endl;
   //    cout << "Seed2: " << seed2 << " ID: " << id2 << endl;
 
-      nxtal_sep =  0;
-  //    nxtal_sep =  Common::Xtal_Seperation(id1,id2);
+  //    nxtal_sep =  0;
+      nxtal_sep =  Common::Xtal_Seperation(id1,id2);
   //   //std::cout << " nxtal_sep : " << nxtal_sep << std::endl;
  
 //            const auto rh_j = (*inpho.recHits)[j]; // position within event rec hits vector
@@ -1338,7 +1338,7 @@ void Skimmer::EventLoop()
                         if( (*kurhID)[kuseed] == id_i ){
                                 RtStc_t_i = (*kuStcrhtime)[kuseed];
                                 RtOOTStc_t_i = (*kuNotStcrhtime)[kuseed];
-                                WtOOTStc_t_i = (*kuWootStcrhtime)[kuseed];
+                                //WtOOTStc_t_i = (*kuWootStcrhtime)[kuseed];
                                 break;
                         }
                 }
@@ -1371,7 +1371,7 @@ void Skimmer::EventLoop()
                         	if( (*kurhID)[kuseed] == id_j ){
                                 	RtStc_t_j = (*kuStcrhtime)[kuseed];
                                         RtOOTStc_t_j = (*kuNotStcrhtime)[kuseed];
-                                        WtOOTStc_t_j = (*kuWootStcrhtime)[kuseed];
+                                        //WtOOTStc_t_j = (*kuWootStcrhtime)[kuseed];
                                 	break;
                         	}	
                 	}
@@ -2574,10 +2574,10 @@ void Skimmer::FillOutPhos(const UInt_t entry)
   b_kuNotStcrhID->GetEntry(entry);
 
 //  b_kuWootStcrhE->GetEntry(entry);
-  b_kuWootStcrhtime->GetEntry(entry);
-  b_kuWootStcrhtimeErr->GetEntry(entry);
+//  b_kuWootStcrhtime->GetEntry(entry);
+//  b_kuWootStcrhtimeErr->GetEntry(entry);
 //  b_kuWootStcrhTOF->GetEntry(entry);
-  b_kuWootStcrhID->GetEntry(entry);
+//  b_kuWootStcrhID->GetEntry(entry);
 
   }
         if( hasUrecDigi ){
@@ -2759,15 +2759,15 @@ void Skimmer::FillOutPhos(const UInt_t entry)
                         outpho.seedkuNotStcID = (*kuNotStcrhID)[kuNotStcseed];
                 }
         }
-        for(UInt_t kuWootStcseed = 0; kuWootStcseed < (*kuWootStcrhID).size(); kuWootStcseed++ ){
-                if( (*kuWootStcrhID)[kuWootStcseed] == (*fInRecHits.ID)[seed] ){
+     //   for(UInt_t kuWootStcseed = 0; kuWootStcseed < (*kuWootStcrhID).size(); kuWootStcseed++ ){
+     //           if( (*kuWootStcrhID)[kuWootStcseed] == (*fInRecHits.ID)[seed] ){
 //                        outpho.seedkuWootStcE = (*kuWootStcrhE)[kuWootStcseed];
-                        outpho.seedkuWootStctime = (*kuWootStcrhtime)[kuWootStcseed];
-                        outpho.seedkuWootStctimeErr = (*kuWootStcrhtimeErr)[kuWootStcseed];
+     //                   outpho.seedkuWootStctime = (*kuWootStcrhtime)[kuWootStcseed];
+     //                   outpho.seedkuWootStctimeErr = (*kuWootStcrhtimeErr)[kuWootStcseed];
 //                        outpho.seedkuWootStcTOF = (*kuWootStcrhTOF)[kuWootStcseed];
-                        outpho.seedkuWootStcID = (*kuWootStcrhID)[kuWootStcseed];
-                }
-        }
+    //                    outpho.seedkuWootStcID = (*kuWootStcrhID)[kuWootStcseed];
+    //            }
+    //    }
 
         }
 
@@ -3284,10 +3284,10 @@ void Skimmer::InitInBranches()
 
    if( hasMultiKURecHit ){
    //fInTree->SetBranchAddress("kuStcrhE", &kuStcrhE, &b_kuStcrhE);
-   fInTree->SetBranchAddress("kuStcrhtime", &kuStcrhtime, &b_kuStcrhtime);
-   fInTree->SetBranchAddress("kuStcrhtimeErr", &kuStcrhtimeErr, &b_kuStcrhtimeErr);
+   fInTree->SetBranchAddress("kuNotStcrhtime", &kuStcrhtime, &b_kuStcrhtime);
+   fInTree->SetBranchAddress("kuNotStcrhtimeErr", &kuStcrhtimeErr, &b_kuStcrhtimeErr);
    //fInTree->SetBranchAddress("kuStcrhTOF", &kuStcrhTOF, &b_kuStcrhTOF);
-   fInTree->SetBranchAddress("kuStcrhID", &kuStcrhID, &b_kuStcrhID);
+   fInTree->SetBranchAddress("kuNotStcrhID", &kuStcrhID, &b_kuStcrhID);
 
    //fInTree->SetBranchAddress("kuNotrhE", &kuNotrhE, &b_kuNotrhE);
    //fInTree->SetBranchAddress("kuNotrhtime", &kuNotrhtime, &b_kuNotrhtime);
@@ -3296,10 +3296,10 @@ void Skimmer::InitInBranches()
    //fInTree->SetBranchAddress("kuNotrhID", &kuNotrhID, &b_kuNotrhID);
 
    //fInTree->SetBranchAddress("kuNotStcrhE", &kuNotStcrhE, &b_kuNotStcrhE);
-   fInTree->SetBranchAddress("kuNotStcrhtime", &kuNotStcrhtime, &b_kuNotStcrhtime);
-   fInTree->SetBranchAddress("kuNotStcrhtimeErr", &kuNotStcrhtimeErr, &b_kuNotStcrhtimeErr);
+   fInTree->SetBranchAddress("kuStcrhtime", &kuNotStcrhtime, &b_kuNotStcrhtime);
+   fInTree->SetBranchAddress("kuStcrhtimeErr", &kuNotStcrhtimeErr, &b_kuNotStcrhtimeErr);
    //fInTree->SetBranchAddress("kuNotStcrhTOF", &kuNotStcrhTOF, &b_kuNotStcrhTOF);
-   fInTree->SetBranchAddress("kuNotStcrhID", &kuNotStcrhID, &b_kuNotStcrhID);
+   fInTree->SetBranchAddress("kuStcrhID", &kuNotStcrhID, &b_kuNotStcrhID);
 //>>>>  alt def
 //   fInTree->SetBranchAddress("kuWootStcrhE", &kuNotStcrhE, &b_kuNotStcrhE);
 //   fInTree->SetBranchAddress("kuWootStcrhtime", &kuNotStcrhtime, &b_kuNotStcrhtime);
@@ -3308,10 +3308,10 @@ void Skimmer::InitInBranches()
 //   fInTree->SetBranchAddress("kuWootStcrhID", &kuNotStcrhID, &b_kuNotStcrhID);
 
  //  fInTree->SetBranchAddress("kuWootStcrhE", &kuWootStcrhE, &b_kuWootStcrhE);
-   fInTree->SetBranchAddress("kuWootStcrhtime", &kuWootStcrhtime, &b_kuWootStcrhtime);
-   fInTree->SetBranchAddress("kuWootStcrhtimeErr", &kuWootStcrhtimeErr, &b_kuWootStcrhtimeErr);
+//   fInTree->SetBranchAddress("kuWootStcrhtime", &kuWootStcrhtime, &b_kuWootStcrhtime);
+//   fInTree->SetBranchAddress("kuWootStcrhtimeErr", &kuWootStcrhtimeErr, &b_kuWootStcrhtimeErr);
   // fInTree->SetBranchAddress("kuWootStcrhTOF", &kuWootStcrhTOF, &b_kuWootStcrhTOF);
-   fInTree->SetBranchAddress("kuWootStcrhID", &kuWootStcrhID, &b_kuWootStcrhID);
+//   fInTree->SetBranchAddress("kuWootStcrhID", &kuWootStcrhID, &b_kuWootStcrhID);
 //  >>>>>>>   alt def
 //   fInTree->SetBranchAddress("kuNotStcrhE", &kuWootStcrhE, &b_kuWootStcrhE);
 //   fInTree->SetBranchAddress("kuNotStcrhtime", &kuWootStcrhtime, &b_kuWootStcrhtime);
@@ -3760,10 +3760,10 @@ void Skimmer::InitOutBranches()
     fOutTree->Branch(Form("%s_%i",pho.s_seedkuNotStcID.c_str(),ipho), &pho.seedkuNotStcID);
 
     //fOutTree->Branch(Form("%s_%i",pho.s_seedkuWootStcE.c_str(),ipho), &pho.seedkuWootStcE);
-    fOutTree->Branch(Form("%s_%i",pho.s_seedkuWootStctime.c_str(),ipho), &pho.seedkuWootStctime);
-    fOutTree->Branch(Form("%s_%i",pho.s_seedkuWootStctimeErr.c_str(),ipho), &pho.seedkuWootStctimeErr);
+    //fOutTree->Branch(Form("%s_%i",pho.s_seedkuWootStctime.c_str(),ipho), &pho.seedkuWootStctime);
+    //fOutTree->Branch(Form("%s_%i",pho.s_seedkuWootStctimeErr.c_str(),ipho), &pho.seedkuWootStctimeErr);
     //fOutTree->Branch(Form("%s_%i",pho.s_seedkuWootStcTOF.c_str(),ipho), &pho.seedkuWootStcTOF);
-    fOutTree->Branch(Form("%s_%i",pho.s_seedkuWootStcID.c_str(),ipho), &pho.seedkuWootStcID);
+    //fOutTree->Branch(Form("%s_%i",pho.s_seedkuWootStcID.c_str(),ipho), &pho.seedkuWootStcID);
 
     }
 

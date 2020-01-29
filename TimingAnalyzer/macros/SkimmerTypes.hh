@@ -645,6 +645,18 @@ struct Pho
   //Float_t seedkuNotStcpedrms6;
   //Float_t seedkuNotStcpedrms1;
 
+  Float_t seedkuWtStcE;
+  Float_t seedkuWtStctime;
+  Float_t seedkuWtStctimeErr;
+  Float_t seedkuWtStcTOF;
+  UInt_t  seedkuWtStcID;
+
+  Float_t seedkuWootStcE;
+  Float_t seedkuWootStctime;
+  Float_t seedkuWootStctimeErr;
+  Float_t seedkuWootStcTOF;
+  UInt_t  seedkuWootStcID;
+
   // MC types
   Bool_t  isGen;
   Int_t   isSignal;
@@ -832,6 +844,17 @@ struct Pho
   //std::string s_seedkuNotStcpedrms6 = "phoseedkuNotStcpedrms6";
   //std::string s_seedkuNotStcpedrms1 = "phoseedkuNotStcpedrms1";
 
+  std::string s_seedkuWtStcE = "phoseedkuWtStcE";
+  std::string s_seedkuWtStctime = "phoseedkuWtStctime";
+  std::string s_seedkuWtStctimeErr = "phoseedkuWtStctimeErr";
+  std::string s_seedkuWtStcTOF = "phoseedkuWtStcTOF";
+  std::string s_seedkuWtStcID = "phoseedkuWtStcID";
+
+  std::string s_seedkuWootStcE = "phoseedkuWootStcE";
+  std::string s_seedkuWootStctime = "phoseedkuWootStctime";
+  std::string s_seedkuWootStctimeErr = "phoseedkuWootStctimeErr";
+  std::string s_seedkuWootStcTOF = "phoseedkuWootStcTOF";
+  std::string s_seedkuWootStcID = "phoseedkuWootStcID";
 
   // tbranches
   TBranch * b_E;
@@ -1002,6 +1025,18 @@ struct Pho
   //TBranch * b_seedkuNotStcpedrms12;
   //TBranch * b_seedkuNotStcpedrms6;
   //TBranch * b_seedkuNotStcpedrms1;
+
+  TBranch * b_seedkuWtStcE;
+  TBranch * b_seedkuWtStctime;
+  TBranch * b_seedkuWtStctimeErr;
+  TBranch * b_seedkuWtStcTOF;
+  TBranch * b_seedkuWtStcID;
+
+  TBranch * b_seedkuWootStcE;
+  TBranch * b_seedkuWootStctime;
+  TBranch * b_seedkuWootStctimeErr;
+  TBranch * b_seedkuWootStcTOF;
+  TBranch * b_seedkuWootStcID;
 
 };
 typedef std::vector<Pho> PhoVec;
